@@ -5,7 +5,7 @@ export const routerHanlder = (req, res, next) => {
 };
 
 export const logHandler = (err, req, res, next) => {
-    console.error(`"[" + ${new Date()} + "]\n"` + err.stack);
+    console.error("[" + `${new Date()}` + "]\n" + err.stack);
     next(err);
 };
 

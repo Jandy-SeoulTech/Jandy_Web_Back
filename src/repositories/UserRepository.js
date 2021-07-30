@@ -54,3 +54,13 @@ export const findByIdWithData = async (id) => {
         console.error(err);
     }
 };
+
+export const findByNickname = async (nickname) => {
+    try {
+        return await prisma.user.findUnique({
+            where: { nickname },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
