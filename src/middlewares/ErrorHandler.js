@@ -16,6 +16,7 @@ export const errorHandler = (err, req, res, next) => {
                 // Pull all enumerable properties, supporting properties on custom Errors
                 ...value,
                 // Explicitly pull Error's non-enumerable properties
+                status: value.status,
                 name: value.name,
                 message: value.message,
             };
