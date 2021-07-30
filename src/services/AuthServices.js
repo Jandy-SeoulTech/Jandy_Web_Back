@@ -91,3 +91,21 @@ export const EmailCheck = async (req, res, next) => {
         next(err);
     }
 };
+
+export const GetUser = async (req, res, next) => {
+    try {
+        if (req.user) {
+            const user = await UserRepository.findByIdWithData(req.user.id);
+            return res
+                .status(200)
+                .send(resFormat.successData(200, "유저 정보 확인 성공", user));
+        } else {
+            return res
+                .status(401)
+                .json(resFormat.fail(401, "유저 정보 확인 실패"));
+        }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
