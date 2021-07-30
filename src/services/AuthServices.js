@@ -57,3 +57,37 @@ export const LogOut = (req, res, next) => {
         }
     });
 };
+
+export const NicknameCheck = async (req, res, next) => {
+    try {
+        const exUser = await UserRepository.findByNickname(req.body.nickname);
+        if (exUser) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "중복된 닉네임입니다"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.success(200, "사용가능한 닉네임입니다."));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const EmailCheck = async (req, res, next) => {
+    try {
+        const exUser = await UserRepository.findByEmail(req.body.email);
+        if (exUser) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "중복된 이메일입니다"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.success(200, "사용가능한 이메일입니다."));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
