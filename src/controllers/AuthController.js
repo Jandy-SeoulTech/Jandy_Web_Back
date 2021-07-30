@@ -12,5 +12,6 @@ Router.post(
     AuthServices.NicknameCheck
 );
 Router.post("/emailcheck", AuthHandler.isNotLoggedIn, AuthServices.EmailCheck);
+Router.get("/", AuthServices.GetUser);
 
 export default Router;
