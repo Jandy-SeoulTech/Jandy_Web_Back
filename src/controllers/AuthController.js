@@ -13,5 +13,6 @@ Router.post(
 );
 Router.post("/emailcheck", AuthHandler.isNotLoggedIn, AuthServices.EmailCheck);
 Router.get("/", AuthServices.GetUser);
+Router.post("/emailauth", AuthHandler.isNotLoggedIn, AuthServices.EmailAuth);
 
 export default Router;
