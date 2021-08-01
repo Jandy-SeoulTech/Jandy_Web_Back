@@ -146,7 +146,7 @@ export const EmailAuth = async (req,res,next) => {
         if(info){
                 return res
                     .status(200)
-                    .send(resFormat.successData(200, "인증번호 보내기 성공", info))
+                    .send(resFormat.successData(200, "인증번호 보내기 성공", RandomAuth))
             }
         else{
             return res
