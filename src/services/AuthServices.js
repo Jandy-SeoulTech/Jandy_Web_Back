@@ -1,8 +1,11 @@
 import * as UserRepository from "../repositories/UserRepository";
+import * as AuthRepository from "../repositories/AuthRepository";
 import bcrypt from "bcrypt";
 import passport from "passport";
 import resFormat from "../utils/resFormat";
 import nodemailer from "nodemailer";
+import mail from '../configs/email';
+
 
 export const SingUp = async (req, res, next) => {
     try {
@@ -113,40 +116,22 @@ export const GetUser = async (req, res, next) => {
 
 export const EmailAuth = async (req,res,next) => {
     try{
-        const RandomCode = () => {
-            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
-            const stringLength = 6
-            let randomstring = ''
-            for (let i = 0; i < stringLength; i++) {
-              const rnum = Math.floor(Math.random() * chars.length)
-              randomstring += chars.substring(rnum, rnum + 1)
-            }
-            return randomstring
-          }
-        const RandomAuth = RandomCode()
-        const mailConfig = {
-            service: 'Naver',
-            host: 'smtp.naver.com',
-            port: 587,
-            auth: {
-              user: process.env.MAIL_EMAIL,
-              pass: process.env.MAIL_PASSWORD
-            }
-          }
-        let message = {
-            from: process.env.MAIL_EMAIL,
-            to: req.body.email,
-            subject: '이메일 인증 요청 메일입니다.',
-            html: `<p> 다음 인증번호 6자리를 입력해주세요! <br> ${RandomAuth} </p>`
-        }
-        let transporter = nodemailer.createTransport(mailConfig)
-        let info = await transporter.sendMail(message)
+        mail.message.to=req.body.email;
+
+        let transporter = nodemailer.createTransport(mail.mailConfig)
+        let info = await transporter.sendMail(mail.message)
+        
         console.log('Message sent: %s', info.messageId);
 
         if(info){
+                const data = {
+                    email: req.body.email,
+                    auth: mail.RandomAuth
+                }
+                let response = await AuthRepository.AuthGenerate(data);
                 return res
                     .status(200)
-                    .send(resFormat.successData(200, "인증번호 보내기 성공", RandomAuth))
+                    .send(resFormat.successData(200,"인증번호 생성 성공",response));
             }
         else{
             return res
@@ -159,3 +144,26 @@ export const EmailAuth = async (req,res,next) => {
         next(err);
     }
 }
+
+export const AuthCheck = async (req, res, next) => {
+    try {
+        const exUser = await AuthRepository.findByEmail(req.body.email);
+        if (exUser) {
+            if(exUser.auth==req.body.auth){
+                return res
+                    .status(200)
+                    .send(resFormat.success(200, "인증번호가 일치함"));
+            }
+            return res
+                .status(403)
+                .send(resFormat.success(403, "인증번호가 일치하지 않음"));
+
+        }
+        return res
+            .status(403)
+            .send(resFormat.success(403, "인증 테이블이 존재하지 않음"));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};

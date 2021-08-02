@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -20,9 +17,7 @@ model User {
   provider   String?
   followers  User[]    @relation("UserFollow", references: [id])
   followings User[]    @relation("UserFollow", references: [id])
-
-  profile Profile?
-
+  profile    Profile?
   @@map(name: "users")
 }
 
@@ -34,7 +29,6 @@ model Profile {
   userId       Int
   talent       Talent[]
   profileImage Image?
-
   @@map(name: "profiles")
 }
 
@@ -42,12 +36,10 @@ model Talent {
   id         Int    @id @default(autoincrement())
   contents   String
   identifier String
-
   createdAt DateTime  @default(now())
   updateAt  DateTime? @updatedAt
   profile   Profile   @relation(fields: [profileId], references: [id])
   profileId Int
-
   @@map(name: "talents")
 }
 
@@ -58,6 +50,14 @@ model Image {
   updateAt  DateTime? @updatedAt
   profile   Profile?  @relation(fields: [profileId], references: [id])
   profileId Int?
-
   @@map(name: "images")
+}
+
+model Auth {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updateAt  DateTime? @updatedAt
+  email     String    @unique @db.VarChar(30)
+  auth      String
+  @@map("auth")
 }
