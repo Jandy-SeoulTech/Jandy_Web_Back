@@ -30,7 +30,6 @@ app.use(passport.session());
 
 //router
 app.use("/api/Auth", AuthController);
-
 //404 handler
 app.use(ErrorHandler.routerHanlder);
 
