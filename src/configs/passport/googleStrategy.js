@@ -1,7 +1,6 @@
 import env from '../';
 import * as UserRepository from "../../repositories/UserRepository";
 
-var passport         = require('passport');
 var GoogleStrategy   = require('passport-google-oauth2').Strategy;
 
 export default (passport) =>{

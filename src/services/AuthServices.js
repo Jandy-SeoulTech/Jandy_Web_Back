@@ -71,11 +71,11 @@ export const Login = (req, res, next) => {
     })(req, res, next);
 };
 
-export const SocialLogin = (req,res, next)=>{
+export const GoogleLogin = (req,res, next)=>{
     passport.authenticate('google', { scope: ['email']})(req,res,next);
 }
 
-export const SocialCallback = (req,res,next) => {
+export const GoogleCallback = (req,res,next) => {
     passport.authenticate('google',(err, user, info) => {
         if (err) {
             return next(err);
