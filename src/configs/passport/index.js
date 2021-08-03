@@ -1,4 +1,5 @@
 import local from "./localStrategy";
+import google from "./googleStrategy";
 import * as UserRepository from "../../repositories/UserRepository";
 
 export default (passport) => {
@@ -18,4 +19,5 @@ export default (passport) => {
     });
     local(passport);
     //Strategy list..
+    google(passport);
 };
