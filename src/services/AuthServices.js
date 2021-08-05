@@ -131,7 +131,7 @@ export const EmailAuth = async (req,res,next) => {
                 let response = await AuthRepository.AuthGenerate(data);
                 setTimeout(()=>{
                     AuthRepository.deleteAuth(data);
-                }, 60000);
+                }, 60000*3);
                 return res
                     .status(200)
                     .send(resFormat.successData(200,"인증번호 생성 성공",response));
