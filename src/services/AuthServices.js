@@ -156,19 +156,14 @@ export const AuthCheck = async (req, res, next) => {
             }
             return res
                 .status(403)
-                .send(resFormat.success(403, "인증번호가 일치하지 않음"));
+                .send(resFormat.fail(403, "인증번호가 일치하지 않음"));
 
         }
         return res
             .status(403)
-            .send(resFormat.success(403, "인증 테이블이 존재하지 않음"));
+            .send(resFormat.fail(403, "인증 테이블이 존재하지 않음"));
     } catch (err) {
         console.error(err);
         next(err);
     }
-};
-
-
-export const test = (req, res, next) => {
-    return res.send("test");
 };

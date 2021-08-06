@@ -2,17 +2,13 @@ import * as UserRepository from "../repositories/UserRepository";
 import passport from "passport";
 import resFormat from "../utils/resFormat";
 
-export const GoogleLogin = (req,res, next)=>{
-    passport.authenticate('google', { scope: ['email']})(req,res,next);
-}
-
-export const GoogleCallback = (req,res,next) => {
-    passport.authenticate('google',(err, user, info) => {
+export const GoogleLogin = (req,res,next) => {
+    passport.authenticate('use-google',(err, user, info) => {
         if (err) {
             return next(err);
         }
         if (!user) {
-            return res.status(401).send(resFormat.fail(401, info.message));
+            return res.status(404).send(resFormat.fail(404,{ mseeage: "해당 유저 정보 없음" }));
         }
         req.login(user, (err) => {
             if (err) {

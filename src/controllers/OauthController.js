@@ -1,12 +1,11 @@
 import express from "express";
-import * as AuthServices from "../services/OauthServices";
+import * as OAuthServices from "../services/OAuthServices";
 import * as AuthHandler from "../middlewares/AuthHandler";
+import * as OAuthHandler from "../middlewares/OAuthHandler";
 const Router = express.Router();
 
-Router.get("/google",AuthServices.GoogleLogin);
-Router.get("/google/callback",AuthServices.GoogleCallback,function(req,res){
-    res.send("콜백함수 체크");
-});
-Router.post("/google/nickname",AuthHandler.isLoggedIn,AuthServices.GoogleNickname);
+Router.post("/google",AuthHandler.isNotLoggedIn,OAuthHandler.GoogleData, OAuthServices.GoogleLogin);
+
+Router.post("/google/nickname",AuthHandler.isLoggedIn,OAuthServices.GoogleNickname);
 
 export default Router;

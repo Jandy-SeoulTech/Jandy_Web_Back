@@ -8,7 +8,7 @@ import passport from "passport";
 import passportConfig from "./configs/passport";
 import * as ErrorHandler from "./middlewares/ErrorHandler";
 import AuthController from "./controllers/AuthController";
-import OauthController from "./controllers/OauthController";
+import OAuthController from "./controllers/OAuthController";
 
 const app = express();
 
@@ -31,7 +31,7 @@ app.use(passport.session());
 
 //router
 app.use("/api/Auth", AuthController);
-app.use("/api/Oauth", OauthController);
+app.use("/api/OAuth", OAuthController);
 //404 handler
 app.use(ErrorHandler.routerHanlder);
 

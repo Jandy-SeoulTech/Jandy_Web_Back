@@ -1,41 +1,25 @@
-import env from '../';
+import passportCustom from "passport-custom";
 import * as UserRepository from "../../repositories/UserRepository";
 
-var GoogleStrategy   = require('passport-google-oauth2').Strategy;
+const CustomStrategy   = passportCustom.Strategy;
 
 export default (passport) =>{
-    passport.use(new GoogleStrategy(
-    {
-        clientID      : env.clientID,
-        clientSecret  : env.clientSecret,
-        callbackURL   : env.callbackURL,
-        passReqToCallback   : true
-    },async function(request, accessToken, refreshToken, email, done){
-        try {
-            const exUser = await UserRepository.findByEmail(email.email);
-            if(!exUser){
-                const user = {
-                    email: email.email,
-                    provider: email.provider,
-                    nickname: email.id
-                };
-                const result = await UserRepository.createSocial(user);
-                if(!result){
-                    return done(null, false, {
-                        message: "소셜 계정 정보가 등록되지 않았습니다.",
-                    });
+    passport.use("use-google",
+        new CustomStrategy(async (req,done) => {
+            try{
+                //console.log(req.UserData);
+                const exUser = await UserRepository.findByEmail(
+                    req.UserData.email
+                );
+                if(exUser){
+                    return done(null, exUser, {messsage : 'User 정보 존재'} );
                 }
-                return done(null,result);
+                const user = await UserRepository.createSocial(req.UserData);
+                return done(null,user);
+            }catch(err){
+                console.error(err);
+                return done(err);
             }
-            const FullUser = await UserRepository.findByIdWithData(
-                exUser.id
-            );
-            return done(null, FullUser);
-        }
-        catch(err){
-            console.error(err);
-            done(err)
-        }
-  }
-));
+        })
+    );
 }
