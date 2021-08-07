@@ -9,9 +9,9 @@ import passport from "passport";
 import passportConfig from "./configs/passport";
 import * as ErrorHandler from "./middlewares/ErrorHandler";
 import AuthController from "./controllers/AuthController";
-import OauthController from "./controllers/OauthController";
 import ImageController from "./controllers/ImageController";
 import ProfileController from "./controllers/ProfileController";
+import OAuthController from "./controllers/OAuthController";
 
 const app = express();
 
@@ -35,7 +35,7 @@ app.use(passport.session());
 
 //router
 app.use("/api/Auth", AuthController);
-app.use("/api/Oauth", OauthController);
+app.use("/api/Oauth", OAuthController);
 app.use("/api/Image", ImageController);
 app.use("/api/Profile", ProfileController);
 
