@@ -40,7 +40,7 @@ export const createLocal = async (data) => {
     }
 };
 
-export const createSocial = async (data) =>{
+export const createSocial = async (data) => {
     try {
         return await prisma.user.create({
             data: {
@@ -52,8 +52,24 @@ export const createSocial = async (data) =>{
     } catch (err) {
         console.error(err);
     }
-}
+};
 export const findByIdWithData = async (id) => {
+    try {
+        return await prisma.user.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                nickname: true,
+                email: true,
+                provider: true,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findByIdWithProfile = async (id) => {
     try {
         return await prisma.user.findUnique({
             where: { id },
@@ -79,17 +95,17 @@ export const findByNickname = async (nickname) => {
     }
 };
 
-export const updateNickname = async (data) =>{
-    try{
+export const updateNickname = async (data) => {
+    try {
         return await prisma.users.update({
-            where:{
+            where: {
                 id: data.id,
             },
             data: {
                 nickname: data.nickname,
-            }
-        })
-    }catch(err){
+            },
+        });
+    } catch (err) {
         console.error(err);
     }
-}
+};
