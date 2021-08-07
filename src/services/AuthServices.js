@@ -165,12 +165,9 @@ export const AuthCheck = async (req, res, next) => {
         return res
             .status(403)
             .send(resFormat.fail(403, "인증번호가 존재하지 않음"));
+
     } catch (err) {
         console.error(err);
         next(err);
     }
-};
-
-export const test = (req, res, next) => {
-    return res.send("test");
 };
