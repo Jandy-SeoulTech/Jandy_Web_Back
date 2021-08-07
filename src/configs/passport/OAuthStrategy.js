@@ -1,11 +1,11 @@
 import passportCustom from "passport-custom";
 import * as UserRepository from "../../repositories/UserRepository";
 
-const CustomStrategy   = passportCustom.Strategy;
+const OAuthStrategy   = passportCustom.Strategy;
 
 export default (passport) =>{
-    passport.use("use-google",
-        new CustomStrategy(async (req,done) => {
+    passport.use("OAuth",
+        new OAuthStrategy(async (req,done) => {
             try{
                 //console.log(req.UserData);
                 const exUser = await UserRepository.findByEmail(

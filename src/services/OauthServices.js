@@ -2,8 +2,8 @@ import * as UserRepository from "../repositories/UserRepository";
 import passport from "passport";
 import resFormat from "../utils/resFormat";
 
-export const GoogleLogin = (req,res,next) => {
-    passport.authenticate('use-google',(err, user, info) => {
+export const OAuthLogin = (req,res,next) => {
+    passport.authenticate('OAuth',(err, user, info) => {
         if (err) {
             return next(err);
         }
@@ -23,7 +23,7 @@ export const GoogleLogin = (req,res,next) => {
     })(req, res, next);
 }
 
-export const GoogleNickname = async (req, res, next) => {
+export const OAuthNickname = async (req, res, next) => {
     try {
         const exUser = await UserRepository.findByEmail(req.user.email);
         if (!exUser) {
