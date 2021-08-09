@@ -1,7 +1,5 @@
 import * as UserRepository from "../repositories/UserRepository";
 import * as ProfileRepository from "../repositories/ProfileRepository";
-import * as ImageRepository from "../repositories/ImageRepostiory";
-import * as TalentRepository from "../repositories/TalentRepository";
 import bcrypt from "bcrypt";
 import { dbNow } from "../utils/dayUtils";
 

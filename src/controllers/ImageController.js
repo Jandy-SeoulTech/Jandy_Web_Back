@@ -6,7 +6,7 @@ const Router = express.Router();
 
 Router.post(
     "/upload",
-    ImageServices.upload.array("files"),
+    ImageServices.useMulter.single("files"),
     ImageServices.ProfileUpload
 );
 

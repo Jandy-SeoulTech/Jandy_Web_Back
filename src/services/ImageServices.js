@@ -1,43 +1,68 @@
-import multer from "multer";
+import Multer from "multer";
+import { format } from "util";
 import path from "path";
 import fs from "fs";
 import resFormat from "../utils/resFormat";
+import { Storage } from "@google-cloud/storage";
+import env from "../configs";
 
-try {
-    fs.accessSync("uploads");
-} catch (err) {
-    console.log("uploads 폴더가 없으므로 생성");
-    fs.mkdirSync("uploads");
-}
+const serviceKey = path.join(__dirname, "/../../../jandyGCPkeys.json");
 
-const multerUpload = multer({
-    storage: multer.diskStorage({
-        destination(req, file, done) {
-            done(null, "uploads");
-        },
-        filename(req, file, done) {
-            console.log(file);
-
-            const ext = path.extname(file.originalname); // 확장자 추출(.png..)
-            const basename = path.basename(file.originalname, ext); //이름 가져오기.
-
-            done(null, basename + "_" + new Date().getTime() + ext); // 파일 이름 + 날짜 + 확장자
-        },
-    }),
-    limits: { fileSize: 20 * 1024 * 1024 }, // 파일 크기 20MB 제한
+const GCPstorage = new Storage({
+    keyFilename: serviceKey,
+    projectId: env.GCLOUD_PROJECT_ID,
 });
 
-export const upload = multerUpload;
+const multerUpload = Multer({
+    storage: Multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5mb
+    },
+});
 
-export const ProfileUpload = (req, res, next) => {
+const bucket = GCPstorage.bucket(env.GCLOUD_STORAGE_BUCKET);
+
+//---above , multer setting ---
+
+export const useMulter = multerUpload;
+
+//custom image code
+const uploadIamge = (file) =>
+    new Promise((resolve, reject) => {
+        const { originalname, buffer } = file;
+        const ext = path.extname(originalname); //확장자 추출 (.png)
+        const basename = path.basename(originalname, ext);
+        const filename = basename + "_" + new Date().getTime() + ext;
+
+        const blob = bucket.file(filename);
+        const blobStream = blob.createWriteStream();
+
+        blobStream.on("err", (err) => {
+            reject(`Unable to upload image, something went wrong`);
+        });
+
+        blobStream.on("finish", () => {
+            console.log("이미지 업로드 성공");
+            const publicUrl = format(
+                `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+            );
+            resolve(publicUrl);
+        });
+
+        blobStream.end(buffer);
+    });
+
+export const ProfileUpload = async (req, res, next) => {
     try {
-        console.log(req.files);
+        //single file
+        if (!req.file) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "파일을 업로드해주세요"));
+        }
+        const imageUrl = await uploadIamge(req.file);
         res.status(200).send(
-            resFormat.successData(
-                200,
-                "이미지 업로드 성공",
-                req.files.map((v) => v.filename)
-            )
+            resFormat.successData(200, "이미지 업로드 성공", imageUrl)
         );
     } catch (err) {
         console.error(err);
