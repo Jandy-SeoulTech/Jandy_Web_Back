@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { dbNow } from "../utils/dayUtils";
 
+const now = dbNow();
 const prisma = new PrismaClient();
 
 export const findByEmail = async (email) => {
@@ -20,6 +22,7 @@ export const createAuth = async (data) => {
             data: {
                 email: data.email,
                 auth: data.auth,
+                createdAt: now,
             },
         });
     } catch (err) {
@@ -27,47 +30,45 @@ export const createAuth = async (data) => {
     }
 };
 
-export const updateAuth = async (data) =>{
-    try{
+export const updateAuth = async (data) => {
+    try {
         return await prisma.auth.update({
-            where:{
+            where: {
                 email: data.email,
             },
             data: {
                 auth: data.auth,
-            }
-        })
-    }catch(err){
+                updatedAt: now,
+            },
+        });
+    } catch (err) {
         console.error(err);
     }
-}
+};
 
-export const AuthGenerate = async (data)=>{
-    try{
-        const exAuth = await findByEmail(data.email)
-        if(exAuth){
+export const AuthGenerate = async (data) => {
+    try {
+        const exAuth = await findByEmail(data.email);
+        if (exAuth) {
             return await updateAuth(data);
-        }
-        else{
+        } else {
             return await createAuth(data);
         }
-    }
-    catch(err){
+    } catch (err) {
         console.error(err);
         next(err);
     }
-}
+};
 
 export const deleteAuth = async (data) => {
-    try{
+    try {
         return await prisma.auth.delete({
             where: {
-              email: data.email,
+                email: data.email,
             },
-          });
-    }
-    catch(err){
+        });
+    } catch (err) {
         console.error(err);
         next(err);
     }
-}
+};

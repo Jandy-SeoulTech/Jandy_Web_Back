@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { dbNow } from "../utils/dayUtils";
 
+const now = dbNow();
 const prisma = new PrismaClient();
 
 export const findByEmail = async (email) => {
@@ -33,6 +35,7 @@ export const createLocal = async (data) => {
                 email: data.email,
                 password: data.password,
                 provider: "local",
+                createdAt: now,
             },
         });
     } catch (err) {
@@ -47,6 +50,7 @@ export const createSocial = async (data) => {
                 nickname: data.nickname,
                 email: data.email,
                 provider: data.provider,
+                createdAt: now,
             },
         });
     } catch (err) {
@@ -78,6 +82,30 @@ export const findByIdWithProfile = async (id) => {
                 nickname: true,
                 email: true,
                 provider: true,
+                followers: true,
+                followings: true,
+                profile: {
+                    select: {
+                        id: true,
+                        department: true,
+                        introduce: true,
+                        welltalent: {
+                            select: {
+                                contents: true,
+                            },
+                        },
+                        interesttalent: {
+                            select: {
+                                contents: true,
+                            },
+                        },
+                        profileImage: {
+                            select: {
+                                src: true,
+                            },
+                        },
+                    },
+                },
             },
         });
     } catch (err) {
@@ -97,12 +125,29 @@ export const findByNickname = async (nickname) => {
 
 export const updateNickname = async (data) => {
     try {
-        return await prisma.users.update({
+        return await prisma.user.update({
             where: {
                 id: data.id,
             },
             data: {
                 nickname: data.nickname,
+                updatedAt: now,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updatePassword = async (id, password) => {
+    try {
+        return await prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                password,
+                updatedAt: now,
             },
         });
     } catch (err) {

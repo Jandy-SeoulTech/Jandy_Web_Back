@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { dbNow } from "../utils/dayUtils";
 
+const now = dbNow();
 const prisma = new PrismaClient();
 
 export const findById = async (id) => {
@@ -27,43 +29,65 @@ export const fineByUserId = async (userId) => {
     }
 };
 
-export const create = async (userId) => {
+export const createProfile = async (option) => {
     try {
         return await prisma.profile.create({
-            data: {
-                userId,
-            },
+            data: option,
         });
     } catch (err) {
         console.error(err);
     }
 };
 
-export const updateByDepartment = async (id, department) => {
+export const updateProfile = async (
+    id,
+    department,
+    introduce,
+    src,
+    WellTalentOption,
+    InterestTalentOption
+) => {
     try {
-        return await prisma.profile.update({
+        console.log(WellTalentOption);
+        console.log(InterestTalentOption);
+        await prisma.profile.update({
             where: {
-                id: id,
+                id,
             },
             data: {
                 department,
-            },
-        });
-    } catch (err) {
-        console.error(err);
-    }
-};
-
-export const updateByIntroduce = async (id, introduce) => {
-    try {
-        return await prisma.profile.update({
-            where: {
-                id: id,
-            },
-            data: {
                 introduce,
+                updatedAt: now,
+                profileImage: {
+                    update: {
+                        src,
+                        updatedAt: now,
+                    },
+                },
+                welltalent: {
+                    deleteMany: {},
+                },
+                interesttalent: {
+                    deleteMany: {},
+                },
             },
         });
+        await prisma.profile.update({
+            where: { id },
+            data: {
+                welltalent: {
+                    createMany: {
+                        data: WellTalentOption,
+                    },
+                },
+                interesttalent: {
+                    createMany: {
+                        data: InterestTalentOption,
+                    },
+                },
+            },
+        });
+        return true;
     } catch (err) {
         console.error(err);
     }
