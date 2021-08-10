@@ -16,7 +16,6 @@ export default {
     COOKIE_SECRET: env.COOKIE_SECRET,
     MAIL_EMAIL: env.MAIL_EMAIL,
     MAIL_PASSWORD: env.MAIL_PASSWORD,
-    clientID: env.clientID,
-    clientSecret: env.clientSecret,
-    callbackURL: env.callbackURL,
+    GCLOUD_STORAGE_BUCKET: env.GCLOUD_STORAGE_BUCKET,
+    GCLOUD_PROJECT_ID: env.GCLOUD_PROJECT_ID,
 };

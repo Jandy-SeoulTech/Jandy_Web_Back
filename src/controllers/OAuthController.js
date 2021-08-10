@@ -1,5 +1,5 @@
 import express from "express";
-import * as OAuthServices from "../services/OAuthServices";
+import * as OAuthServices from "../services/OauthServices";
 import * as AuthHandler from "../middlewares/AuthHandler";
 import * as OAuthHandler from "../middlewares/OAuthHandler";
 const Router = express.Router();
