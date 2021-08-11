@@ -13,12 +13,14 @@ export default (passport) => {
             },
             async (email, password, done) => {
                 try {
+                    console.log("1");
                     const user = await UserRepository.findByEmail(email);
                     if (!user) {
                         return done(null, false, {
                             message: "이메일에 해당하는 유저 없음",
                         });
                     }
+                    console.log("2");
                     const result = await bcrypt.compare(
                         password,
                         user.password
@@ -28,6 +30,7 @@ export default (passport) => {
                             message: "비밀번호가 일치하지 않습니다.",
                         });
                     }
+                    console.log("3");
                     const FullUser = await UserRepository.findByIdWithData(
                         user.id
                     );

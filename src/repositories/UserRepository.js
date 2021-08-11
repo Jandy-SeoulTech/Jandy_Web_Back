@@ -27,13 +27,13 @@ export const findById = async (id) => {
         console.error(err);
     }
 };
-export const createLocal = async (data) => {
+export const createLocal = async (nickname, email, password) => {
     try {
         return await prisma.user.create({
             data: {
-                nickname: data.nickname,
-                email: data.email,
-                password: data.password,
+                nickname,
+                email,
+                password,
                 provider: "local",
                 createdAt: now,
             },
