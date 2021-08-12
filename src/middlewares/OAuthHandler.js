@@ -35,6 +35,9 @@ export const KakaoData = async (req,res,next) =>{
                 "Content-Type":
                 "application/x-www-form-urlencoded;charset=utf-8",
                 Authorization: `Bearer ${req.body.token}`,
+            },
+            data : {
+                property_keys: ["kakao_account.email"]
             }
         })
         console.log(response.data);
