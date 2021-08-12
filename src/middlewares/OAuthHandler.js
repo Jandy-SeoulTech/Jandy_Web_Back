@@ -14,7 +14,6 @@ export const GoogleData = async (req, res, next) => {
         //console.log(response.data);
         const UserData = {
             email: response.data.email,
-            nickname: response.data.id,
             provider: "google",
         };
         req.UserData = UserData;
@@ -39,7 +38,6 @@ export const KakaoData = async (req, res, next) => {
         console.log(response.data);
         const UserData = {
             email: response.data.kakao_account.email,
-            nickname: response.data.id,
             provider: "kakao",
         };
         req.UserData = UserData;
@@ -64,7 +62,6 @@ export const NaverData = async (req, res, next) => {
         //console.log(response.response);
         const UserData = {
             email: response.data.response.email,
-            nickname: response.response.id,
             provider: "naver",
         };
         req.UserData = UserData;
