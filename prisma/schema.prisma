@@ -8,19 +8,19 @@ generator client {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique @db.VarChar(30)
-  password    String?   @db.VarChar(200)
-  nickname    String    @unique @db.VarChar(30)
-  createdAt   DateTime
-  updatedAt   DateTime?
-  provider    String?
-  followers   Follow[]  @relation("Follower")
-  followings  Follow[]  @relation("Following")
-  profile     Profile?
-  admin       Channel[] @relation("admin")
-  participant Channel[]
-  like        Like[]
+  id            Int       @id @default(autoincrement())
+  email         String    @unique @db.VarChar(30)
+  password      String?   @db.VarChar(200)
+  nickname      String    @unique @db.VarChar(30)
+  createdAt     DateTime
+  updatedAt     DateTime?
+  provider      String?
+  followers     Follow[]  @relation("Follower")
+  followings    Follow[]  @relation("Following")
+  profile       Profile?
+  admin         Channel[] @relation("admin")
+  participant   Channel[]
+  channellike   ChannelLike[]
 
   @@map(name: "users")
 }
@@ -106,9 +106,9 @@ model Channel {
   admin           User      @relation("admin",fields: [adminId],references:[id])
   adminId         Int
   participant     User[]
-  tag             Tag[]
-  category        Category?
-  like            Like[]
+  tags            ChannelTag[]
+  category        ChannelCategory[]
+  channellike     ChannelLike[]
   createdAt       DateTime
   updatedAt       DateTime?
 
@@ -116,29 +116,53 @@ model Channel {
   @@map("channels")
 }
 
+
 model Tag {
-  name      String
+  id        Int       @id @default(autoincrement())
+  name      String    
   createdAt DateTime
   updatedAt DateTime?
-  channel   Channel   @relation(fields: [channelId],references:[id])
-  channelId Int
+  channel   ChannelTag[]
 
-  @@id([name,channelId])
   @@map("tags")
 }
 
-model Category {
-  name      String        @id
+model ChannelTag{
+  channel   Channel @relation(fields: [channelId],references:[id])
+  channelId Int
+  tag       Tag @relation(fields: [tagId],references:[id])
+  tagId     Int
   createdAt DateTime
   updatedAt DateTime?
-  channel   Channel       @relation(fields: [channelId],references:[id])
-  channelId Int
+  
+  @@id([channelId,tagId])
+  @@map("channel_tags")
+}
+
+model Category {
+  id        Int              @id @default(autoincrement())
+  name      String        
+  createdAt DateTime
+  updatedAt DateTime?
+  channel   ChannelCategory?
 
   @@map("categories")
 }
 
+model ChannelCategory{
+  channel       Channel @relation(fields: [channelId],references:[id])
+  channelId     Int
+  category      Category @relation(fields: [categoryId],references:[id])
+  categoryId    Int
+  createdAt     DateTime
+  updatedAt     DateTime?
+
+  @@id([channelId,categoryId])
+  @@map("Channel_categories")
+}
+
 // Channel -- Like -- User
-model Like {
+model ChannelLike {
   user            User      @relation(fields:[userId], references: [id])
   userId          Int
   channel         Channel   @relation(fields: [channelId],references:[id])
@@ -147,5 +171,5 @@ model Like {
   updatedAt       DateTime?
 
   @@id([userId,channelId])
-  @@map("like")
+  @@map("channel_like")
 }
