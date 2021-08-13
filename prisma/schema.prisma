@@ -21,6 +21,7 @@ model User {
   admin       Channel[] @relation("admin")
   participant Channel[]
   like        Like[]
+
   @@map(name: "users")
 }
 

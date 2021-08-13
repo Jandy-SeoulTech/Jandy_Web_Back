@@ -47,7 +47,6 @@ export const createSocial = async (data) => {
     try {
         return await prisma.user.create({
             data: {
-                nickname: data.nickname,
                 email: data.email,
                 provider: data.provider,
                 createdAt: now,
