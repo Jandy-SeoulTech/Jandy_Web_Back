@@ -3,7 +3,7 @@ import resFormat from "../utils/resFormat";
 
 export default (req, res, next) => {
     const error = validationResult(req);
-    if (!error.isEmpty())
+    if (!error.isEmpty()) {
         return res
             .status(400)
             .send(
@@ -13,5 +13,7 @@ export default (req, res, next) => {
                     error.errors
                 )
             );
-    next();
+    } else {
+        next();
+    }
 };

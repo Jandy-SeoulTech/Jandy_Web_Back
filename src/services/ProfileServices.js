@@ -11,6 +11,7 @@ export const CreateProfile = async (req, res, next) => {
         const exProfile = await ProfileRepository.fineByUserId(
             parseInt(req.body.userId, 10)
         );
+        console.log(exProfile);
         if (exProfile[0]) {
             return res
                 .status(403)
@@ -24,10 +25,15 @@ export const CreateProfile = async (req, res, next) => {
         const InterestArray = req.body.interesttalent.split(",");
 
         //유저 아이디로 프로필 생성∏
-
+        console.log(MakeOption(req.body, WellTalentArray, InterestArray));
         const Response = await ProfileRepository.createProfile(
-            MakeOption(req.body, WellTalentArray, InterestArray, "create")
+            MakeOption(req.body, WellTalentArray, InterestArray)
         );
+        if (!Response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "프로필 생성 실패"));
+        }
         const ProfileData = await ProfileRepository.findById(Response.id);
 
         res.status(200).send(
@@ -153,6 +159,15 @@ export const UpdatePassword = async (req, res, next) => {
         } else {
             return res.status(500).send(resFormat.fail(500, "알수 없는 에러"));
         }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const UserFollow = async (req, res, next) => {
+    try {
+        return res.send("ok");
     } catch (err) {
         console.error(err);
         next(err);

@@ -5,7 +5,12 @@ import * as ProfileValidation from "../validations/ProfileValidation";
 
 const Router = express.Router();
 
-Router.post("/", AuthHandler.isNotLoggedIn, ProfileServices.CreateProfile);
+Router.post(
+    "/",
+    AuthHandler.isLoggedIn,
+    ProfileValidation.CreateRequestValid,
+    ProfileServices.CreateProfile
+);
 Router.patch("/", AuthHandler.isLoggedIn, ProfileServices.UpdateUserProfile);
 Router.get("/:userId", ProfileServices.GetUserProfile);
 Router.post("/password", AuthHandler.isLoggedIn, ProfileServices.CheckPassword);
@@ -14,9 +19,5 @@ Router.patch(
     AuthHandler.isLoggedIn,
     ProfileServices.UpdatePassword
 );
-Router.post("/follow", ProfileValidation.testCode, (req, res, next) => {
-    console.log(req.body);
-
-    return res.send("ok");
-});
+Router.post("/follow", ProfileValidation.testCode);
 export default Router;
