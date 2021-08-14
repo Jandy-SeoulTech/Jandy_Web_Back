@@ -8,32 +8,33 @@ import resFormat from "../utils/resFormat";
 
 export const CreateProfile = async (req, res, next) => {
     try {
+        if (!(parseInt(req.body.userId, 10) === req.user.id)) {
+            return res
+                .status(401)
+                .send(resFormat.fail(401, "본인의 프로필만 생성 가능"));
+        }
+
         const exProfile = await ProfileRepository.fineByUserId(
             parseInt(req.body.userId, 10)
         );
-        console.log(exProfile);
+
         if (exProfile[0]) {
             return res
                 .status(403)
                 .send(resFormat.fail(403, "이미 프로필이 존재합니다."));
         }
-        //null 값이 들어온 경우 빈 문자열로 변환
-        req.body.welltalent = req.body.welltalent || "";
-        req.body.interesttalent = req.body.interesttalent || "";
 
-        const WellTalentArray = req.body.welltalent.split(",");
-        const InterestArray = req.body.interesttalent.split(",");
-
-        //유저 아이디로 프로필 생성∏
-        console.log(MakeOption(req.body, WellTalentArray, InterestArray));
+        //유저 아이디로 프로필 생성
         const Response = await ProfileRepository.createProfile(
-            MakeOption(req.body, WellTalentArray, InterestArray)
+            MakeOption(req.body, req.body.welltalent, req.body.interesttalent)
         );
+
         if (!Response) {
             return res
                 .status(500)
                 .send(resFormat.fail(500, "프로필 생성 실패"));
         }
+
         const ProfileData = await ProfileRepository.findById(Response.id);
 
         res.status(200).send(
@@ -204,7 +205,7 @@ const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
 };
 
 const ChangeObject = (arr) => {
-    if (arr[0] === "") return { contents: null, createdAt: now };
+    if (arr === null) return { contents: null, createdAt: now };
     let ArrayChange = [];
     arr.map((v) => {
         ArrayChange.push({ contents: v, createdAt: now });
