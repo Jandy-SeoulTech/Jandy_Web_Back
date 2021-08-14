@@ -81,3 +81,25 @@ export const UpdateRequestValid = async (req, res, next) => {
         .run(req);
     CreateRequestValid(req, res, next);
 };
+
+export const GetRequestValid = async (req, res, next) => {
+    await check("userId")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .isNumeric()
+        .withMessage("userId는 숫자 형식이여야 합니다.")
+        .run(req);
+    validationFunction(req, res, next);
+};
+
+export const PasswordRequestValid = async (req, res, next) => {
+    await check("password")
+        .trim()
+        .notEmpty()
+        .withMessage("값이 없습니다.")
+        .matches(/^[a-zA-Z0-9가-힣]{8,}$/)
+        .withMessage("비밀번호 형식에 맞지 않습니다.")
+        .run(req);
+
+    validationFunction(req, res, next);
+};

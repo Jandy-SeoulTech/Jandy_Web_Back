@@ -17,11 +17,21 @@ Router.patch(
     ProfileValidation.UpdateRequestValid,
     ProfileServices.UpdateUserProfile
 );
-Router.get("/:userId", ProfileServices.GetUserProfile);
-Router.post("/password", AuthHandler.isLoggedIn, ProfileServices.CheckPassword);
+Router.get(
+    "/:userId",
+    ProfileValidation.GetRequestValid,
+    ProfileServices.GetUserProfile
+);
+Router.post(
+    "/password",
+    AuthHandler.isLoggedIn,
+    ProfileValidation.PasswordRequestValid,
+    ProfileServices.CheckPassword
+);
 Router.patch(
     "/password",
     AuthHandler.isLoggedIn,
+    ProfileValidation.PasswordRequestValid,
     ProfileServices.UpdatePassword
 );
 Router.post("/follow", ProfileValidation.testCode);
