@@ -31,7 +31,6 @@ export const SingUp = async (req, res, next) => {
             hashPassword
         );
         if (response) {
-            console.log("tester");
             passport.authenticate("local", (err, user, info) => {
                 if (!user) {
                     return res
