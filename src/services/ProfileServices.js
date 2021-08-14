@@ -1,10 +1,10 @@
 import * as UserRepository from "../repositories/UserRepository";
 import * as ProfileRepository from "../repositories/ProfileRepository";
 import bcrypt from "bcrypt";
+import resFormat from "../utils/resFormat";
 import { dbNow } from "../utils/dayUtils";
 
 const now = dbNow();
-import resFormat from "../utils/resFormat";
 
 export const CreateProfile = async (req, res, next) => {
     try {
@@ -73,12 +73,6 @@ export const UpdateUserProfile = async (req, res, next) => {
                 .status(401)
                 .send(resFormat.fail(401, "자신의 프로필만 수정 가능합니다"));
         }
-        //nickname은 null을 허용하지 않음.
-        if (req.body.nickname === (undefined && null)) {
-            return res
-                .status(403)
-                .send(resFormat.fail(401, "닉네임값이 없습니다."));
-        }
 
         const exProfile = await ProfileRepository.fineByUserId(req.user.id);
 
@@ -93,13 +87,6 @@ export const UpdateUserProfile = async (req, res, next) => {
             nickname: req.body.nickname,
         });
 
-        //null값-> 빈 문자열 변경
-        req.body.welltalent = req.body.welltalent || "";
-        req.body.interesttalent = req.body.interesttalent || "";
-        //split 문자열 배열로 반환
-        const WellTalentArray = req.body.welltalent.split(",");
-        const InterestArray = req.body.interesttalent.split(",");
-
         //갯수가 동일한 department, introduce, image는 바로 업데이트 가능.
         //기존 welltalnet와 interesttalent는 삭제 후 재생성
         const Response = await ProfileRepository.updateProfile(
@@ -107,8 +94,8 @@ export const UpdateUserProfile = async (req, res, next) => {
             req.body.department,
             req.body.introduce,
             req.body.src,
-            ChangeObject(WellTalentArray),
-            ChangeObject(InterestArray)
+            ChangeObject(req.body.welltalent),
+            ChangeObject(req.body.interesttalent)
         );
 
         if (!Response) {

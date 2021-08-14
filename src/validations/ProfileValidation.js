@@ -1,5 +1,6 @@
-import { body, check } from "express-validator";
+import { body, check, validationResult } from "express-validator";
 import validationFunction from "./validationFunction";
+import resFormat from "../utils/resFormat";
 
 export const testCode = [
     body("email").isEmail().withMessage("이메일 형식 불일치").bail(),
@@ -69,4 +70,14 @@ export const CreateRequestValid = async (req, res, next) => {
             .run(req);
     }
     validationFunction(req, res, next);
+};
+
+export const UpdateRequestValid = async (req, res, next) => {
+    await check("nickname")
+        .isString()
+        .withMessage("잘못된 형식입니다.")
+        .isLength({ max: 12 })
+        .withMessage("닉네임은 12자 이내로 작성해야 합니다.")
+        .run(req);
+    CreateRequestValid(req, res, next);
 };

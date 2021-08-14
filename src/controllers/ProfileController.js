@@ -11,7 +11,12 @@ Router.post(
     ProfileValidation.CreateRequestValid,
     ProfileServices.CreateProfile
 );
-Router.patch("/", AuthHandler.isLoggedIn, ProfileServices.UpdateUserProfile);
+Router.patch(
+    "/",
+    AuthHandler.isLoggedIn,
+    ProfileValidation.UpdateRequestValid,
+    ProfileServices.UpdateUserProfile
+);
 Router.get("/:userId", ProfileServices.GetUserProfile);
 Router.post("/password", AuthHandler.isLoggedIn, ProfileServices.CheckPassword);
 Router.patch(
