@@ -15,4 +15,10 @@ export default {
         success: false,
         message,
     }),
+    failData: (status, message, errors) => ({
+        status,
+        success: false,
+        message,
+        errors,
+    }),
 };
