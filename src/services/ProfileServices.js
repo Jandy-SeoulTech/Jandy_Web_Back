@@ -1,5 +1,6 @@
 import * as UserRepository from "../repositories/UserRepository";
 import * as ProfileRepository from "../repositories/ProfileRepository";
+import * as FollowRepository from "../repositories/FollowRepository";
 import bcrypt from "bcrypt";
 import resFormat from "../utils/resFormat";
 import { dbNow } from "../utils/dayUtils";
@@ -155,7 +156,100 @@ export const UpdatePassword = async (req, res, next) => {
 
 export const UserFollow = async (req, res, next) => {
     try {
-        return res.send("ok");
+        if (req.user.id === parseInt(req.body.followingId, 10)) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "스스로를 팔로우 할수 없습니다."));
+        }
+        const exUser = await UserRepository.findById(
+            parseInt(req.body.followingId, 10)
+        );
+        if (!exUser) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "없는 유저 팔로우 할 수 없음."));
+        }
+
+        const exFollow = await FollowRepository.findFollow(
+            req.user.id,
+            parseInt(req.body.followingId, 10)
+        );
+        if (exFollow) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "이미 팔로우 했습니다"));
+        }
+        const response = await UserRepository.Follow(
+            req.user.id,
+            parseInt(req.body.followingId, 10)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 팔로우 실패"));
+        }
+        const UserProfile = await UserRepository.findByIdWithProfile(
+            req.user.id
+        );
+
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "팔로우 성공", UserProfile));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const UserUnFollow = async (req, res, next) => {
+    try {
+        if (req.user.id === parseInt(req.body.followingId, 10)) {
+            return res
+                .status(403)
+                .send(
+                    resFormat.fail(403, "스스로를 팔로우 취소 할수 없습니다.")
+                );
+        }
+
+        const exUser = await UserRepository.findById(
+            parseInt(req.body.followingId, 10)
+        );
+
+        if (!exUser) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "없는 유저 팔로우 취소 할 수 없음."));
+        }
+
+        const exFollow = await FollowRepository.findFollow(
+            req.user.id,
+            parseInt(req.body.followingId, 10)
+        );
+
+        if (!exFollow) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "이미 팔로우관계가 아닙니다"));
+        }
+
+        const response = await UserRepository.unFollow(
+            req.user.id,
+            parseInt(req.body.followingId, 10)
+        );
+
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 팔로우 실패"));
+        }
+
+        const UserProfile = await UserRepository.findByIdWithProfile(
+            req.user.id
+        );
+
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "팔로우 취소 성공", UserProfile));
     } catch (err) {
         console.error(err);
         next(err);

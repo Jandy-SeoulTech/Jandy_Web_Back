@@ -82,8 +82,16 @@ export const findByIdWithProfile = async (id) => {
                 nickname: true,
                 email: true,
                 provider: true,
-                followers: true,
-                followings: true,
+                followers: {
+                    select: {
+                        followerId: true,
+                    },
+                },
+                followings: {
+                    select: {
+                        followingId: true,
+                    },
+                },
                 profile: {
                     select: {
                         id: true,
@@ -148,6 +156,50 @@ export const updatePassword = async (id, password) => {
             data: {
                 password,
                 updatedAt: now,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const Follow = async (id, followingId) => {
+    try {
+        return await prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                followings: {
+                    create: {
+                        followingId,
+                        createdAt: now,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const unFollow = async (id, followingId) => {
+    try {
+        return await prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                followings: {
+                    delete: [
+                        {
+                            followKey: {
+                                followerId: id,
+                                followingId,
+                            },
+                        },
+                    ],
+                },
             },
         });
     } catch (err) {

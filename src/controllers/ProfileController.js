@@ -34,5 +34,16 @@ Router.patch(
     ProfileValidation.PasswordRequestValid,
     ProfileServices.UpdatePassword
 );
-Router.post("/follow", ProfileValidation.testCode);
+Router.post(
+    "/follow",
+    AuthHandler.isLoggedIn,
+    ProfileValidation.FollowRequestValid,
+    ProfileServices.UserFollow
+);
+Router.post(
+    "/unfollow",
+    AuthHandler.isLoggedIn,
+    ProfileValidation.FollowRequestValid,
+    ProfileServices.UserUnFollow
+);
 export default Router;

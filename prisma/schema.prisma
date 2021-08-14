@@ -15,8 +15,8 @@ model User {
   createdAt  DateTime
   updatedAt  DateTime?
   provider   String?
-  followers  Follow[]  @relation("Follower")
-  followings Follow[]  @relation("Following")
+  followings Follow[]  @relation("Follower")
+  followers  Follow[]  @relation("Following")
   profile    Profile?
 
   @@map(name: "users")
@@ -89,6 +89,6 @@ model Follow {
   createdAt   DateTime
   updatedAt   DateTime?
 
-  @@id([followerId, followingId])
+  @@unique([followerId, followingId], name: "followKey")
   @@map("follow")
 }

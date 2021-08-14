@@ -2,12 +2,6 @@ import { body, check, validationResult } from "express-validator";
 import validationFunction from "./validationFunction";
 import resFormat from "../utils/resFormat";
 
-export const testCode = [
-    body("email").isEmail().withMessage("이메일 형식 불일치").bail(),
-    body("name").exists().withMessage("이름 값입력 필요"),
-    validationFunction,
-];
-
 //요청 단위 컨벤션 : [요청네임]ReqeustValid
 
 export const CreateRequestValid = async (req, res, next) => {
@@ -101,5 +95,16 @@ export const PasswordRequestValid = async (req, res, next) => {
         .withMessage("비밀번호 형식에 맞지 않습니다.")
         .run(req);
 
+    validationFunction(req, res, next);
+};
+
+export const FollowRequestValid = async (req, res, next) => {
+    await check("followingId")
+        .notEmpty()
+        .withMessage("값이 없습니다.")
+        .bail()
+        .isNumeric()
+        .withMessage("followingId는 숫자 형식이여야 합니다.")
+        .run(req);
     validationFunction(req, res, next);
 };
