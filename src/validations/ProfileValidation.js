@@ -68,6 +68,8 @@ export const CreateRequestValid = async (req, res, next) => {
 
 export const UpdateRequestValid = async (req, res, next) => {
     await check("nickname")
+        .trim()
+        .notEmpty()
         .isString()
         .withMessage("잘못된 형식입니다.")
         .isLength({ max: 12 })
@@ -88,9 +90,6 @@ export const GetRequestValid = async (req, res, next) => {
 
 export const PasswordRequestValid = async (req, res, next) => {
     await check("password")
-        .trim()
-        .notEmpty()
-        .withMessage("값이 없습니다.")
         .matches(/^[a-zA-Z0-9가-힣]{8,}$/)
         .withMessage("비밀번호 형식에 맞지 않습니다.")
         .run(req);
