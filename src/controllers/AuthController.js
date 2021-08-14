@@ -11,7 +11,12 @@ Router.post(
     AuthValidation.SignUpRequestValid,
     AuthServices.SingUp
 );
-Router.post("/login", AuthHandler.isNotLoggedIn, AuthServices.Login);
+Router.post(
+    "/login",
+    AuthHandler.isNotLoggedIn,
+    AuthValidation.LoginRequestValid,
+    AuthServices.Login
+);
 Router.get("/logout", AuthHandler.isLoggedIn, AuthServices.LogOut);
 Router.post(
     "/nicknamecheck",
