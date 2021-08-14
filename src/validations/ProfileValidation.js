@@ -7,6 +7,8 @@ export const testCode = [
     validationFunction,
 ];
 
+//요청 단위 컨벤션 : [요청네임]ReqeustValid
+
 export const CreateRequestValid = async (req, res, next) => {
     await check("userId")
         .notEmpty()
@@ -32,10 +34,16 @@ export const CreateRequestValid = async (req, res, next) => {
     await check("welltalent")
         .exists()
         .withMessage("welltalent가 존재하지 않습니다.")
+        .if((value, { req }) => value !== null)
+        .isArray()
+        .withMessage("배열만 가능합니다.")
         .run(req);
     await check("interesttalent")
         .exists()
         .withMessage("interesttalent가 존재하지 않습니다")
+        .if((value, { req }) => value !== null)
+        .isArray()
+        .withMessage("배열만 가능합니다.")
         .run(req);
     await check("src")
         .exists()
@@ -43,12 +51,6 @@ export const CreateRequestValid = async (req, res, next) => {
         .run(req);
 
     if (!(req.body.welltalent === null)) {
-        await check("welltalent")
-            .isArray()
-            .withMessage("배열만 가능합니다.")
-            .notEmpty()
-            .withMessage("값이 없습니다.")
-            .run(req);
         await check("welltalent.*")
             .trim()
             .notEmpty()
@@ -58,12 +60,6 @@ export const CreateRequestValid = async (req, res, next) => {
             .run(req);
     }
     if (!(req.body.interesttalent === null)) {
-        await check("interesttalent")
-            .isArray()
-            .withMessage("배열만 가능합니다")
-            .notEmpty()
-            .withMessage("값이 없습니다.")
-            .run(req);
         await check("interesttalent.*")
             .trim()
             .notEmpty()
