@@ -10,4 +10,10 @@ Router.post(
     ImageServices.ProfileUpload
 );
 
+Router.post(
+    "/upload/channel",
+    ImageServices.useMulter.single("files"),
+    ImageServices.ChannelUpload
+)
+
 export default Router;

@@ -105,6 +105,7 @@ model Participant {
   channelId   Int
 
   @@id([userId,channelId])
+  @@map("participants")
 }
 
 model Channel {
@@ -116,7 +117,7 @@ model Channel {
   adminId         Int
   participants    Participant[]  @relation("Participant")
   tags            ChannelTag[]
-  category        ChannelCategory[]
+  category        ChannelCategory?
   channellike     ChannelLike[]
   createdAt       DateTime
   updatedAt       DateTime?
