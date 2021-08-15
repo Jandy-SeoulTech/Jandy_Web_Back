@@ -49,14 +49,19 @@ export const CreateProfile = async (req, res, next) => {
 
 export const GetUserProfile = async (req, res, next) => {
     try {
+        const exProfile = await ProfileRepository.fineByUserId(
+            parseInt(req.params.userId, 10)
+        );
+        if (!exProfile[0]) {
+            return res
+                .status(403)
+                .send(
+                    resFormat.fail(403, "유저의 프로필이 존재하지 않습니다.")
+                );
+        }
         const UserProfile = await UserRepository.findByIdWithProfile(
             parseInt(req.params.userId, 10)
         );
-        if (!UserProfile) {
-            return res
-                .status(403)
-                .send(resFormat.fail(403, "유저의 프로필이 존재하지 않습니다"));
-        }
         return res
             .status(200)
             .send(resFormat.successData(200, "프로필 조회 성공", UserProfile));
