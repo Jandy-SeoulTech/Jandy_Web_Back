@@ -76,3 +76,27 @@ export const findManyByUserid = async (id) => {
         console.error(err);
     } 
 }
+
+export const updateChannel = async (
+    data
+) => {
+    try {
+        await prisma.channel.update({
+            where: {
+                id: parseInt(data.id,10),
+            },
+            data: {
+                tags: {
+                    deleteMany: {},
+                },
+            },
+        });
+        await prisma.channel.update({
+            where: { id: parseInt(data.id,10) },
+            data
+        });
+        return true;
+    } catch (err) {
+        console.error(err);
+    }
+};

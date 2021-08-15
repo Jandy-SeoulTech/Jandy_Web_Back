@@ -13,7 +13,7 @@ export const CreateChannel = async (req,res,next) => {
                 .send(resFormat.fail(401, "본인소유의 채널만 생성 가능"));
         }
         const response = await ChannelRepository.createChannel(
-            MakeOption(req.body,req.body.tag)
+            CreateOption(req.body)
         )
         //console.log(response);
         
@@ -59,14 +59,44 @@ export const GetChannelInfo = async (req,res,nex) => {
         }
         return res
                 .status(200)
-                . send(resFormat.successData(200,"채널 목록 가져오기 성공",data))
+                . send(resFormat.successData(200,"채널 정보 가져오기 성공",data))
     }catch(err){
         console.error(err);
         next(err);
     }
 }
+
+export const UpdateChannel = async(req,res,next) => {
+    try{
+       /* if (!(parseInt(req.body.userId, 10) === req.user.id)) {
+            return res
+                .status(401)
+                .send(resFormat.fail(401, "본인소유의 채널만 생성 가능"));
+        }*/
+        const response = await ChannelRepository.updateChannel(
+            UpdateOption(req.body)
+        )
+        if (!response) {
+            return res.status(500).send(resFormat.fail(500, "알수없는 에러"));
+        }
+
+        const data = await ChannelRepository.findById(parseInt(req.body.channelId),10);
+        if(!data){
+            return res
+                    .status(403)
+                    .send(resFormat.fail(403, "채널이 존재 하지 않습니다."));
+        }
+        return res
+                .status(200)
+                . send(resFormat.successData(200,"채널 수정 성공",data))
+    }catch(err){
+        console.error(err);
+        next(err);
+    }
+}
+
 // Option 생성
-const MakeOption = (bodydata, TagArray) => {
+const CreateOption = (bodydata) => {
     // DB에 맞추어 Option 설정
 
     const Option = {
@@ -74,7 +104,7 @@ const MakeOption = (bodydata, TagArray) => {
         name  : bodydata.name,
         introduce : bodydata.introduce,
         tags : {
-            create : ChangeObject(TagArray),
+            create : ChangeObject(bodydata.tag),
         },
         category : {
             create: 
@@ -98,7 +128,45 @@ const MakeOption = (bodydata, TagArray) => {
     };
     return Option;
 }
+const UpdateOption = (bodydata) => {
+    // DB에 맞추어 Option 설정
 
+    let Option = {
+        id : parseInt(bodydata.channelId,10),
+        updatedAt : now
+    };
+    if(bodydata.introduce){
+        Option.introduce = bodydata.introduce
+    }
+    if(bodydata.tag){
+        Option.tags = {
+          create : ChangeObject(bodydata.tag)
+        }
+    }
+    if(bodydata.category){
+        Option.category = {
+            update: 
+        { 
+            category: {
+                update : {
+                    name : bodydata.category,
+                    updatedAt : now
+                },
+            },
+            updatedAt : now,
+        },
+        } 
+    }
+    if(bodydata.channelImage){
+        Option.channelImage = {
+            update : {
+                src : bodydata.src,
+                updatedAt: now
+            }
+        }
+    }
+    return Option;
+}
 const ChangeObject = (arr) => {
     let ArrayChange = [];
     arr.map((v) => {
