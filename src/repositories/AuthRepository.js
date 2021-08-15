@@ -49,7 +49,6 @@ export const updateAuth = async (data) => {
 export const AuthGenerate = async (data) => {
     try {
         const exAuth = await findByEmail(data.email);
-        console.log(exAuth);
         if (exAuth) {
             return await updateAuth(data);
         } else {
