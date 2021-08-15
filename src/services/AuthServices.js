@@ -5,7 +5,7 @@ import passport from "passport";
 import resFormat from "../utils/resFormat";
 import nodemailer from "nodemailer";
 import mail from "../configs/email";
-
+import env from "../configs"
 export const SingUp = async (req, res, next) => {
     try {
         //nickname, email, password
@@ -150,27 +150,35 @@ export const GetUser = async (req, res, next) => {
 
 export const EmailAuth = async (req, res, next) => {
     try {
-        mail.message.to = req.body.email;
+        const RandomAuth = mail.RandomCode();
+        let message = {
+            from: env.MAIL_EMAIL,
+            to: req.body.email,
+            subject: '이메일 인증 요청 메일입니다.',
+            html: `<p> 다음 인증번호 6자리를 입력해주세요! <br> ${RandomAuth} </p>`
+        }
 
         let transporter = nodemailer.createTransport(mail.mailConfig);
-        let info = await transporter.sendMail(mail.message);
+        let info = await transporter.sendMail(message);
 
         console.log("Message sent: %s", info.messageId);
 
         if (info) {
             const data = {
                 email: req.body.email,
-                auth: mail.RandomAuth,
+                auth: RandomAuth,
             };
-            let response = await AuthRepository.AuthGenerate(data);
+            const response = await AuthRepository.AuthGenerate(data);
             setTimeout(() => {
                 AuthRepository.deleteAuth(data);
             }, 60000 * 3);
+            if(response){
             return res
                 .status(200)
                 .send(
-                    resFormat.successData(200, "인증번호 생성 성공", response)
+                    resFormat.success(200, "인증번호 생성 성공")
                 );
+            } return res.status(403).send(resFormat.fail(403,"인증번호 생성 실패"))
         } else {
             return res
                 .status(401)
