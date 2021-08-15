@@ -4,5 +4,7 @@ import * as AuthHandler from "../middlewares/AuthHandler";
 const Router = express.Router();
 
 Router.post("/",ChannelServices.CreateChannel);
+Router.get("/:userId",ChannelServices.GetChannelList);
+Router.get("/info/:channelId",ChannelServices.GetChannelInfo);
 
 export default Router;

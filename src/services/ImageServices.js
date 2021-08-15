@@ -20,7 +20,7 @@ const multerUpload = Multer({
     },
 });
 
-const bucket = "jandy_bucket";
+const bucket = GCPstorage.bucket(env.GCLOUD_STORAGE_BUCKET);
 
 //---above , multer setting ---
 
