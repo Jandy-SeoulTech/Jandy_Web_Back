@@ -1,33 +1,41 @@
 import * as UserRepository from "../repositories/UserRepository";
 import * as ProfileRepository from "../repositories/ProfileRepository";
+import * as FollowRepository from "../repositories/FollowRepository";
 import bcrypt from "bcrypt";
+import resFormat from "../utils/resFormat";
 import { dbNow } from "../utils/dayUtils";
 
 const now = dbNow();
-import resFormat from "../utils/resFormat";
 
 export const CreateProfile = async (req, res, next) => {
     try {
+        if (!(parseInt(req.body.userId, 10) === req.user.id)) {
+            return res
+                .status(401)
+                .send(resFormat.fail(401, "본인의 프로필만 생성 가능"));
+        }
+
         const exProfile = await ProfileRepository.fineByUserId(
             parseInt(req.body.userId, 10)
         );
+
         if (exProfile[0]) {
             return res
                 .status(403)
                 .send(resFormat.fail(403, "이미 프로필이 존재합니다."));
         }
-        //null 값이 들어온 경우 빈 문자열로 변환
-        req.body.welltalent = req.body.welltalent || "";
-        req.body.interesttalent = req.body.interesttalent || "";
 
-        const WellTalentArray = req.body.welltalent.split(",");
-        const InterestArray = req.body.interesttalent.split(",");
-
-        //유저 아이디로 프로필 생성∏
-
+        //유저 아이디로 프로필 생성
         const Response = await ProfileRepository.createProfile(
-            MakeOption(req.body, WellTalentArray, InterestArray, "create")
+            MakeOption(req.body, req.body.welltalent, req.body.interesttalent)
         );
+
+        if (!Response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "프로필 생성 실패"));
+        }
+
         const ProfileData = await ProfileRepository.findById(Response.id);
 
         res.status(200).send(
@@ -66,12 +74,6 @@ export const UpdateUserProfile = async (req, res, next) => {
                 .status(401)
                 .send(resFormat.fail(401, "자신의 프로필만 수정 가능합니다"));
         }
-        //nickname은 null을 허용하지 않음.
-        if (req.body.nickname === (undefined && null)) {
-            return res
-                .status(403)
-                .send(resFormat.fail(401, "닉네임값이 없습니다."));
-        }
 
         const exProfile = await ProfileRepository.fineByUserId(req.user.id);
 
@@ -86,13 +88,6 @@ export const UpdateUserProfile = async (req, res, next) => {
             nickname: req.body.nickname,
         });
 
-        //null값-> 빈 문자열 변경
-        req.body.welltalent = req.body.welltalent || "";
-        req.body.interesttalent = req.body.interesttalent || "";
-        //split 문자열 배열로 반환
-        const WellTalentArray = req.body.welltalent.split(",");
-        const InterestArray = req.body.interesttalent.split(",");
-
         //갯수가 동일한 department, introduce, image는 바로 업데이트 가능.
         //기존 welltalnet와 interesttalent는 삭제 후 재생성
         const Response = await ProfileRepository.updateProfile(
@@ -100,8 +95,8 @@ export const UpdateUserProfile = async (req, res, next) => {
             req.body.department,
             req.body.introduce,
             req.body.src,
-            ChangeObject(WellTalentArray),
-            ChangeObject(InterestArray)
+            ChangeObject(req.body.welltalent),
+            ChangeObject(req.body.interesttalent)
         );
 
         if (!Response) {
@@ -159,6 +154,108 @@ export const UpdatePassword = async (req, res, next) => {
     }
 };
 
+export const UserFollow = async (req, res, next) => {
+    try {
+        if (req.user.id === parseInt(req.body.followingId, 10)) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "스스로를 팔로우 할수 없습니다."));
+        }
+        const exUser = await UserRepository.findById(
+            parseInt(req.body.followingId, 10)
+        );
+        if (!exUser) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "없는 유저 팔로우 할 수 없음."));
+        }
+
+        const exFollow = await FollowRepository.findFollow(
+            req.user.id,
+            parseInt(req.body.followingId, 10)
+        );
+        if (exFollow) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "이미 팔로우 했습니다"));
+        }
+        const response = await UserRepository.Follow(
+            req.user.id,
+            parseInt(req.body.followingId, 10)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 팔로우 실패"));
+        }
+        const UserProfile = await UserRepository.findByIdWithProfile(
+            req.user.id
+        );
+
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "팔로우 성공", UserProfile));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const UserUnFollow = async (req, res, next) => {
+    try {
+        if (req.user.id === parseInt(req.body.followingId, 10)) {
+            return res
+                .status(403)
+                .send(
+                    resFormat.fail(403, "스스로를 팔로우 취소 할수 없습니다.")
+                );
+        }
+
+        const exUser = await UserRepository.findById(
+            parseInt(req.body.followingId, 10)
+        );
+
+        if (!exUser) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "없는 유저 팔로우 취소 할 수 없음."));
+        }
+
+        const exFollow = await FollowRepository.findFollow(
+            req.user.id,
+            parseInt(req.body.followingId, 10)
+        );
+
+        if (!exFollow) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "이미 팔로우관계가 아닙니다"));
+        }
+
+        const response = await UserRepository.unFollow(
+            req.user.id,
+            parseInt(req.body.followingId, 10)
+        );
+
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 팔로우 실패"));
+        }
+
+        const UserProfile = await UserRepository.findByIdWithProfile(
+            req.user.id
+        );
+
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "팔로우 취소 성공", UserProfile));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
 //옵션 생성 함수
 const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
     // DB data 옵션 설정.
@@ -189,7 +286,7 @@ const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
 };
 
 const ChangeObject = (arr) => {
-    if (arr[0] === "") return { contents: null, createdAt: now };
+    if (arr === null) return { contents: null, createdAt: now };
     let ArrayChange = [];
     arr.map((v) => {
         ArrayChange.push({ contents: v, createdAt: now });

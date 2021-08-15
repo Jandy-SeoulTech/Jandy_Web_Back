@@ -7,12 +7,8 @@ import resFormat from "../utils/resFormat";
 
 export const CreateChannel = async (req,res,next) => {
     try{
-
-        // Tag string 값 배열로 변환
-        const TagArray = req.body.tag.split(",");
-        
         const response = await ChannelRepository.createChannel(
-            MakeOption(req.body,TagArray,"create")
+            MakeOption(req.body,req.body.tag,"create")
         )
         console.log(response);
 
