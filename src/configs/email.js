@@ -11,7 +11,6 @@ const RandomCode = () => {
     return randomstring
   }
 
-const RandomAuth = RandomCode()
 
 const mailConfig = {
     service: 'Naver',
@@ -23,15 +22,9 @@ const mailConfig = {
     }
   }
   
-let message = {
-    from: env.MAIL_EMAIL,
-    to: null,
-    subject: '이메일 인증 요청 메일입니다.',
-    html: `<p> 다음 인증번호 6자리를 입력해주세요! <br> ${RandomAuth} </p>`
-}
+
 
 export default {
     mailConfig,
-    message,
-    RandomAuth,
+    RandomCode,
 }
