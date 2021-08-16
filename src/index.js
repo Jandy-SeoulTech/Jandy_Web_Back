@@ -12,6 +12,7 @@ import AuthController from "./controllers/AuthController";
 import ImageController from "./controllers/ImageController";
 import ProfileController from "./controllers/ProfileController";
 import OAuthController from "./controllers/OAuthController";
+import ChannelController from "./controllers/ChannelController";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/Auth", AuthController);
 app.use("/api/Oauth", OAuthController);
 app.use("/api/Image", ImageController);
 app.use("/api/Profile", ProfileController);
+app.use("/api/Channel", ChannelController);
 
 //404 handler
 app.use(ErrorHandler.routerHanlder);

@@ -65,6 +65,7 @@ export const deleteAuth = async (data) => {
         return await prisma.auth.delete({
             where: {
                 email: data.email,
+                auth: data.auth
             },
         });
     } catch (err) {
