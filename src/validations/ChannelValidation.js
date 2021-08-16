@@ -15,6 +15,9 @@ export const ChannelRequestValid = async (req, res, next) => {
     await check("name")
         .exists()
         .withMessage("name 존재하지 않습니다")
+        .isString()
+        .withMessage("name은 String 형식에 맞게 들어와야 합니다.")
+        .bail()
         .bail()
         .isLength({ max: 20 })
         .withMessage("20자 이내 작성 가능")
@@ -23,6 +26,9 @@ export const ChannelRequestValid = async (req, res, next) => {
         .exists()
         .withMessage("introduce가 존재하지 않습니다")
         .bail()
+        .isString()
+        .withMessage("introduce는 String 형식에 맞게 들어와야 합니다.")
+        .bail()
         .isLength({ max: 500 })
         .withMessage("500자 이내 작성 가능")
         .run(req);
@@ -30,6 +36,8 @@ export const ChannelRequestValid = async (req, res, next) => {
         .exists()
         .withMessage("category가 존재하지 않습니다")
         .bail()
+        .isString()
+        .withMessage("category는 String 형식에 맞게 들어와야 합니다.")
         .run(req);        
     await check("tag")
         .exists()
