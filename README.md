@@ -1,3 +1,7 @@
+<p align="center">
+<img src="https://user-images.githubusercontent.com/24623403/129664202-0ac9857f-32f0-416e-915b-2254c4661bbc.png"/>
+</p>
+
 # 재능 공유 플랫폼 Upgle
 ## 서비스 설명
 > 자신이 잘하는 분야를 화상 채팅을 이용하여 배우고 싶은 사람들과 실시간으로 인터랙션 하며 무료로 공유할 수 있는 플랫폼입니다.   
@@ -28,3 +32,35 @@
 - 클라우드 서버 : Google Cloud Platform
 - 채팅 : Socket.io
 
+## 👨‍👩‍👧‍👦 팀 멤버(Team Information)
+<table>
+   <tr>
+      <td colspan="2" align="center"><strong>Front-End Developer</strong></td>
+      <td colspan="2" align="center"><strong>Back-End Developer</strong></td>
+      <td colspan="1" align="center"><strong>Product Manager</strong></td>
+      <td colspan="1" align="center"><strong>Product Designer</strong></td>
+
+   </tr>
+  <tr>
+    <td align="center">
+    <a href="https://github.com/md2eoseo"><img src="https://avatars.githubusercontent.com/u/8054085?v=4" width="150px;" alt="김성태"/><br /><sub><b>김성태</b></sub></a><br />
+    </td>
+     <td align="center">
+        <a href="https://github.com/sjsjsj1246"><img src="https://avatars.githubusercontent.com/u/24623403?v=4" width="150px" alt="황인서"/><br /><sub><b>황인서</b></sub></a>
+     </td>
+     <td align="center">
+        <a href="https://github.com/InHyeok-J"><img src="https://avatars.githubusercontent.com/u/28949213?v=4" width="150px" alt="조인혁"/><br /><sub><b>조인혁</b></sub></a>
+     </td>
+     <td align="center">
+        <a href="https://github.com/iqeq1945"><img src="https://avatars.githubusercontent.com/u/50164778?v=4" width="150px" alt="홍성웅"/><br /><sub><b>홍성웅</b></sub></a>
+     </td>
+     <td align="center">
+        <a href="https://github.com/KeisLuv5991"><img src="https://avatars.githubusercontent.com/u/38745815?v=4" width="150px" alt="최민준"/><br /><sub><b>최민준</b></sub></a>
+     </td>
+     <td align="center">
+        <a href="##"><img src="https://avatars.githubusercontent.com/u/50164778?v=4" width="150px" alt="김연수"/><br /><sub><b>김연수</b></sub></a>
+     </td>
+  <tr>
+    
+
+</table>
