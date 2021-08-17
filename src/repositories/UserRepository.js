@@ -205,3 +205,47 @@ export const unFollow = async (id, followingId) => {
         console.error(err);
     }
 };
+
+export const LikeOnChannel = async (userId, channelId) => {
+    try{
+        return await prisma.user.update({
+            where : {
+                id : userId
+            },
+            data : {
+                channellike :{
+                    create : {
+                        channelId,
+                        createdAt : now
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const unLikeOnChannel = async (userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where: {
+                id : userId
+            },
+            data : {
+                channellike : {
+                    delete : {
+                        channel_like : {
+                            userId,
+                            channelId
+                        }
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}

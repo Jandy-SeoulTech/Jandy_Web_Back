@@ -26,5 +26,16 @@ Router.patch(
     ChannelValidation.UpdateRequestValid, 
     ChannelServices.UpdateChannel
 );
-
+Router.post(
+    "/like",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.LikeRequestValid,
+    ChannelServices.LikeChannel
+)
+Router.post(
+    "/unlike",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.LikeRequestValid,
+    ChannelServices.UnLikeChannel
+)
 export default Router;
