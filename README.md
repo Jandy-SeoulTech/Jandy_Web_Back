@@ -58,7 +58,7 @@
         <a href="https://github.com/KeisLuv5991"><img src="https://avatars.githubusercontent.com/u/38745815?v=4" width="150px" alt="최민준"/><br /><sub><b>최민준</b></sub></a>
      </td>
      <td align="center">
-        <a href="##"><img src="https://avatars.githubusercontent.com/u/50164778?v=4" width="150px" alt="김연수"/><br /><sub><b>김연수</b></sub></a>
+        <a href="##"><img src="https://user-images.githubusercontent.com/28949213/129733334-66bf8833-ce33-4e1a-9503-d01f700635af.png" width="150px" alt="김연수"/><br /><sub><b>김연수</b></sub></a>
      </td>
   <tr>
     
