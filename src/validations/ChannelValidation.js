@@ -4,7 +4,7 @@ import resFormat from "../utils/resFormat";
 
 //요청 단위 컨벤션 : [요청네임]ReqeustValid
 
-export const ChannelRequestValid = async (req, res, next) => {
+export const CreateRequestValid = async (req, res, next) => {
     await check("userId")
         .notEmpty()
         .withMessage("userId가 존재하지 않습니다.")
@@ -63,6 +63,17 @@ export const ChannelRequestValid = async (req, res, next) => {
     validationFunction(req, res, next);
 };
 
+export const UpdateRequestValid = async (req,res,next) => {
+    await check("channelId")
+        .exists()
+        .withMessage("channelId가 존재하지 않습니다.")
+        .bail()
+        .isNumeric()
+        .withMessage("숫자 형식이어야 합니다.")
+        .run(req);
+    CreateRequestValid(req,res,next);
+}
+
 export const GetListRequestValid = async (req, res, next) => {
     await check("userId")
         .exists()
@@ -75,9 +86,9 @@ export const GetListRequestValid = async (req, res, next) => {
 };
 
 export const GetInfoRequestValid = async (req, res, next) => {
-    await check("Channeld")
+    await check("channelId")
         .exists()
-        .withMessage("ChannelId가 존재하지 않습니다.")
+        .withMessage("channelId가 존재하지 않습니다.")
         .bail()
         .isNumeric()
         .withMessage("숫자 형식이어야 합니다.")

@@ -7,7 +7,7 @@ const Router = express.Router();
 Router.post(
     "/",
     AuthHandler.isLoggedIn,
-    ChannelValidation.ChannelRequestValid,
+    ChannelValidation.CreateRequestValid,
     ChannelServices.CreateChannel
 );
 Router.get(
@@ -23,7 +23,8 @@ Router.get(
 Router.patch(
     "/",
     AuthHandler.isLoggedIn,
-    ChannelValidation.ChannelRequestValid, 
-    ChannelServices.UpdateChannel);
+    ChannelValidation.UpdateRequestValid, 
+    ChannelServices.UpdateChannel
+);
 
 export default Router;
