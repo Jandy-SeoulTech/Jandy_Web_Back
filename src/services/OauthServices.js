@@ -26,6 +26,7 @@ export const OAuthLogin = (req,res,next) => {
 export const OAuthNickname = async (req, res, next) => {
     try {
         const exUser = await UserRepository.findByEmail(req.user.email);
+        console.log(exUser);
         if (!exUser) {
             return res
                 .status(403)

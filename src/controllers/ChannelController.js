@@ -1,10 +1,30 @@
 import express from "express";
 import * as ChannelServices from "../services/ChannelServices";
 import * as AuthHandler from "../middlewares/AuthHandler";
+import * as ChannelValidation from "../validations/ChannelValidation";
 const Router = express.Router();
 
-Router.post("/",ChannelServices.CreateChannel);
-Router.get("/:userId",ChannelServices.GetChannelList);
-Router.get("/info/:channelId",ChannelServices.GetChannelInfo);
-Router.patch("/", ChannelServices.UpdateChannel);
+Router.post(
+    "/",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.CreateRequestValid,
+    ChannelServices.CreateChannel
+);
+Router.get(
+    "/:userId",
+    ChannelValidation.GetListRequestValid,
+    ChannelServices.GetChannelList
+);
+Router.get(
+    "/info/:channelId",
+    ChannelValidation.GetInfoRequestValid,
+    ChannelServices.GetChannelInfo
+);
+Router.patch(
+    "/",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.UpdateRequestValid, 
+    ChannelServices.UpdateChannel
+);
+
 export default Router;
