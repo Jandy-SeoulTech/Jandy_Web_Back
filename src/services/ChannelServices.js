@@ -68,11 +68,11 @@ export const GetChannelInfo = async (req,res,nex) => {
 
 export const UpdateChannel = async(req,res,next) => {
     try{
-       /* if (!(parseInt(req.body.userId, 10) === req.user.id)) {
+        if (!(parseInt(req.body.userId, 10) === req.user.id)) {
             return res
                 .status(401)
                 .send(resFormat.fail(401, "본인소유의 채널만 수정 가능"));
-        }*/
+        }
         const response = await ChannelRepository.updateChannel(
             UpdateOption(req.body)
         )
