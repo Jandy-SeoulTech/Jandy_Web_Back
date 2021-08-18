@@ -95,7 +95,7 @@ model Follow {
   createdAt   DateTime
   updatedAt   DateTime?
 
-  @@unique([followerId, followingId], name: "followKey")
+  @@id([followerId, followingId])
   @@map("follow")
 }
 

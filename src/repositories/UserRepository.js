@@ -215,7 +215,11 @@ export const LikeOnChannel = async (userId, channelId) => {
             data : {
                 channellike :{
                     create : {
-                        channelId,
+                        channel : {
+                            connect : {
+                                id: channelId
+                            } 
+                        },
                         createdAt : now
                     }
                 }
@@ -235,12 +239,10 @@ export const unLikeOnChannel = async (userId,channelId) => {
             },
             data : {
                 channellike : {
-                    delete : {
-                        channel_like : {
-                            userId,
-                            channelId
-                        }
-                    }
+                   deleteMany : {
+                       userId,
+                       channelId
+                   }
                 }
             }
         });

@@ -36,6 +36,11 @@ export const findById = async (id) =>{
                     include : {
                         tag : true
                     }
+                },
+                channellike : {
+                    select : {
+                        userId : true,
+                    }
                 }
             }
         });
@@ -69,7 +74,12 @@ export const findManyByUserid = async (id) => {
                     include : {
                         tag : true
                     }
-                }
+                },
+                channellike : {
+                    select : {
+                        userId : true
+                    }
+                },
             }
         })
     } catch(err){

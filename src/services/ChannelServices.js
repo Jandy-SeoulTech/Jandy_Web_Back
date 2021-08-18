@@ -98,13 +98,13 @@ export const UpdateChannel = async(req,res,next) => {
 
 export const LikeChannel = async (req, res, next)=>{
     try{
-        const response = await UserRepository.LikeOnChannel(req.user.id,req.body.channelId);
+        const response = await UserRepository.LikeOnChannel(req.user.id,parseInt(req.body.channelId,10));
         if(!response){
             return res
                 .status(500)
                 .send(resFormat.fail(500, "알수 없는 에러로 좋아요 실패"));
         }
-        const data = await ChannelRepository.findById(req.body.channelId);
+        const data = await ChannelRepository.findById(parseInt(req.body.channelId,10));
         return res
             .status(200)
             .send(resFormat.successData(200,"좋아요 성공",data));
@@ -117,13 +117,13 @@ export const LikeChannel = async (req, res, next)=>{
 
 export const UnLikeChannel = async (req, res, next)=>{
     try{
-        const response = await UserRepository.unLikeOnChannel(req.user.id,req.body.channelId);
+        const response = await UserRepository.unLikeOnChannel(req.user.id,parseInt(req.body.channelId,10));
         if(!response){
             return res
                 .status(500)
                 .send(resFormat.fail(500, "알수 없는 에러로 좋아요 취소 실패"));
         }
-        const data = await ChannelRepository.findById(req.body.channelId);
+        const data = await ChannelRepository.findById(parseInt(req.body.channelId,10));
         return res
             .status(200)
             .send(resFormat.successData(200,"좋아요 취소 성공",data));
