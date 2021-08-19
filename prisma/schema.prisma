@@ -12,7 +12,7 @@ model User {
   id            Int       @id @default(autoincrement())
   email         String        @unique @db.VarChar(30)
   password      String?       @db.VarChar(200)
-  nickname      String        @unique @db.VarChar(30)
+  nickname      String?        @unique @db.VarChar(30)
   createdAt     DateTime
   updatedAt     DateTime?
   provider      String?
@@ -95,7 +95,7 @@ model Follow {
   createdAt   DateTime
   updatedAt   DateTime?
 
-  @@id([followerId, followingId])
+  @@unique([followerId, followingId], name: "followKey")
   @@map("follow")
 }
 

@@ -239,10 +239,55 @@ export const unLikeOnChannel = async (userId,channelId) => {
             },
             data : {
                 channellike : {
-                   deleteMany : {
-                       userId,
-                       channelId
-                   }
+                    deleteMany : {
+                        userId,
+                        channelId
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const EnterChannel = async (userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where :{
+                id : userId
+            },
+            data : {
+                participants: {
+                    create :{
+                        channel : {
+                            connect : {
+                                id : channelId
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const ExitChannel = async (userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where: {
+                id : userId
+            },
+            data : {
+                participants : {
+                    deleteMany : {
+                        userId,
+                        channelId
+                    }
                 }
             }
         });

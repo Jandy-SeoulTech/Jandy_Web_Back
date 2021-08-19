@@ -26,7 +26,11 @@ export const findById = async (id) =>{
                         nickname: true
                     }
                 },
-                participants : true,
+                participants : {
+                    select : {
+                        userId : true
+                    }
+                },
                 category : {
                     include : {
                         category :true,
@@ -64,7 +68,11 @@ export const findManyByUserid = async (id) => {
                         nickname: true
                     }
                 },
-                participants : true,
+                participants : {
+                    select : {
+                        userId : true
+                    }
+                },
                 category : {
                     include : {
                         category :true,

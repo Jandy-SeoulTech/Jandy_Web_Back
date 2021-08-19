@@ -31,11 +31,26 @@ Router.post(
     AuthHandler.isLoggedIn,
     ChannelValidation.LikeRequestValid,
     ChannelServices.LikeChannel
-)
+);
 Router.post(
     "/unlike",
     AuthHandler.isLoggedIn,
     ChannelValidation.LikeRequestValid,
     ChannelServices.UnLikeChannel
+);
+
+Router.post(
+    "/enter",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.EnterRequestValid,
+    ChannelServices.EnterChannel
 )
+
+Router.post(
+    "/exit",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.EnterRequestValid,
+    ChannelServices.ExitChannl
+);
+
 export default Router;
