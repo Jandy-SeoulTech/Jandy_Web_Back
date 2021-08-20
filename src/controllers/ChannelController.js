@@ -50,13 +50,20 @@ Router.post(
     "/exit",
     AuthHandler.isLoggedIn,
     ChannelValidation.EnterRequestValid,
-    ChannelServices.ExitChannl
+    ChannelServices.ExitChannel
 );
 
 Router.post(
     "/pass",
     AuthHandler.isLoggedIn,
-    ChannelValidation.PassRequestValid,
+    ChannelValidation.ManageRequestValid,
     ChannelServices.ChangeAdmin
+);
+
+Router.post(
+    "/ban",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.ManageRequestValid,
+    ChannelServices.Ban
 );
 export default Router;

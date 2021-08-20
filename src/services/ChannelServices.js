@@ -1,4 +1,5 @@
 import * as ChannelRepository from "../repositories/ChannelRepository";
+import * as BanRepository from "../repositories/BanRepository";
 import * as UserRepository from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { dbNow } from "../utils/dayUtils";
@@ -141,6 +142,12 @@ export const EnterChannel = async (req,res,next) => {
                 .status(401)
                 .send(resFormat.fail(401, "본인소유의 채널은 참여하기 불가능"));
         }
+        const exBan = await BanRepository.findBan(req.user.id,parseInt(req.body.channelId,10));
+        if (exBan) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "추방 당한 채널에 들어갈 수 없습니다"));
+        }
         const response = await UserRepository.EnterChannel(req.user.id,parseInt(req.body.channelId,10));
         if(!response){
             return res
@@ -158,7 +165,7 @@ export const EnterChannel = async (req,res,next) => {
     }
 }
 
-export const ExitChannl = async (req, res, next)=>{
+export const ExitChannel = async (req, res, next)=>{
     try{
         if((parseInt(req.body.adminId, 10) === req.user.id)){
             return res
@@ -199,6 +206,30 @@ export const ChangeAdmin = async (req, res, next) => {
         return res
             .status(200)
             .send(resFormat.successData(200,"관리자 넘겨주기 성공",data));
+    }
+    catch(err){
+        console.error(err)
+        next(err);
+    }
+}
+
+export const Ban = async (req, res, next) => {
+    try{
+        if (!(parseInt(req.body.adminId, 10) === req.user.id)) {
+            return res
+                .status(401)
+                .send(resFormat.fail(401, "본인소유의 채널만 접근 가능"));
+        }
+        const response = await UserRepository.Ban(parseInt(req.body.userId,10),parseInt(req.body.channelId,10));
+        if(!response){
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 추방하기 실패"));
+        }
+        const data = await ChannelRepository.findById(parseInt(req.body.channelId,10));
+        return res
+            .status(200)
+            .send(resFormat.successData(200,"추방하기 성공",data));
     }
     catch(err){
         console.error(err)

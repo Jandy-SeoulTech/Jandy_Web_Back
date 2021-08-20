@@ -45,6 +45,11 @@ export const findById = async (id) =>{
                     select : {
                         userId : true,
                     }
+                },
+                ban : {
+                    select : {
+                        userId : true,
+                    }
                 }
             }
         });

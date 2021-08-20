@@ -323,3 +323,34 @@ export const ChangeAdmin = async(userId,channelId) => {
         console.error(err);
     }
 }
+
+export const Ban = async(userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where: {
+                id : userId
+            },
+            data : {
+                ban: {
+                    create :{
+                        channel : {
+                            connect : {
+                                id : channelId
+                            }
+                        },
+                        createdAt : now
+                    }
+                },    
+                participants : {
+                    deleteMany : {
+                        userId,
+                        channelId
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}

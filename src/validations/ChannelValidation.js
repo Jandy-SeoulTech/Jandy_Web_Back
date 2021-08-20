@@ -124,7 +124,7 @@ export const EnterRequestValid = async (req, res, next) => {
     validationFunction(req, res, next);
 }
 
-export const PassRequestValid = async (req, res, next) => {
+export const ManageRequestValid = async (req, res, next) => {
     await check("channelId")
         .exists()
         .withMessage("channelId가 존재하지 않습니다.")
