@@ -181,6 +181,31 @@ export const ExitChannl = async (req, res, next)=>{
         next(err);
     }
 }
+
+export const ChangeAdmin = async (req, res, next) => {
+    try{
+        if (!(parseInt(req.body.adminId, 10) === req.user.id)) {
+            return res
+                .status(401)
+                .send(resFormat.fail(401, "본인소유의 채널만 접근 가능"));
+        }
+        const response = await UserRepository.ChangeAdmin(parseInt(req.body.userId,10),parseInt(req.body.channelId,10));
+        if(!response){
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 관리자 넘겨주기 실패"));
+        }
+        const data = await ChannelRepository.findById(parseInt(req.body.channelId,10));
+        return res
+            .status(200)
+            .send(resFormat.successData(200,"관리자 넘겨주기 성공",data));
+    }
+    catch(err){
+        console.error(err)
+        next(err);
+    }
+}
+
 // Option 생성
 const CreateOption = (bodydata) => {
     // DB에 맞추어 Option 설정

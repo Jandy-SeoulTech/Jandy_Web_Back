@@ -123,3 +123,28 @@ export const EnterRequestValid = async (req, res, next) => {
         .run(req);
     validationFunction(req, res, next);
 }
+
+export const PassRequestValid = async (req, res, next) => {
+    await check("channelId")
+        .exists()
+        .withMessage("channelId가 존재하지 않습니다.")
+        .bail()
+        .isNumeric()
+        .withMessage("숫자 형식이어야 합니다.")
+        .run(req);
+    await check("adminId")
+        .exists()
+        .withMessage("adminId가 존재하지 않습니다.")
+        .bail()
+        .isNumeric()
+        .withMessage("숫자 형식이어야 합니다.")
+        .run(req);
+    await check("userId")
+        .exists()
+        .withMessage("userId가 존재하지 않습니다.")
+        .bail()
+        .isNumeric()
+        .withMessage("숫자 형식이어야 합니다.")
+        .run(req);
+    validationFunction(req, res, next);
+}

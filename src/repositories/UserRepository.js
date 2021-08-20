@@ -296,3 +296,30 @@ export const ExitChannel = async (userId,channelId) => {
         console.error(err);
     }
 }
+
+export const ChangeAdmin = async(userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where: {
+                id : userId
+            },
+            data : {
+                admin: {
+                    connect : {
+                        id : channelId
+                    }
+                }
+                ,    
+                participants : {
+                    deleteMany : {
+                        userId,
+                        channelId
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}

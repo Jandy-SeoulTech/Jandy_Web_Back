@@ -53,4 +53,10 @@ Router.post(
     ChannelServices.ExitChannl
 );
 
+Router.post(
+    "/pass",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.PassRequestValid,
+    ChannelServices.ChangeAdmin
+);
 export default Router;
