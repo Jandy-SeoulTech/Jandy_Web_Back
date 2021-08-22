@@ -12,7 +12,7 @@ model User {
   id            Int       @id @default(autoincrement())
   email         String        @unique @db.VarChar(30)
   password      String?       @db.VarChar(200)
-  nickname      String        @unique @db.VarChar(30)
+  nickname      String?        @unique @db.VarChar(30)
   createdAt     DateTime
   updatedAt     DateTime?
   provider      String?
@@ -22,7 +22,7 @@ model User {
   admin         Channel[]     @relation("admin")
   participants  Participant[]  @relation("Join")
   channellike   ChannelLike[]
-
+  ban           Ban[]         @relation("ban")
   @@map(name: "users")
 }
 
@@ -120,6 +120,7 @@ model Channel {
   tags            ChannelTag[]
   category        ChannelCategory?
   channellike     ChannelLike[]
+  ban             Ban[]    
   createdAt       DateTime
   updatedAt       DateTime?
 
@@ -183,4 +184,16 @@ model ChannelLike {
 
   @@id([userId,channelId])
   @@map("channel_like")
+}
+
+model Ban {
+  user            User      @relation("ban",fields:[userId], references: [id])
+  userId          Int
+  channel         Channel   @relation(fields: [channelId],references:[id])
+  channelId       Int
+  createdAt       DateTime
+  updatedAt       DateTime?
+
+  @@unique([userId,channelId], name: "banKey")
+  @@map("ban")
 }

@@ -26,5 +26,44 @@ Router.patch(
     ChannelValidation.UpdateRequestValid, 
     ChannelServices.UpdateChannel
 );
+Router.post(
+    "/like",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.LikeRequestValid,
+    ChannelServices.LikeChannel
+);
+Router.post(
+    "/unlike",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.LikeRequestValid,
+    ChannelServices.UnLikeChannel
+);
 
+Router.post(
+    "/enter",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.EnterRequestValid,
+    ChannelServices.EnterChannel
+)
+
+Router.post(
+    "/exit",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.EnterRequestValid,
+    ChannelServices.ExitChannel
+);
+
+Router.post(
+    "/pass",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.ManageRequestValid,
+    ChannelServices.ChangeAdmin
+);
+
+Router.post(
+    "/ban",
+    AuthHandler.isLoggedIn,
+    ChannelValidation.ManageRequestValid,
+    ChannelServices.Ban
+);
 export default Router;

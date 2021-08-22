@@ -205,3 +205,152 @@ export const unFollow = async (id, followingId) => {
         console.error(err);
     }
 };
+
+export const LikeOnChannel = async (userId, channelId) => {
+    try{
+        return await prisma.user.update({
+            where : {
+                id : userId
+            },
+            data : {
+                channellike :{
+                    create : {
+                        channel : {
+                            connect : {
+                                id: channelId
+                            } 
+                        },
+                        createdAt : now
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const unLikeOnChannel = async (userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where: {
+                id : userId
+            },
+            data : {
+                channellike : {
+                    deleteMany : {
+                        userId,
+                        channelId
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const EnterChannel = async (userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where :{
+                id : userId
+            },
+            data : {
+                participants: {
+                    create :{
+                        channel : {
+                            connect : {
+                                id : channelId
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const ExitChannel = async (userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where: {
+                id : userId
+            },
+            data : {
+                participants : {
+                    deleteMany : {
+                        userId,
+                        channelId
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const ChangeAdmin = async(userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where: {
+                id : userId
+            },
+            data : {
+                admin: {
+                    connect : {
+                        id : channelId
+                    }
+                }
+                ,    
+                participants : {
+                    deleteMany : {
+                        userId,
+                        channelId
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const Ban = async(userId,channelId) => {
+    try{
+        return await prisma.user.update({
+            where: {
+                id : userId
+            },
+            data : {
+                ban: {
+                    create :{
+                        channel : {
+                            connect : {
+                                id : channelId
+                            }
+                        },
+                        createdAt : now
+                    }
+                },    
+                participants : {
+                    deleteMany : {
+                        userId,
+                        channelId
+                    }
+                }
+            }
+        });
+    }
+    catch(err){
+        console.error(err);
+    }
+}

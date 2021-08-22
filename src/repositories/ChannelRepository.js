@@ -26,7 +26,11 @@ export const findById = async (id) =>{
                         nickname: true
                     }
                 },
-                participants : true,
+                participants : {
+                    select : {
+                        userId : true
+                    }
+                },
                 category : {
                     include : {
                         category :true,
@@ -35,6 +39,16 @@ export const findById = async (id) =>{
                 tags : {
                     include : {
                         tag : true
+                    }
+                },
+                channellike : {
+                    select : {
+                        userId : true,
+                    }
+                },
+                ban : {
+                    select : {
+                        userId : true,
                     }
                 }
             }
@@ -59,7 +73,11 @@ export const findManyByUserid = async (id) => {
                         nickname: true
                     }
                 },
-                participants : true,
+                participants : {
+                    select : {
+                        userId : true
+                    }
+                },
                 category : {
                     include : {
                         category :true,
@@ -69,7 +87,12 @@ export const findManyByUserid = async (id) => {
                     include : {
                         tag : true
                     }
-                }
+                },
+                channellike : {
+                    select : {
+                        userId : true
+                    }
+                },
             }
         })
     } catch(err){
