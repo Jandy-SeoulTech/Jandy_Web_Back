@@ -1,5 +1,6 @@
 import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as BanRepository from "../repositories/BanRepository";
+import * as LikeRepository from "../repositories/LikeReposiotry"
 import * as UserRepository from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { dbNow } from "../utils/dayUtils";
@@ -99,6 +100,12 @@ export const UpdateChannel = async(req,res,next) => {
 
 export const LikeChannel = async (req, res, next)=>{
     try{
+        const exLike = await LikeRepository.findLike(req.user.id,parseInt(req.body.channelId,10));
+        if (exLike) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "이미 좋아요를 하였습니다."));
+        }
         const response = await UserRepository.LikeOnChannel(req.user.id,parseInt(req.body.channelId,10));
         if(!response){
             return res
@@ -118,6 +125,12 @@ export const LikeChannel = async (req, res, next)=>{
 
 export const UnLikeChannel = async (req, res, next)=>{
     try{
+        const exLike = await LikeRepository.findLike(req.user.id,parseInt(req.body.channelId,10));
+        if (!exLike) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "좋아요 상태가 아닙니다."));
+        }
         const response = await UserRepository.unLikeOnChannel(req.user.id,parseInt(req.body.channelId,10));
         if(!response){
             return res
