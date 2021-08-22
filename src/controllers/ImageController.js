@@ -7,13 +7,7 @@ const Router = express.Router();
 Router.post(
     "/upload",
     ImageServices.useMulter.single("files"),
-    ImageServices.ProfileUpload
+    ImageServices.SingleImageUpload
 );
-
-Router.post(
-    "/upload/channel",
-    ImageServices.useMulter.single("files"),
-    ImageServices.ChannelUpload
-)
 
 export default Router;
