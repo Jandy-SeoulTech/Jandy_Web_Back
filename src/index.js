@@ -8,6 +8,7 @@ import env from "./configs";
 import passport from "passport";
 import passportConfig from "./configs/passport";
 import * as ErrorHandler from "./middlewares/ErrorHandler";
+import Socket from "./socket";
 import AuthController from "./controllers/AuthController";
 import ImageController from "./controllers/ImageController";
 import ProfileController from "./controllers/ProfileController";
@@ -35,6 +36,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //router
+app.get("/", (req, res, next) => {
+    return res.send("Hello world!");
+});
 app.use("/api/Auth", AuthController);
 app.use("/api/Oauth", OAuthController);
 app.use("/api/Image", ImageController);
@@ -49,6 +53,8 @@ app.use(ErrorHandler.logHandler);
 //errorhandler
 app.use(ErrorHandler.errorHandler);
 
-app.listen(env.PORT, () => {
+const server = app.listen(env.PORT, () => {
     console.log(env.PORT, "서버시작");
 });
+
+Socket(server, app);
