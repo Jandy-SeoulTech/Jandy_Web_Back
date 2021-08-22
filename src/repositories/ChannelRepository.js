@@ -196,3 +196,33 @@ export const createChat = async (id, channelId, contents) => {
         console.error(err);
     }
 };
+
+export const ChatMessage = async (channelId) => {
+    try {
+        return await prisma.chatMessage.findMany({
+            where: {
+                channelId,
+            },
+            include: {
+                sendUser: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

@@ -4,7 +4,7 @@ import resFormat from "../utils/resFormat";
 
 export const MainChatLog = async (req, res, next) => {
     try {
-        const response = await ChannelRepository.findChatLogById(
+        const response = await ChannelRepository.ChatMessage(
             parseInt(req.params.channelId)
         );
         if (!response) {
