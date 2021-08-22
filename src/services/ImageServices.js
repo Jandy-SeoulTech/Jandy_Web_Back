@@ -52,25 +52,7 @@ const uploadIamge = (file) =>
         blobStream.end(buffer);
     });
 
-export const ProfileUpload = async (req, res, next) => {
-    try {
-        //single file
-        if (!req.file) {
-            return res
-                .status(403)
-                .send(resFormat.fail(403, "파일을 업로드해주세요"));
-        }
-        const imageUrl = await uploadIamge(req.file);
-        res.status(200).send(
-            resFormat.successData(200, "이미지 업로드 성공", imageUrl)
-        );
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-};
-
-export const ChannelUpload = async (req, res, next) => {
+export const SingleImageUpload = async (req, res, next) => {
     try {
         //single file
         if (!req.file) {

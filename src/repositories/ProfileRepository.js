@@ -64,10 +64,10 @@ export const updateProfile = async (
                         updatedAt: now,
                     },
                 },
-                welltalent: {
+                wellTalent: {
                     deleteMany: {},
                 },
-                interesttalent: {
+                interestTalent: {
                     deleteMany: {},
                 },
             },
@@ -75,12 +75,12 @@ export const updateProfile = async (
         await prisma.profile.update({
             where: { id },
             data: {
-                welltalent: {
+                wellTalent: {
                     createMany: {
                         data: WellTalentOption,
                     },
                 },
-                interesttalent: {
+                interestTalent: {
                     createMany: {
                         data: InterestTalentOption,
                     },

@@ -26,16 +26,16 @@ export const CreateRequestValid = async (req, res, next) => {
         .isLength({ max: 300 })
         .withMessage("300자 이내 작성 가능")
         .run(req);
-    await check("welltalent")
+    await check("wellTalent")
         .exists()
-        .withMessage("welltalent가 존재하지 않습니다.")
+        .withMessage("wellTalent가 존재하지 않습니다.")
         .if((value, { req }) => value !== null)
         .isArray()
         .withMessage("배열만 가능합니다.")
         .run(req);
-    await check("interesttalent")
+    await check("interestTalent")
         .exists()
-        .withMessage("interesttalent가 존재하지 않습니다")
+        .withMessage("interestTalent가 존재하지 않습니다")
         .if((value, { req }) => value !== null)
         .isArray()
         .withMessage("배열만 가능합니다.")
@@ -46,7 +46,7 @@ export const CreateRequestValid = async (req, res, next) => {
         .run(req);
 
     if (!(req.body.welltalent === null)) {
-        await check("welltalent.*")
+        await check("wellTalent.*")
             .trim()
             .notEmpty()
             .withMessage("값이 없습니다.")
@@ -55,7 +55,7 @@ export const CreateRequestValid = async (req, res, next) => {
             .run(req);
     }
     if (!(req.body.interesttalent === null)) {
-        await check("interesttalent.*")
+        await check("interestTalent.*")
             .trim()
             .notEmpty()
             .withMessage("값이 없습니다.")
