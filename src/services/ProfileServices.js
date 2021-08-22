@@ -27,7 +27,7 @@ export const CreateProfile = async (req, res, next) => {
 
         //유저 아이디로 프로필 생성
         const Response = await ProfileRepository.createProfile(
-            MakeOption(req.body, req.body.welltalent, req.body.interesttalent)
+            MakeOption(req.body, req.body.wellTalent, req.body.interestTalent)
         );
 
         if (!Response) {
@@ -100,8 +100,8 @@ export const UpdateUserProfile = async (req, res, next) => {
             req.body.department,
             req.body.introduce,
             req.body.src,
-            ChangeObject(req.body.welltalent),
-            ChangeObject(req.body.interesttalent)
+            ChangeObject(req.body.wellTalent),
+            ChangeObject(req.body.interestTalent)
         );
 
         if (!Response) {
@@ -261,6 +261,43 @@ export const UserUnFollow = async (req, res, next) => {
     }
 };
 
+export const FollowerList = async (req, res) => {
+    try {
+        const response = await UserRepository.findFollowerListById(
+            parseInt(req.params.userId)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "팔로워 리스트 조회 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "팔로워 리스트", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const FollowingList = async (req, res, next) => {
+    try {
+        const response = await UserRepository.findFollowingListById(
+            parseInt(req.params.userId)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "팔로윙 리스트 조회 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "팔로윙 리스트", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
 //옵션 생성 함수
 const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
     // DB data 옵션 설정.
@@ -269,12 +306,12 @@ const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
         department: bodydata.department,
         introduce: bodydata.introduce,
         createdAt: now,
-        welltalent: {
+        wellTalent: {
             createMany: {
                 data: ChangeObject(WellTalentArray),
             },
         },
-        interesttalent: {
+        interestTalent: {
             createMany: {
                 data: ChangeObject(InterestArray),
             },

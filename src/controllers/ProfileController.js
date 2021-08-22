@@ -46,4 +46,16 @@ Router.post(
     ProfileValidation.FollowRequestValid,
     ProfileServices.UserUnFollow
 );
+Router.get(
+    "/followerlist/:userId",
+    AuthHandler.isLoggedIn,
+    ProfileValidation.GetRequestValid,
+    ProfileServices.FollowerList
+);
+Router.get(
+    "/followinglist/:userId",
+    AuthHandler.isLoggedIn,
+    ProfileValidation.GetRequestValid,
+    ProfileServices.FollowingList
+);
 export default Router;

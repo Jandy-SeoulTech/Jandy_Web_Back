@@ -9,20 +9,20 @@ generator client {
 
 model User {
 
-  id            Int       @id @default(autoincrement())
-  email         String        @unique @db.VarChar(30)
-  password      String?       @db.VarChar(200)
-  nickname      String?        @unique @db.VarChar(30)
-  createdAt     DateTime
-  updatedAt     DateTime?
-  provider      String?
-  followers     Follow[]      @relation("Follower")
-  followings    Follow[]      @relation("Following")
-  profile       Profile?
-  admin         Channel[]     @relation("admin")
-  participants  Participant[]  @relation("Join")
-  channellike   ChannelLike[]
-  ban           Ban[]         @relation("ban")
+  id           Int           @id @default(autoincrement())
+  email        String        @unique @db.VarChar(30)
+  password     String?       @db.VarChar(200)
+  nickname     String?       @unique @db.VarChar(30)
+  createdAt    DateTime
+  updatedAt    DateTime?
+  provider     String?
+  followers    Follow[]      @relation("Following")
+  followings   Follow[]      @relation("Follower")
+  profile      Profile?
+  admin        Channel[]     @relation("admin")
+  participants Participant[] @relation("Join")
+  channellike  ChannelLike[]
+  ban          Ban[]         @relation("ban")
   @@map(name: "users")
 }
 
@@ -34,8 +34,8 @@ model Profile {
   updatedAt      DateTime?
   user           User             @relation(fields: [userId], references: [id])
   userId         Int
-  welltalent     WellTalent[]
-  interesttalent InterestTalent[]
+  wellTalent     WellTalent[]
+  interestTalent InterestTalent[]
   profileImage   Image?
 
   @@map(name: "profiles")
@@ -70,7 +70,7 @@ model Image {
   updatedAt DateTime?
   profile   Profile?  @relation(fields: [profileId], references: [id])
   profileId Int?
-  channel   Channel?  @relation(fields: [channelId],references:[id])
+  channel   Channel?  @relation(fields: [channelId], references: [id])
   channelId Int?
 
   @@map(name: "images")
@@ -100,38 +100,37 @@ model Follow {
 }
 
 model Participant {
-  user        User    @relation("Join", fields:[userId],references:[id])
-  userId      Int
-  channel     Channel @relation("Participant",fields: [channelId],references:[id])
-  channelId   Int
+  user      User    @relation("Join", fields: [userId], references: [id])
+  userId    Int
+  channel   Channel @relation("Participant", fields: [channelId], references: [id])
+  channelId Int
 
-  @@id([userId,channelId])
+  @@id([userId, channelId])
   @@map("participants")
 }
 
 model Channel {
-  id              Int       @id @default(autoincrement())
-  name            String
-  introduce       String?   @db.Text
-  channelImage    Image?
-  admin           User      @relation("admin",fields: [adminId],references:[id])
-  adminId         Int
-  participants    Participant[]  @relation("Participant")
-  tags            ChannelTag[]
-  category        ChannelCategory?
-  channellike     ChannelLike[]
-  ban             Ban[]    
-  createdAt       DateTime
-  updatedAt       DateTime?
+  id           Int              @id @default(autoincrement())
+  name         String
+  introduce    String?          @db.Text
+  channelImage Image?
+  admin        User             @relation("admin", fields: [adminId], references: [id])
+  adminId      Int
+  participants Participant[]    @relation("Participant")
+  tags         ChannelTag[]
+  category     ChannelCategory?
+  channellike  ChannelLike[]
+  ban          Ban[]
+  createdAt    DateTime
+  updatedAt    DateTime?
 
-  @@unique([name,adminId])
+  @@unique([name, adminId])
   @@map("channels")
 }
 
-
 model Tag {
-  id        Int       @id @default(autoincrement())
-  name      String    
+  id        Int          @id @default(autoincrement())
+  name      String
   createdAt DateTime
   updatedAt DateTime?
   channel   ChannelTag[]
@@ -139,21 +138,21 @@ model Tag {
   @@map("tags")
 }
 
-model ChannelTag{
-  channel   Channel @relation(fields: [channelId],references:[id])
+model ChannelTag {
+  channel   Channel   @relation(fields: [channelId], references: [id])
   channelId Int
-  tag       Tag @relation(fields: [tagId],references:[id])
+  tag       Tag       @relation(fields: [tagId], references: [id])
   tagId     Int
   createdAt DateTime
   updatedAt DateTime?
 
-  @@id([channelId,tagId])
+  @@id([channelId, tagId])
   @@map("channel_tags")
 }
 
 model Category {
   id        Int              @id @default(autoincrement())
-  name      String        
+  name      String
   createdAt DateTime
   updatedAt DateTime?
   channel   ChannelCategory?
@@ -161,39 +160,39 @@ model Category {
   @@map("categories")
 }
 
-model ChannelCategory{
-  channel       Channel @relation(fields: [channelId],references:[id])
-  channelId     Int
-  category      Category @relation(fields: [categoryId],references:[id])
-  categoryId    Int
-  createdAt     DateTime
-  updatedAt     DateTime?
+model ChannelCategory {
+  channel    Channel   @relation(fields: [channelId], references: [id])
+  channelId  Int
+  category   Category  @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  createdAt  DateTime
+  updatedAt  DateTime?
 
-  @@id([channelId,categoryId])
+  @@id([channelId, categoryId])
   @@map("channel_categories")
 }
 
 // Channel -- Like -- User
 model ChannelLike {
-  user            User      @relation(fields:[userId], references: [id])
-  userId          Int
-  channel         Channel   @relation(fields: [channelId],references:[id])
-  channelId       Int
-  createdAt       DateTime
-  updatedAt       DateTime?
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  channel   Channel   @relation(fields: [channelId], references: [id])
+  channelId Int
+  createdAt DateTime
+  updatedAt DateTime?
 
-  @@id([userId,channelId])
+  @@id([userId, channelId])
   @@map("channel_like")
 }
 
 model Ban {
-  user            User      @relation("ban",fields:[userId], references: [id])
-  userId          Int
-  channel         Channel   @relation(fields: [channelId],references:[id])
-  channelId       Int
-  createdAt       DateTime
-  updatedAt       DateTime?
+  user      User      @relation("ban", fields: [userId], references: [id])
+  userId    Int
+  channel   Channel   @relation(fields: [channelId], references: [id])
+  channelId Int
+  createdAt DateTime
+  updatedAt DateTime?
 
-  @@unique([userId,channelId], name: "banKey")
+  @@unique([userId, channelId], name: "banKey")
   @@map("ban")
 }
