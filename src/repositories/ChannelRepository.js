@@ -134,6 +134,22 @@ export const findAdminChannel = async (id, SelectOption) => {
     }
 };
 
+export const findParticipantUser = async (id) => {
+    try {
+        return await prisma.channel.findMany({
+            where: {
+                participants: {
+                    some: {
+                        userId: id,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 export const findParticipantChannel = async (id, SelectOption) => {
     try {
         return await prisma.channel.findMany({
@@ -145,6 +161,36 @@ export const findParticipantChannel = async (id, SelectOption) => {
                 },
             },
             select: SelectOption,
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findChatLogById = async (id) => {
+    try {
+        return await prisma.channel.findUnique({
+            where: {
+                id,
+            },
+            select: {
+                baseRoomChat: true,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const createChat = async (id, channelId, contents) => {
+    try {
+        return await prisma.chatMessage.create({
+            data: {
+                channelId,
+                sendUserId: id,
+                contents,
+                createdAt: now,
+            },
         });
     } catch (err) {
         console.error(err);

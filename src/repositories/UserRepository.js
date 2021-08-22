@@ -415,3 +415,33 @@ export const findFollowingListById = async (id) => {
         console.error(err);
     }
 };
+
+export const CheckJoinChannel = async (id, channelId) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                OR: [
+                    {
+                        admin: {
+                            some: {
+                                id: channelId,
+                            },
+                        },
+                    },
+                    {
+                        participants: {
+                            some: {
+                                channelId,
+                            },
+                        },
+                    },
+                ],
+                AND: {
+                    id,
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

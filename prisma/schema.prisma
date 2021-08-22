@@ -24,7 +24,8 @@ model User {
   channellike     ChannelLike[]
   ban             Ban[]         @relation("ban")
   roomOwner       ChannelRoom[] @relation("RoomOwner")
-  RoomParticipant RoomUser[]
+  ChatMessage     ChatMessage[]
+  RoomParticipant RoomUser?
 
   @@map(name: "users")
 }
@@ -164,6 +165,8 @@ model ChannelRoom {
 model ChatMessage {
   id            Int          @id @default(autoincrement())
   contents      String
+  sendUserId    Int
+  sendUser      User         @relation(fields: [sendUserId], references: [id])
   baseRoomChat  Channel?     @relation(fields: [channelId], references: [id])
   ChannelRoom   ChannelRoom? @relation(fields: [channelRoomId], references: [id])
   answered      ChatMessage? @relation("answer", fields: [answeredId], references: [id])
