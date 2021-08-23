@@ -1,6 +1,5 @@
-import { check,body } from "express-validator";
+import { check, body } from "express-validator";
 import validationFunction from "./validationFunction";
-
 
 //email nicnname password
 export const TokenRequestValid = async (req, res, next) => {
@@ -11,14 +10,7 @@ export const TokenRequestValid = async (req, res, next) => {
     validationFunction(req, res, next);
 };
 
-export const NicknameRequestValid = async (req,res,next) => {
-    await body("email")
-        .exists()
-        .withMessage("email이 존재하지 않습니다.")
-        .bail()
-        .isEmail()
-        .withMessage("email 형식에 맞지 않습니다.")
-        .run(req);
+export const NicknameRequestValid = async (req, res, next) => {
     await body("nickname")
         .exists()
         .withMessage("nickname이 존재하지 않습니다.")
@@ -27,4 +19,4 @@ export const NicknameRequestValid = async (req,res,next) => {
         .withMessage("nickname의 공백은 허용하지 않습니다.")
         .run(req);
     validationFunction(req, res, next);
-}
+};
