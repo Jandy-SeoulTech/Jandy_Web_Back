@@ -182,13 +182,13 @@ export const findChatLogById = async (id) => {
     }
 };
 
-export const createChat = async (id, channelId, contents) => {
+export const createChat = async (id, channelId, content) => {
     try {
         return await prisma.chatMessage.create({
             data: {
                 channelId,
                 sendUserId: id,
-                contents,
+                content,
                 createdAt: now,
             },
         });

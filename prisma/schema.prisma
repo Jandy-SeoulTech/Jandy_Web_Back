@@ -164,7 +164,7 @@ model ChannelRoom {
 
 model ChatMessage {
   id            Int          @id @default(autoincrement())
-  contents      String
+  content       String
   sendUserId    Int
   sendUser      User         @relation(fields: [sendUserId], references: [id])
   baseRoomChat  Channel?     @relation(fields: [channelId], references: [id])

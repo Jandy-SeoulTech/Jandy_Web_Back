@@ -314,14 +314,12 @@ export const GetMyChannelInfo = async (req, res, next) => {
         if (!ParticipantChannel) {
             return res.status(500).send(resFormat.fail(500, "알수없는 에러"));
         } else {
-            return res
-                .status(200)
-                .send(
-                    resFormat.successData(200, "내 채널 정보", {
-                        adminChannl: adminChannel,
-                        participantChannel: ParticipantChannel,
-                    })
-                );
+            return res.status(200).send(
+                resFormat.successData(200, "내 채널 정보", {
+                    adminChannl: adminChannel,
+                    participantChannel: ParticipantChannel,
+                })
+            );
         }
     } catch (err) {
         console.error(err);
@@ -412,6 +410,13 @@ const ChangeObject = (arr) => {
 //MyChannel Page SelectOption
 const SelectOption = {
     id: true,
+    name: true,
+    introduce: true,
+    participants: {
+        select: {
+            userId: true,
+        },
+    },
     channelImage: {
         select: {
             src: true,

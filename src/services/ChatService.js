@@ -21,12 +21,12 @@ export const MainChatLog = async (req, res, next) => {
 
 export const MainChat = async (req, res, next) => {
     try {
-        const JoinUser = await UserRepository.CheckJoinChannel(
+        const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
             parseInt(req.params.channelId)
         );
-        console.log(JoinUser);
-        if (!JoinUser[0]) {
+        console.log(joinUser);
+        if (!joinUser[0]) {
             return res
                 .status(401)
                 .send(
@@ -37,7 +37,7 @@ export const MainChat = async (req, res, next) => {
         const response = await ChannelRepository.createChat(
             req.user.id,
             parseInt(req.params.channelId),
-            req.body.contents
+            req.body.content
         );
         if (!response) {
             return res.status(400).send(resFormat.fail(400, "실패"));
