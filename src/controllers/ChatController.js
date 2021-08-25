@@ -13,7 +13,7 @@ Router.get(
 Router.post(
     "/channel/:channelId/chat",
     AuthHandler.isLoggedIn,
-    ChatValidation.ChannelLogRequestValid,
+    ChatValidation.ChatRequestValid,
     ChatService.MainChat
 );
 export default Router;

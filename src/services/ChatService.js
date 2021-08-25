@@ -4,8 +4,13 @@ import resFormat from "../utils/resFormat";
 
 export const MainChatLog = async (req, res, next) => {
     try {
-        const response = await ChannelRepository.ChatMessage(
-            parseInt(req.params.channelId)
+        let lastId = parseInt(req.query.lastId, 10);
+        if (req.query.lastId === "null") {
+            lastId = null;
+        }
+        const response = await ChannelRepository.findChatByChannelId(
+            parseInt(req.params.channelId),
+            lastId
         );
         if (!response) {
             return res.status(400).send(resFormat.fail(400, "실패"));
@@ -25,7 +30,6 @@ export const MainChat = async (req, res, next) => {
             req.user.id,
             parseInt(req.params.channelId)
         );
-        console.log(joinUser);
         if (!joinUser[0]) {
             return res
                 .status(401)
@@ -39,12 +43,14 @@ export const MainChat = async (req, res, next) => {
             parseInt(req.params.channelId),
             req.body.content
         );
+
         if (!response) {
             return res.status(400).send(resFormat.fail(400, "실패"));
         }
-        return res
-            .status(200)
-            .send(resFormat.successData(200, "성공", response));
+        const io = req.app.get("io");
+        io.of(`/channel-${req.params.channelId}`).emit("message", response);
+
+        return res.status(200).send(resFormat.success(200, "성공"));
     } catch (err) {
         console.error(err);
         next(err);

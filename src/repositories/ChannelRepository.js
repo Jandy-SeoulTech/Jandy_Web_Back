@@ -189,7 +189,25 @@ export const createChat = async (id, channelId, content) => {
                 channelId,
                 sendUserId: id,
                 content,
-                createdAt: now,
+                createdAt: dbNow(),
+            },
+            include: {
+                sendUser: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             },
         });
     } catch (err) {
@@ -197,11 +215,20 @@ export const createChat = async (id, channelId, content) => {
     }
 };
 
-export const ChatMessage = async (channelId) => {
+export const findChatByChannelId = async (channelId, lastId) => {
     try {
         return await prisma.chatMessage.findMany({
+            take: 10,
             where: {
                 channelId,
+            },
+            cursor: lastId
+                ? {
+                      id: lastId,
+                  }
+                : undefined,
+            orderBy: {
+                createdAt: "desc",
             },
             include: {
                 sendUser: {
