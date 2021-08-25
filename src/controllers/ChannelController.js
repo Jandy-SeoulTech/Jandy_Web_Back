@@ -11,6 +11,11 @@ Router.post(
     ChannelServices.CreateChannel
 );
 Router.get(
+    "/mychannel",
+    AuthHandler.isLoggedIn,
+    ChannelServices.GetMyChannelInfo
+);
+Router.get(
     "/:userId",
     ChannelValidation.GetListRequestValid,
     ChannelServices.GetChannelList
@@ -23,7 +28,7 @@ Router.get(
 Router.patch(
     "/",
     AuthHandler.isLoggedIn,
-    ChannelValidation.UpdateRequestValid, 
+    ChannelValidation.UpdateRequestValid,
     ChannelServices.UpdateChannel
 );
 Router.post(
@@ -44,7 +49,7 @@ Router.post(
     AuthHandler.isLoggedIn,
     ChannelValidation.EnterRequestValid,
     ChannelServices.EnterChannel
-)
+);
 
 Router.post(
     "/exit",
@@ -66,4 +71,5 @@ Router.post(
     ChannelValidation.ManageRequestValid,
     ChannelServices.Ban
 );
+
 export default Router;

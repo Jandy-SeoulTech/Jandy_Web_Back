@@ -9,20 +9,24 @@ generator client {
 
 model User {
 
-  id           Int           @id @default(autoincrement())
-  email        String        @unique @db.VarChar(30)
-  password     String?       @db.VarChar(200)
-  nickname     String?       @unique @db.VarChar(30)
-  createdAt    DateTime
-  updatedAt    DateTime?
-  provider     String?
-  followers    Follow[]      @relation("Following")
-  followings   Follow[]      @relation("Follower")
-  profile      Profile?
-  admin        Channel[]     @relation("admin")
-  participants Participant[] @relation("Join")
-  channellike  ChannelLike[]
-  ban          Ban[]         @relation("ban")
+  id              Int           @id @default(autoincrement())
+  email           String        @unique @db.VarChar(30)
+  password        String?       @db.VarChar(200)
+  nickname        String?       @unique @db.VarChar(30)
+  createdAt       DateTime
+  updatedAt       DateTime?
+  provider        String?
+  followers       Follow[]      @relation("Following")
+  followings      Follow[]      @relation("Follower")
+  profile         Profile?
+  admin           Channel[]     @relation("admin")
+  participants    Participant[] @relation("Join")
+  channellike     ChannelLike[]
+  ban             Ban[]         @relation("ban")
+  roomOwner       ChannelRoom[] @relation("RoomOwner")
+  ChatMessage     ChatMessage[]
+  RoomParticipant RoomUser?
+
   @@map(name: "users")
 }
 
@@ -121,11 +125,60 @@ model Channel {
   category     ChannelCategory?
   channellike  ChannelLike[]
   ban          Ban[]
-  createdAt    DateTime
-  updatedAt    DateTime?
+  ChannelRoom  ChannelRoom[]
+  baseRoomChat ChatMessage[]
+
+  createdAt DateTime
+  updatedAt DateTime?
 
   @@unique([name, adminId])
   @@map("channels")
+}
+
+model RoomUser {
+  User          User        @relation(fields: [userId], references: [id])
+  userId        Int
+  ChannelRoom   ChannelRoom @relation(fields: [channelRoomId], references: [id])
+  channelRoomId Int
+
+  @@unique([userId, channelRoomId], name: "RoomParticipant")
+  @@map(name: "room_users")
+}
+
+model ChannelRoom {
+  id              Int           @id @default(autoincrement())
+  status          String
+  name            String
+  channelId       Int
+  userId          Int
+  roomImage       String?
+  RoomOwner       User          @relation("RoomOwner", fields: [userId], references: [id]) //룸생성자
+  Channel         Channel       @relation(fields: [channelId], references: [id]) //룸이 소속한채널
+  RoomParticipant RoomUser[]
+  createdAt       DateTime
+  updatedAt       DateTime?
+  ChatMessage     ChatMessage[]
+
+  @@map(name: "channel_rooms")
+}
+
+model ChatMessage {
+  id            Int          @id @default(autoincrement())
+  content       String
+  sendUserId    Int
+  sendUser      User         @relation(fields: [sendUserId], references: [id])
+  baseRoomChat  Channel?     @relation(fields: [channelId], references: [id])
+  ChannelRoom   ChannelRoom? @relation(fields: [channelRoomId], references: [id])
+  answered      ChatMessage? @relation("answer", fields: [answeredId], references: [id])
+  ChatMessage   ChatMessage? @relation("answer")
+  answeredId    Int? // 답장 글인지 여부, null-> 답장글 아님, id 값이면 ChatMessage에 있음. 그 값이.
+  channelRoomId Int? // 채널 방 id( 채널 소규모 채팅 방에서 사용)
+  channelId     Int? // 채널 id(채널 잡담방 사용)
+
+  createdAt DateTime
+  updatedAt DateTime?
+
+  @@map(name: "chat_messages")
 }
 
 model Tag {

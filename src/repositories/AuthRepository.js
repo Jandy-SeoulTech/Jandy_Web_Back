@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { dbNow } from "../utils/dayUtils";
 
-const now = dbNow();
 const prisma = new PrismaClient();
 
 export const findByEmail = async (email) => {
@@ -22,7 +21,7 @@ export const createAuth = async (data) => {
             data: {
                 email: data.email,
                 auth: data.auth,
-                createdAt: now,
+                createdAt: dbNow(),
             },
         });
     } catch (err) {
@@ -64,15 +63,15 @@ export const deleteAuth = async (data) => {
     try {
         return await prisma.auth.deleteMany({
             where: {
-                AND : [
+                AND: [
                     {
-                        email : data.email,
+                        email: data.email,
                     },
                     {
-                        auth : data.auth,
-                    }
-            ],
-        },
+                        auth: data.auth,
+                    },
+                ],
+            },
         });
     } catch (err) {
         console.error(err);

@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { dbNow } from "../utils/dayUtils";
 
-const now = dbNow();
 const prisma = new PrismaClient();
 
 export const createChannel = async (option) => {
@@ -14,99 +13,96 @@ export const createChannel = async (option) => {
     }
 };
 
-export const findById = async (id) =>{
+export const findById = async (id) => {
     try {
         return await prisma.channel.findUnique({
             where: { id },
-            include :{
-                admin : {
-                    select : {
-                        id :  true,
+            include: {
+                admin: {
+                    select: {
+                        id: true,
                         email: true,
-                        nickname: true
-                    }
+                        nickname: true,
+                    },
                 },
-                participants : {
-                    select : {
-                        userId : true
-                    }
+                participants: {
+                    select: {
+                        userId: true,
+                    },
                 },
-                category : {
-                    include : {
-                        category :true,
-                    }
+                category: {
+                    include: {
+                        category: true,
+                    },
                 },
-                tags : {
-                    include : {
-                        tag : true
-                    }
+                tags: {
+                    include: {
+                        tag: true,
+                    },
                 },
-                channellike : {
-                    select : {
-                        userId : true,
-                    }
+                channellike: {
+                    select: {
+                        userId: true,
+                    },
                 },
-                ban : {
-                    select : {
-                        userId : true,
-                    }
-                }
-            }
+                ban: {
+                    select: {
+                        userId: true,
+                    },
+                },
+            },
         });
-    }
-    catch(err){
+    } catch (err) {
         console.error(err);
     }
-}
+};
 
 export const findManyByUserid = async (id) => {
-    try{
+    try {
         return await prisma.channel.findMany({
-            where : {
-                adminId : id
+            where: {
+                adminId: id,
             },
-            include :{
-                admin  : {
-                    select : {
-                        id :  true,
+            include: {
+                admin: {
+                    select: {
+                        id: true,
                         email: true,
-                        nickname: true
-                    }
+                        nickname: true,
+                    },
                 },
-                participants : {
-                    select : {
-                        userId : true
-                    }
+                participants: {
+                    select: {
+                        userId: true,
+                    },
                 },
-                category : {
-                    include : {
-                        category :true,
-                    }
+                category: {
+                    include: {
+                        category: true,
+                    },
                 },
-                tags : {
-                    include : {
-                        tag : true
-                    }
+                tags: {
+                    include: {
+                        tag: true,
+                    },
                 },
-                channellike : {
-                    select : {
-                        userId : true
-                    }
+                channellike: {
+                    select: {
+                        userId: true,
+                    },
                 },
-            }
-        })
-    } catch(err){
+            },
+        });
+    } catch (err) {
         console.error(err);
-    } 
-}
+    }
+};
 
-export const updateChannel = async (
-    data
-) => {
+export const updateChannel = async (data) => {
     try {
         await prisma.channel.update({
             where: {
-                id: parseInt(data.id,10),
+                id: parseInt(data.id, 10),
             },
             data: {
                 tags: {
@@ -115,10 +111,143 @@ export const updateChannel = async (
             },
         });
         await prisma.channel.update({
-            where: { id: parseInt(data.id,10) },
-            data
+            where: { id: parseInt(data.id, 10) },
+            data,
         });
         return true;
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findAdminChannel = async (id, SelectOption) => {
+    try {
+        return await prisma.channel.findMany({
+            where: {
+                adminId: id,
+            },
+            select: SelectOption,
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findParticipantUser = async (id) => {
+    try {
+        return await prisma.channel.findMany({
+            where: {
+                participants: {
+                    some: {
+                        userId: id,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findParticipantChannel = async (id, SelectOption) => {
+    try {
+        return await prisma.channel.findMany({
+            where: {
+                participants: {
+                    some: {
+                        userId: id,
+                    },
+                },
+            },
+            select: SelectOption,
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findChatLogById = async (id) => {
+    try {
+        return await prisma.channel.findUnique({
+            where: {
+                id,
+            },
+            select: {
+                baseRoomChat: true,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const createChat = async (id, channelId, content) => {
+    try {
+        return await prisma.chatMessage.create({
+            data: {
+                channelId,
+                sendUserId: id,
+                content,
+                createdAt: dbNow(),
+            },
+            include: {
+                sendUser: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findChatByChannelId = async (channelId, lastId) => {
+    try {
+        return await prisma.chatMessage.findMany({
+            take: 10,
+            where: {
+                channelId,
+            },
+            cursor: lastId
+                ? {
+                      id: lastId,
+                  }
+                : undefined,
+            orderBy: {
+                createdAt: "desc",
+            },
+            include: {
+                sendUser: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
     } catch (err) {
         console.error(err);
     }

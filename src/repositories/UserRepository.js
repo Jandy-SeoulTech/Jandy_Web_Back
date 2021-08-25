@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { dbNow } from "../utils/dayUtils";
 
-const now = dbNow();
 const prisma = new PrismaClient();
 
 export const findByEmail = async (email) => {
@@ -35,7 +34,7 @@ export const createLocal = async (nickname, email, password) => {
                 email,
                 password,
                 provider: "local",
-                createdAt: now,
+                createdAt: dbNow(),
             },
         });
     } catch (err) {
@@ -49,7 +48,7 @@ export const createSocial = async (data) => {
             data: {
                 email: data.email,
                 provider: data.provider,
-                createdAt: now,
+                createdAt: dbNow(),
             },
         });
     } catch (err) {
@@ -138,7 +137,7 @@ export const updateNickname = async (data) => {
             },
             data: {
                 nickname: data.nickname,
-                updatedAt: now,
+                updatedAt: dbNow(),
             },
         });
     } catch (err) {
@@ -154,7 +153,7 @@ export const updatePassword = async (id, password) => {
             },
             data: {
                 password,
-                updatedAt: now,
+                updatedAt: dbNow(),
             },
         });
     } catch (err) {
@@ -172,7 +171,7 @@ export const Follow = async (id, followingId) => {
                 followings: {
                     create: {
                         followingId,
-                        createdAt: now,
+                        createdAt: dbNow(),
                     },
                 },
             },
@@ -220,7 +219,7 @@ export const LikeOnChannel = async (userId, channelId) => {
                                 id: channelId,
                             },
                         },
-                        createdAt: now,
+                        createdAt: dbNow(),
                     },
                 },
             },
@@ -332,7 +331,7 @@ export const Ban = async (userId, channelId) => {
                                 id: channelId,
                             },
                         },
-                        createdAt: now,
+                        createdAt: dbNow(),
                     },
                 },
                 participants: {
@@ -408,6 +407,36 @@ export const findFollowingListById = async (id) => {
                             },
                         },
                     },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const CheckJoinChannel = async (id, channelId) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                OR: [
+                    {
+                        admin: {
+                            some: {
+                                id: channelId,
+                            },
+                        },
+                    },
+                    {
+                        participants: {
+                            some: {
+                                channelId,
+                            },
+                        },
+                    },
+                ],
+                AND: {
+                    id,
                 },
             },
         });

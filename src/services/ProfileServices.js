@@ -5,8 +5,6 @@ import bcrypt from "bcrypt";
 import resFormat from "../utils/resFormat";
 import { dbNow } from "../utils/dayUtils";
 
-const now = dbNow();
-
 export const CreateProfile = async (req, res, next) => {
     try {
         if (!(parseInt(req.body.userId, 10) === req.user.id)) {
@@ -305,7 +303,7 @@ const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
         userId: parseInt(bodydata.userId, 10),
         department: bodydata.department,
         introduce: bodydata.introduce,
-        createdAt: now,
+        createdAt: dbNow(),
         wellTalent: {
             createMany: {
                 data: ChangeObject(WellTalentArray),
@@ -319,7 +317,7 @@ const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
         profileImage: {
             create: {
                 src: bodydata.src,
-                createdAt: now,
+                createdAt: dbNow(),
             },
         },
     };
@@ -328,10 +326,10 @@ const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
 };
 
 const ChangeObject = (arr) => {
-    if (arr === null) return { contents: null, createdAt: now };
+    if (arr === null) return { contents: null, createdAt: dbNow() };
     let ArrayChange = [];
     arr.map((v) => {
-        ArrayChange.push({ contents: v, createdAt: now });
+        ArrayChange.push({ contents: v, createdAt: dbNow() });
     });
     return ArrayChange;
 };
