@@ -61,10 +61,16 @@ export const AuthGenerate = async (data) => {
 
 export const deleteAuth = async (data) => {
     try {
-        return await prisma.auth.delete({
+        return await prisma.auth.deleteMany({
             where: {
-                email: data.email,
-                auth: data.auth,
+                AND: [
+                    {
+                        email: data.email,
+                    },
+                    {
+                        auth: data.auth,
+                    },
+                ],
             },
         });
     } catch (err) {
