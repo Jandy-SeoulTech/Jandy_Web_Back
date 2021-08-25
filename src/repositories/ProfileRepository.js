@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { dbNow } from "../utils/dayUtils";
 
-const now = dbNow();
 const prisma = new PrismaClient();
 
 export const findById = async (id) => {
@@ -57,11 +56,11 @@ export const updateProfile = async (
             data: {
                 department,
                 introduce,
-                updatedAt: now,
+                updatedAt: dbNow(),
                 profileImage: {
                     update: {
                         src,
-                        updatedAt: now,
+                        updatedAt: dbNow(),
                     },
                 },
                 wellTalent: {

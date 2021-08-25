@@ -2,10 +2,10 @@ import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as BanRepository from "../repositories/BanRepository";
 import * as LikeRepository from "../repositories/LikeReposiotry";
 import * as UserRepository from "../repositories/UserRepository";
-import bcrypt from "bcrypt";
 import { dbNow } from "../utils/dayUtils";
 
-const now = dbNow();
+import bcrypt from "bcrypt";
+
 import resFormat from "../utils/resFormat";
 
 export const CreateChannel = async (req, res, next) => {
@@ -342,19 +342,19 @@ const CreateOption = (bodydata) => {
                 category: {
                     create: {
                         name: bodydata.category,
-                        createdAt: now,
+                        createdAt: dbNow(),
                     },
                 },
-                createdAt: now,
+                createdAt: dbNow(),
             },
         },
         channelImage: {
             create: {
                 src: bodydata.src,
-                createdAt: now,
+                createdAt: dbNow(),
             },
         },
-        createdAt: now,
+        createdAt: dbNow(),
     };
     return Option;
 };
@@ -363,7 +363,7 @@ const UpdateOption = (bodydata) => {
 
     let Option = {
         id: parseInt(bodydata.channelId, 10),
-        updatedAt: now,
+        updatedAt: dbNow(),
     };
     if (bodydata.introduce) {
         Option.introduce = bodydata.introduce;
@@ -379,10 +379,10 @@ const UpdateOption = (bodydata) => {
                 category: {
                     update: {
                         name: bodydata.category,
-                        updatedAt: now,
+                        updatedAt: dbNow(),
                     },
                 },
-                updatedAt: now,
+                updatedAt: dbNow(),
             },
         };
     }
@@ -390,7 +390,7 @@ const UpdateOption = (bodydata) => {
         Option.channelImage = {
             update: {
                 src: bodydata.src,
-                updatedAt: now,
+                updatedAt: dbNow(),
             },
         };
     }
@@ -400,8 +400,8 @@ const ChangeObject = (arr) => {
     let ArrayChange = [];
     arr.map((v) => {
         ArrayChange.push({
-            tag: { create: { name: v, createdAt: now } },
-            createdAt: now,
+            tag: { create: { name: v, createdAt: dbNow() } },
+            createdAt: dbNow(),
         });
     });
     return ArrayChange;
