@@ -15,9 +15,6 @@ export const ChannelLogRequestValid = async (req, res, next) => {
     await check("lastId")
         .exists()
         .withMessage("lastId가 존재하지 않습니다.")
-        .bail()
-        .isNumeric()
-        .withMessage("숫자형식이여아합니다.")
         .run(req);
     validationFunction(req, res, next);
 };
