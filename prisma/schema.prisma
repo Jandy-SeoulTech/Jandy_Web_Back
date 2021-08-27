@@ -26,7 +26,8 @@ model User {
   roomOwner       ChannelRoom[] @relation("RoomOwner")
   ChatMessage     ChatMessage[]
   RoomParticipant RoomUser?
-
+  post            Post[]        @relation("post")
+  comment         Comment[]     @relation("comment")
   @@map(name: "users")
 }
 
@@ -127,6 +128,8 @@ model Channel {
   ban          Ban[]
   ChannelRoom  ChannelRoom[]
   baseRoomChat ChatMessage[]
+  post         Post[]
+
 
   createdAt DateTime
   updatedAt DateTime?
@@ -248,4 +251,54 @@ model Ban {
 
   @@unique([userId, channelId], name: "banKey")
   @@map("ban")
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  status    Staus
+  content   String    
+  comment   Comment[]
+  files     File[]  
+  author    User @relation("post",fields: [authorId], references: [id])
+  authorId  Int
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId Int
+
+  reservation DateTime?
+  createdAt DateTime
+  updatedAt DateTime?
+
+  @@map("posts")
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String
+  author    User      @relation("comment", fields: [authorId], references: [id])
+  authorId  Int
+  post      Post      @relation(fields:[postId], references: [id])
+  postId    Int 
+  createdAt DateTime
+  updatedAt DateTime?
+
+  @@map("comments")
+}
+
+model File {
+  id        Int       @id @default(autoincrement())
+  src       String?   @db.VarChar(200)
+  post      Post?      @relation(fields: [postId], references: [id])
+  postId    Int?    
+
+  createdAt DateTime
+  updatedAt DateTime?
+
+  @@map(name: "files")
+}
+
+enum Staus {
+  Notice
+  Open
+  Reservation
+  Close
 }

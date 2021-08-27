@@ -15,6 +15,9 @@ import ProfileController from "./controllers/ProfileController";
 import OAuthController from "./controllers/OAuthController";
 import ChannelController from "./controllers/ChannelController";
 import ChatController from "./controllers/ChatController";
+import PostController from "./controllers/PostController";
+import CommentController from "./controllers/CommentController";
+
 
 const app = express();
 
@@ -46,6 +49,8 @@ app.use("/api/Image", ImageController);
 app.use("/api/Profile", ProfileController);
 app.use("/api/Channel", ChannelController);
 app.use("/api/Chat", ChatController);
+app.use("/api/Post", PostController);
+app.use("/api/Comment", CommentController);
 
 //404 handler
 app.use(ErrorHandler.routerHanlder);
