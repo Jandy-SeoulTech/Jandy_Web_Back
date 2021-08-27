@@ -22,12 +22,36 @@ export const findById = async (id) => {
                     select: {
                         id: true,
                         email: true,
-                        nickname: true,
+                        nickname : true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            }
+                        }
                     },
                 },
                 participants: {
                     select: {
                         userId: true,
+                        user : {
+                            select: {
+                                id: true,
+                                nickname : true,
+                                profile: {
+                                    select: {
+                                        profileImage: {
+                                            select: {
+                                                src: true,
+                                            },
+                                        },
+                                    }
+                                }
+                            },
+                        }
                     },
                 },
                 category: {
@@ -50,6 +74,11 @@ export const findById = async (id) => {
                         userId: true,
                     },
                 },
+                channelImage: {
+                    select: {
+                        src: true,
+                    }
+                }
             },
         });
     } catch (err) {
@@ -68,7 +97,7 @@ export const findManyByUserid = async (id) => {
                     select: {
                         id: true,
                         email: true,
-                        nickname: true,
+                        nickname : true,
                     },
                 },
                 participants: {
@@ -91,6 +120,11 @@ export const findManyByUserid = async (id) => {
                         userId: true,
                     },
                 },
+                channelImage: {
+                    select: {
+                        src: true,
+                    }
+                }
             },
         });
     } catch (err) {
