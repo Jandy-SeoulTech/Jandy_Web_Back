@@ -25,7 +25,6 @@ export const findById = async (id) => {
                         },
                     },
                 },
-                content: true,
                 comment : {
                     select: {
                         author: {
@@ -49,8 +48,6 @@ export const findById = async (id) => {
                         updatedAt: true
                     }
                 },
-                createdAt: true,
-                updatedAt: true
             },
         });
     }
@@ -59,11 +56,14 @@ export const findById = async (id) => {
     }
 }
 
-export const createPost = async (option) => {
+export const createPost = async (data) => {
     try{
-        return await prisma.post.create(
-            option
-        );
+        return await prisma.post.create({
+            data,
+            include: {
+                files : true
+            }
+        });
     }
     catch(err){
         console.error(err);
@@ -85,6 +85,9 @@ export const updatePost = async (data) => {
         return await prisma.post.update({
             where: { id: parseInt(data.id, 10) },
             data,
+            include: {
+                files : true
+            }
         });
     }
     catch(err){
@@ -106,7 +109,6 @@ export const deletePost = async (id) => {
 export const findPostByChannelId = async (channelId) => {
     try {
         return await prisma.post.findMany({
-            take: 10,
             where: {
                 channelId,
             },
@@ -116,6 +118,9 @@ export const findPostByChannelId = async (channelId) => {
                 },
                 {
                     createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc"
                 }
             ],
             include: {

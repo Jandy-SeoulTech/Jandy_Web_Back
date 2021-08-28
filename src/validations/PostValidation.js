@@ -13,14 +13,21 @@ export const CreateRequestValid = async (req, res, next) => {
         .exists()
         .withMessage("status가 존재하지 않습니다.")
         .bail()
-        .isNumeric()
-        .withMessage("status에는 숫자가 들어와야 합니다.")
+        .isString()
+        .withMessage("status에는 문자열이 들어와야 합니다.")
         .run(req);
     await check("content")
         .exists()
         .withMessage("content가 존재하지 않습니다")
         .isString()
         .withMessage("content 은 String 형식에 맞게 들어와야 합니다.")
+        .run(req);
+    await check("reservation")
+        .exists()
+        .withMessage("reservation 존재하지 않습니다")
+        .if((value, { req }) => value !== null)
+        .isISO8601()
+        .withMessage("reservation 은 date 형식에 맞게 들어와야 합니다.")
         .run(req);   
     await check("files")
         .exists()

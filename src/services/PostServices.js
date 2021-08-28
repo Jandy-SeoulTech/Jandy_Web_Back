@@ -7,11 +7,11 @@ import bcrypt from "bcrypt";
 
 import resFormat from "../utils/resFormat";
 
-export const CreatePost = async (req, res) => {
+export const CreatePost = async (req, res, next) => {
     try{
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.body.channelId)
+            parseInt(req.body.channelId,10)
         );
         if (!joinUser[0]) {
             return res
@@ -26,7 +26,7 @@ export const CreatePost = async (req, res) => {
         if (!response) {
             return res
                 .status(500)
-                .send(resFormat.fail(500, "알수 없는 에러로 추방하기 실패"));
+                .send(resFormat.fail(500, "알수 없는 에러로 포스트 작성하기 실패"));
         }
         return res
             .status(200)
@@ -38,7 +38,7 @@ export const CreatePost = async (req, res) => {
     }
 }
 
-export const UpdatePost = async (req, res) => {
+export const UpdatePost = async (req, res, next) => {
     try{
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
@@ -52,8 +52,8 @@ export const UpdatePost = async (req, res) => {
                 );
         }
         const checkAuthor = await PostRepository.CheckMyPost(
-            req.user.id,
-            parseInt(req.body.postId)
+            parseInt(req.body.postId),
+            req.user.id
         );
         if(!checkAuthor[0]){
             return res
@@ -63,7 +63,7 @@ export const UpdatePost = async (req, res) => {
                 );
         }
         const response = await PostRepository.updatePost(
-            UpdateOption(req.user.id,req.body)
+            UpdateOption(req.body)
         );
         if (!response) {
             return res
@@ -80,11 +80,11 @@ export const UpdatePost = async (req, res) => {
     }
 }
 
-export const DeletePost = async (req, res) => {
+export const DeletePost = async (req, res, next) => {
     try{
         const checkAuthor = await PostRepository.CheckMyPost(
-            req.user.id,
-            parseInt(req.params.postId)
+            parseInt(req.params.postId),
+            req.user.id
         );
         if(!checkAuthor[0]){
             return res
@@ -93,7 +93,7 @@ export const DeletePost = async (req, res) => {
                     resFormat.fail(401, "자신의 포스트만 삭제 가능합니다.")
                 );
         }
-        const response = await PostRepository.deletePost(parseInt(req.parms.postId));
+        const response = await PostRepository.deletePost(parseInt(req.params.postId));
         if (!response) {
             return res
                 .status(500)
@@ -109,9 +109,9 @@ export const DeletePost = async (req, res) => {
     }
 }
 
-export const GetPostInfo = async (req, res) => {
+export const GetPostInfo = async (req, res, next) => {
     try{
-        const data = await PostRepository.GetPostInfo(parseInt(req.params.postId,10));
+        const data = await PostRepository.findById(parseInt(req.params.postId,10));
         if(!data) {
             return res
                 .status(500)
@@ -127,6 +127,24 @@ export const GetPostInfo = async (req, res) => {
     }
 }
 
+export const GetPostListById = async (req, res, next) => {
+    try{
+        const data = await PostRepository.findPostByChannelId(parseInt(req.params.channelId,10));
+        if(!data) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 포스트 리스트 정보 찾기 실패"));
+        }
+        return res
+                .status(200)
+                .send(resFormat.successData(200,"포스트 리스트 정보 얻기 성공",data))
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
+}
+
 const CreateOption = (id,bodydata) => {
     // DB에 맞추어 Option 설정
     const Option = {
@@ -135,7 +153,7 @@ const CreateOption = (id,bodydata) => {
                 id
             }
         },
-        status : parseInt(bodydata.status,10),
+        status : bodydata.status,
         content : bodydata.content,
         channel : {
             connect : {
@@ -145,6 +163,7 @@ const CreateOption = (id,bodydata) => {
         files: {
             create: CreateObject(bodydata.files),
         },
+        reservation : bodydata.reservation,
         createdAt: dbNow(),
     };
     return Option;
@@ -159,10 +178,16 @@ const UpdateOption = (bodydata) => {
     if (bodydata.content) {
         Option.content = bodydata.content;
     }
+    if (bodydata.status) {
+        Option.status = bodydata.status;
+    }
     if (bodydata.files) {
         Option.files = {
             create: UpdateObject(bodydata.files),
         };
+    }
+    if( bodydata.reservation){
+        Option.reservation = bodydata.reservation;
     }
     return Option;
 };
