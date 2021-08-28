@@ -15,13 +15,11 @@ export const CreateComment = async(data) => {
     }
 }
 
-export const UpdateComment = async(id,data) => {
+export const UpdateComment = async(data) => {
     try{
         return await prisma.comment.update({
-            where: { id },
-            data : { 
-
-            }
+            where: { id : data.id },
+            data
         })
     }
     catch(err){
