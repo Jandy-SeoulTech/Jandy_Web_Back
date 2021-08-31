@@ -28,6 +28,7 @@ model User {
   RoomParticipant RoomUser?
   post            Post[]        @relation("post")
   comment         Comment[]     @relation("comment")
+  attention       Attention[] @relation("Attention")
   @@map(name: "users")
 }
 
@@ -263,6 +264,7 @@ model Post {
   authorId  Int
   channel   Channel @relation(fields: [channelId], references: [id])
   channelId Int
+  attention Attention[]
 
   reservedAt DateTime?
   createdAt DateTime
@@ -294,6 +296,18 @@ model File {
   updatedAt DateTime?
 
   @@map(name: "files")
+}
+
+model Attention {
+  user      User      @relation("Attention", fields: [userId], references: [id])
+  userId    Int
+  post      Post      @relation(fields: [postId], references: [id])
+  postId Int
+  createdAt DateTime
+  updatedAt DateTime?
+
+  @@unique([userId, postId], name: "attentionKey")
+  @@map("attention")
 }
 
 enum Staus {

@@ -467,3 +467,46 @@ export const CheckMyChannel = async (id, channelId) => {
         console.error(err);
     }
 };
+
+export const Attetnion = async (userId, postId) => {
+    try {
+        return await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                attention: {
+                    create: {
+                        post: {
+                            connect: {
+                                id: postId,
+                            },
+                        },
+                        createdAt: dbNow(),
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const NotAttention = async (userId, postId) => {
+    try {
+        return await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                attention: {
+                    deleteMany: {
+                        postId,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

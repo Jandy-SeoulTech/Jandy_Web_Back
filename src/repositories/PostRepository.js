@@ -48,6 +48,17 @@ export const findById = async (id) => {
                         updatedAt: true
                     }
                 },
+                attention : {
+                    select: {
+                        user : {
+                            select: {
+                                id: true,
+                                email: true,
+                                nickname: true,
+                            }
+                        }
+                    }
+                },
             },
         });
     }

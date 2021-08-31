@@ -63,3 +63,7 @@ export const GetRequestValid = async (req, res, next) => {
 export const DeleteRequestValid = async (req, res, next) => {
     GetRequestValid(req, res, next);
 }
+
+export const AttentionRequestValid = async (req, res, next) => {
+    GetRequestValid(req,res,next);
+}

@@ -1,6 +1,6 @@
-import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as PostRepository from "../repositories/PostRepository";
 import * as UserRepository from "../repositories/UserRepository";
+import * as AttentionRepository from "../repositories/AttentionRepository";
 import { dbNow } from "../utils/dayUtils";
 
 import bcrypt from "bcrypt";
@@ -142,6 +142,70 @@ export const GetPostListById = async (req, res, next) => {
         return res
                 .status(200)
                 .send(resFormat.successData(200,"포스트 리스트 정보 얻기 성공",data))
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
+}
+
+export const BeAttention = async (req, res, next) => {
+    try{
+        const checkAttention = await AttentionRepository.findById(req.user.id,parseInt(req.params.postId,10));
+        if(checkAttention){
+            return res
+                .status(401)
+                .send(
+                    resFormat.fail(401, "이미 궁금쓰 상태입니다.")
+                );
+        }
+        const response = await UserRepository.Attetnion(req.user.id,parseInt(req.params.postId,10));
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 실패"));
+        }
+        const data = await PostRepository.findById(parseInt(req.params.postId));
+        if (!data) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200,"궁금쓰 성공",data))
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
+}
+
+export const NotAttention = async (req, res, next) => {
+    try{
+        const checkAttention = await AttentionRepository.findById(req.user.id,parseInt(req.params.postId,10));
+        if(!checkAttention){
+            return res
+                .status(401)
+                .send(
+                    resFormat.fail(401, "궁금쓰 상태가 아닙니다.")
+                );
+        }
+        const response = await UserRepository.NotAttention(req.user.id,parseInt(req.params.postId,10));
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 실패"));
+        }
+        const data = await PostRepository.findById(parseInt(req.params.postId));
+        if (!data) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200,"궁금쓰 취소 성공",data))
     }
     catch(err){
         console.error(err);

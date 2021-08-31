@@ -132,4 +132,16 @@ Router.delete(
     CommentServices.DeleteComment
 )
 
+Router.post(
+    "/:channelId/post/:postId/attention",
+    AuthHandler.isLoggedIn,
+    PostValidation.AttentionRequestValid,
+    PostServices.BeAttention
+)
+
+Router.post(
+    "/:channelId/post/:postId/notattention",
+    PostValidation.AttentionRequestValid,
+    PostServices.NotAttention
+)
 export default Router;
