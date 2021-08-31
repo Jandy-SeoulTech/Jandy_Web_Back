@@ -264,7 +264,7 @@ model Post {
   channel   Channel @relation(fields: [channelId], references: [id])
   channelId Int
 
-  reservation DateTime?
+  reservedAt DateTime?
   createdAt DateTime
   updatedAt DateTime?
 

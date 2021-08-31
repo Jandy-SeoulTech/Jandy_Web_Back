@@ -11,7 +11,7 @@ export const CreatePost = async (req, res, next) => {
     try{
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.body.channelId,10)
+            parseInt(req.params.channelId,10)
         );
         if (!joinUser[0]) {
             return res
@@ -21,7 +21,7 @@ export const CreatePost = async (req, res, next) => {
                 );
         }
         const response = await PostRepository.createPost(
-            CreateOption(req.user.id,req.body)
+            CreateOption(req.user.id,parseInt(req.params.channelId,10),req.body)
         );
         if (!response) {
             return res
@@ -42,7 +42,7 @@ export const UpdatePost = async (req, res, next) => {
     try{
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.body.channelId)
+            parseInt(req.params.channelId)
         );
         if (!joinUser[0]) {
             return res
@@ -86,11 +86,15 @@ export const DeletePost = async (req, res, next) => {
             parseInt(req.params.postId),
             req.user.id
         );
-        if(!checkAuthor[0]){
+        const checkAdmin = await UserRepository.CheckMyChannel(
+            req.user.id,
+            parseInt(req.params.channelId),
+        )
+        if(!checkAuthor[0]&&!checkAdmin[0]){
             return res
                 .status(401)
                 .send(
-                    resFormat.fail(401, "자신의 포스트만 삭제 가능합니다.")
+                    resFormat.fail(401, "포스트 삭제 권한이 없습니다.")
                 );
         }
         const response = await PostRepository.deletePost(parseInt(req.params.postId));
@@ -145,7 +149,7 @@ export const GetPostListById = async (req, res, next) => {
     }
 }
 
-const CreateOption = (id,bodydata) => {
+const CreateOption = (id,channelId,bodydata) => {
     // DB에 맞추어 Option 설정
     const Option = {
         author : {
@@ -157,7 +161,7 @@ const CreateOption = (id,bodydata) => {
         content : bodydata.content,
         channel : {
             connect : {
-                id : parseInt(bodydata.channelId,10)
+                id : parseInt(channelId,10)
             }
         },
         files: {

@@ -444,3 +444,26 @@ export const CheckJoinChannel = async (id, channelId) => {
         console.error(err);
     }
 };
+
+export const CheckMyChannel = async (id, channelId) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                OR: [
+                    {
+                        admin: {
+                            some: {
+                                id: channelId,
+                            },
+                        },
+                    },
+                ],
+                AND: {
+                    id,
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

@@ -10,7 +10,7 @@ export const CreateComment = async (req, res, next) => {
     try{
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.body.channelId,10)
+            parseInt(req.params.channelId,10)
         );
         if (!joinUser[0]) {
             return res
@@ -20,7 +20,7 @@ export const CreateComment = async (req, res, next) => {
                 );
         }
         const response = await CommentRepository.CreateComment(
-            CreateOption(req.user.id,req.body)
+            CreateOption(req.user.id,parseInt(req.params.postId,10),req.body)
         );
         if (!response) {
             return res
@@ -41,7 +41,7 @@ export const UpdateComment = async (req, res, next) => {
     try{
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.body.channelId)
+            parseInt(req.params.channelId)
         );
         if (!joinUser[0]) {
             return res
@@ -54,11 +54,15 @@ export const UpdateComment = async (req, res, next) => {
             parseInt(req.body.commentId),
             req.user.id
         );
-        if(!checkAuthor[0]){
+        const checkAdmin = await UserRepository.CheckMyChannel(
+            req.user.id,
+            parseInt(req.params.channelId),
+        )
+        if(!checkAuthor[0]&&!checkAdmin[0]){
             return res
                 .status(401)
                 .send(
-                    resFormat.fail(401, "자신의 댓글만 수정이 가능합니다.")
+                    resFormat.fail(401, "댓글 삭제 권한이 없습니다.")
                 );
         }
         const response = await CommentRepository.UpdateComment(
@@ -108,7 +112,7 @@ export const DeleteComment = async (req, res, next) => {
     }
 }
 
-const CreateOption = (id,bodydata) => {
+const CreateOption = (id,postId,bodydata) => {
     // DB에 맞추어 Option 설정
     const Option = {
         author : {
@@ -119,7 +123,7 @@ const CreateOption = (id,bodydata) => {
         content : bodydata.content,
         post : {
             connect : {
-                id : parseInt(bodydata.postId,10)
+                id : parseInt(postId,10)
             }
         },
         createdAt: dbNow(),
