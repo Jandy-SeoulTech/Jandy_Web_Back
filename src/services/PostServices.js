@@ -228,8 +228,8 @@ const CreateOption = (id,channelId,bodydata) => {
                 id : parseInt(channelId,10)
             }
         },
-        files: {
-            create: CreateObject(bodydata.files),
+        images: {
+            create: CreateObject(bodydata.images),
         },
         reservation : bodydata.reservation,
         createdAt: dbNow(),
@@ -249,9 +249,9 @@ const UpdateOption = (bodydata) => {
     if (bodydata.status) {
         Option.status = bodydata.status;
     }
-    if (bodydata.files) {
-        Option.files = {
-            create: UpdateObject(bodydata.files),
+    if (bodydata.images) {
+        Option.images = {
+            create: UpdateObject(bodydata.images),
         };
     }
     if( bodydata.reservation){

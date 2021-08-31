@@ -59,6 +59,11 @@ export const findById = async (id) => {
                         }
                     }
                 },
+                images : {
+                    select: {
+                        src: true
+                    }
+                }
             },
         });
     }
@@ -72,7 +77,7 @@ export const createPost = async (data) => {
         return await prisma.post.create({
             data,
             include: {
-                files : true
+                images : true
             }
         });
     }
@@ -88,7 +93,7 @@ export const updatePost = async (data) => {
                 id: parseInt(data.id, 10),
             },
             data: {
-                files: {
+                images: {
                     deleteMany: {},
                 },
             }
@@ -97,7 +102,7 @@ export const updatePost = async (data) => {
             where: { id: parseInt(data.id, 10) },
             data,
             include: {
-                files : true
+                images : true
             }
         });
     }

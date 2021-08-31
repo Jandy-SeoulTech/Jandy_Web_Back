@@ -78,6 +78,8 @@ model Image {
   profileId Int?
   channel   Channel?  @relation(fields: [channelId], references: [id])
   channelId Int?
+  post      Post? @relation(fields: [postId], references: [id])
+  postId    Int?
 
   @@map(name: "images")
 }
@@ -259,7 +261,7 @@ model Post {
   status    Staus
   content   String    
   comment   Comment[]
-  files     File[]  
+  images    Image[]  
   author    User @relation("post",fields: [authorId], references: [id])
   authorId  Int
   channel   Channel @relation(fields: [channelId], references: [id])
@@ -284,18 +286,6 @@ model Comment {
   updatedAt DateTime?
 
   @@map("comments")
-}
-
-model File {
-  id        Int       @id @default(autoincrement())
-  src       String?   @db.VarChar(200)
-  post      Post?      @relation(fields: [postId], references: [id])
-  postId    Int?    
-
-  createdAt DateTime
-  updatedAt DateTime?
-
-  @@map(name: "files")
 }
 
 model Attention {

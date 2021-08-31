@@ -22,15 +22,15 @@ export const CreateRequestValid = async (req, res, next) => {
         .isString()
         .withMessage("content 은 String 형식에 맞게 들어와야 합니다.")
         .run(req);
-    await check("files")
+    await check("images")
         .exists()
-        .withMessage("files가 존재하지 않습니다.")
+        .withMessage("images가 존재하지 않습니다.")
         .if((value, { req }) => value !== null)
         .isArray()
         .withMessage("배열만 가능합니다.")
         .run(req);
-    if (!(req.body.files === null)) {
-        await check("files.*")
+    if (!(req.body.images === null)) {
+        await check("images.*")
             .trim()
             .notEmpty()
             .withMessage("값이 없습니다.")
