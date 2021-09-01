@@ -221,6 +221,7 @@ const CreateOption = (id,channelId,bodydata) => {
                 id
             }
         },
+        title : bodydata.title,
         status : bodydata.status,
         content : bodydata.content,
         channel : {
@@ -243,6 +244,9 @@ const UpdateOption = (bodydata) => {
         id: parseInt(bodydata.postId, 10),
         updatedAt: dbNow(),
     };
+    if (bodydata.title) {
+        Option.title = bodydata.title;
+    }
     if (bodydata.content) {
         Option.content = bodydata.content;
     }
