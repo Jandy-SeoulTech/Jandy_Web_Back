@@ -24,11 +24,11 @@ model User {
   channellike     ChannelLike[]
   ban             Ban[]         @relation("ban")
   roomOwner       ChannelRoom[] @relation("RoomOwner")
-  ChatMessage     ChatMessage[]
-  RoomParticipant RoomUser?
+  chatMessage     ChatMessage[]
+  roomParticipant RoomUser?
   post            Post[]        @relation("post")
   comment         Comment[]     @relation("comment")
-  attention       Attention[] @relation("Attention")
+  attention       Attention[]   @relation("Attention")
   @@map(name: "users")
 }
 
@@ -78,7 +78,7 @@ model Image {
   profileId Int?
   channel   Channel?  @relation(fields: [channelId], references: [id])
   channelId Int?
-  post      Post? @relation(fields: [postId], references: [id])
+  post      Post?     @relation(fields: [postId], references: [id])
   postId    Int?
 
   @@map(name: "images")
@@ -129,7 +129,7 @@ model Channel {
   category     ChannelCategory?
   channellike  ChannelLike[]
   ban          Ban[]
-  ChannelRoom  ChannelRoom[]
+  channelRoom  ChannelRoom[]
   baseRoomChat ChatMessage[]
   post         Post[]
 
@@ -142,9 +142,9 @@ model Channel {
 }
 
 model RoomUser {
-  User          User        @relation(fields: [userId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
   userId        Int
-  ChannelRoom   ChannelRoom @relation(fields: [channelRoomId], references: [id])
+  channelRoom   ChannelRoom @relation(fields: [channelRoomId], references: [id])
   channelRoomId Int
 
   @@unique([userId, channelRoomId], name: "RoomParticipant")
@@ -158,12 +158,14 @@ model ChannelRoom {
   channelId       Int
   userId          Int
   roomImage       String?
-  RoomOwner       User          @relation("RoomOwner", fields: [userId], references: [id]) //룸생성자
-  Channel         Channel       @relation(fields: [channelId], references: [id]) //룸이 소속한채널
-  RoomParticipant RoomUser[]
+  roomOwner       User          @relation("RoomOwner", fields: [userId], references: [id]) //룸생성자
+  channel         Channel       @relation(fields: [channelId], references: [id]) //룸이 소속한채널
+  roomParticipant RoomUser[]
   createdAt       DateTime
   updatedAt       DateTime?
-  ChatMessage     ChatMessage[]
+  chatMessage     ChatMessage[]
+  question        Post          @relation(fields: [postId], references: [id])
+  postId          Int
 
   @@map(name: "channel_rooms")
 }
@@ -174,9 +176,9 @@ model ChatMessage {
   sendUserId    Int
   sendUser      User         @relation(fields: [sendUserId], references: [id])
   baseRoomChat  Channel?     @relation(fields: [channelId], references: [id])
-  ChannelRoom   ChannelRoom? @relation(fields: [channelRoomId], references: [id])
+  channelRoom   ChannelRoom? @relation(fields: [channelRoomId], references: [id])
   answered      ChatMessage? @relation("answer", fields: [answeredId], references: [id])
-  ChatMessage   ChatMessage? @relation("answer")
+  chatMessage   ChatMessage? @relation("answer")
   answeredId    Int? // 답장 글인지 여부, null-> 답장글 아님, id 값이면 ChatMessage에 있음. 그 값이.
   channelRoomId Int? // 채널 방 id( 채널 소규모 채팅 방에서 사용)
   channelId     Int? // 채널 id(채널 잡담방 사용)
@@ -257,20 +259,21 @@ model Ban {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  status    Staus
-  content   String    
-  comment   Comment[]
-  images    Image[]  
-  author    User @relation("post",fields: [authorId], references: [id])
-  authorId  Int
-  channel   Channel @relation(fields: [channelId], references: [id])
-  channelId Int
-  attention Attention[]
+  id          Int          @id @default(autoincrement())
+  status      Staus
+  content     String
+  comment     Comment[]
+  images      Image[]
+  author      User         @relation("post", fields: [authorId], references: [id])
+  authorId    Int
+  channel     Channel      @relation(fields: [channelId], references: [id])
+  channelId   Int
+  attention   Attention[]
+  ChannelRoom ChannelRoom?
 
   reservedAt DateTime?
-  createdAt DateTime
-  updatedAt DateTime?
+  createdAt  DateTime
+  updatedAt  DateTime?
 
   @@map("posts")
 }
@@ -280,8 +283,8 @@ model Comment {
   content   String
   author    User      @relation("comment", fields: [authorId], references: [id])
   authorId  Int
-  post      Post      @relation(fields:[postId], references: [id])
-  postId    Int 
+  post      Post      @relation(fields: [postId], references: [id])
+  postId    Int
   createdAt DateTime
   updatedAt DateTime?
 
@@ -292,7 +295,7 @@ model Attention {
   user      User      @relation("Attention", fields: [userId], references: [id])
   userId    Int
   post      Post      @relation(fields: [postId], references: [id])
-  postId Int
+  postId    Int
   createdAt DateTime
   updatedAt DateTime?
 
