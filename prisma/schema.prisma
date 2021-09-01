@@ -258,7 +258,8 @@ model Ban {
 
 model Post {
   id        Int       @id @default(autoincrement())
-  status    Staus
+  title     String
+  status    Status
   content   String    
   comment   Comment[]
   images    Image[]  
@@ -300,7 +301,7 @@ model Attention {
   @@map("attention")
 }
 
-enum Staus {
+enum Status {
   Notice
   Open
   Reservation

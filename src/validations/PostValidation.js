@@ -9,6 +9,12 @@ export const CreateRequestValid = async (req, res, next) => {
         .isNumeric()
         .withMessage("channelId에는 숫자가 들어와야 합니다.")
         .run(req);
+    await check("title")
+        .exists()
+        .withMessage("title가 존재하지 않습니다")
+        .isString()
+        .withMessage("title은 String 형식에 맞게 들어와야 합니다.")
+        .run(req);
     await check("status")
         .exists()
         .withMessage("status가 존재하지 않습니다.")
