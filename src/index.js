@@ -16,6 +16,7 @@ import OAuthController from "./controllers/OAuthController";
 import ChannelController from "./controllers/ChannelController";
 import ChatController from "./controllers/ChatController";
 
+
 const app = express();
 
 passportConfig(passport);
