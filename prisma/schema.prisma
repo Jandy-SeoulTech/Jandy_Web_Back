@@ -157,10 +157,10 @@ model ChannelRoom {
   name            String
   channelId       Int
   userId          Int
-  roomImage       String?
   roomOwner       User          @relation("RoomOwner", fields: [userId], references: [id]) //룸생성자
   channel         Channel       @relation(fields: [channelId], references: [id]) //룸이 소속한채널
   roomParticipant RoomUser[]
+  reservedAt      DateTime?
   createdAt       DateTime
   updatedAt       DateTime?
   chatMessage     ChatMessage[]
