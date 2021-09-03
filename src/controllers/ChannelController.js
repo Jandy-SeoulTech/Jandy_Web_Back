@@ -4,7 +4,7 @@ import * as PostServices from "../services/PostServices";
 import * as AuthHandler from "../middlewares/AuthHandler";
 import * as ChannelValidation from "../validations/ChannelValidation";
 import * as PostValidation from "../validations/PostValidation";
-import * as CommentValidation from "../validations/CommentValidation"
+import * as CommentValidation from "../validations/CommentValidation";
 import * as CommentServices from "../services/CommentServices";
 const Router = express.Router();
 
@@ -13,11 +13,6 @@ Router.post(
     AuthHandler.isLoggedIn,
     ChannelValidation.CreateRequestValid,
     ChannelServices.CreateChannel
-);
-Router.get(
-    "/mychannel",
-    AuthHandler.isLoggedIn,
-    ChannelServices.GetMyChannelInfo
 );
 Router.get(
     "/:userId",
@@ -77,14 +72,14 @@ Router.post(
 );
 
 Router.post(
-    '/:channelId/post',
+    "/:channelId/post",
     AuthHandler.isLoggedIn,
     PostValidation.CreateRequestValid,
     PostServices.CreatePost
 );
 
 Router.patch(
-    '/:channelId/post', 
+    "/:channelId/post",
     AuthHandler.isLoggedIn,
     PostValidation.UpdateRequestValid,
     PostServices.UpdatePost
@@ -116,32 +111,33 @@ Router.post(
     AuthHandler.isLoggedIn,
     CommentValidation.CreateRequestValid,
     CommentServices.CreateComment
-)
+);
 
 Router.patch(
     "/:channelId/post/:postId/comment",
     AuthHandler.isLoggedIn,
     CommentValidation.UpdateRequestValid,
     CommentServices.UpdateComment
-)
+);
 
 Router.delete(
     "/:channelId/post/:postId/comment/:commentId",
     AuthHandler.isLoggedIn,
     CommentValidation.DeleteRequestValid,
     CommentServices.DeleteComment
-)
+);
 
 Router.post(
     "/:channelId/post/:postId/attention",
     AuthHandler.isLoggedIn,
     PostValidation.AttentionRequestValid,
     PostServices.BeAttention
-)
+);
 
 Router.post(
     "/:channelId/post/:postId/notattention",
     PostValidation.AttentionRequestValid,
     PostServices.NotAttention
-)
+);
+
 export default Router;
