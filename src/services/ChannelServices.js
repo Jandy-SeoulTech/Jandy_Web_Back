@@ -48,7 +48,7 @@ export const GetChannelList = async (req, res, next) => {
             return res.status(500).send(resFormat.fail(500, "알수없는 에러"));
         } else {
             return res.status(200).send(
-                resFormat.successData(200, "내 채널 정보", {
+                resFormat.successData(200, "채널 정보 리스트", {
                     adminChannl: adminChannel,
                     participantChannel: ParticipantChannel,
                 })
