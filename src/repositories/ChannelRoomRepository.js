@@ -145,3 +145,75 @@ export const findById = async (id) => {
         console.error(err);
     }
 };
+
+export const findChatByRoomId = async (channelRoomId, lastId) => {
+    try {
+        return await prisma.chatMessage.findMany({
+            take: 10,
+            where: {
+                channelRoomId,
+            },
+            cursor: lastId
+                ? {
+                      id: lastId,
+                  }
+                : undefined,
+            orderBy: {
+                createdAt: "desc",
+            },
+            include: {
+                sendUser: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const createChat = async (id, channelRoomId, content) => {
+    try {
+        return await prisma.chatMessage.create({
+            data: {
+                channelRoomId,
+                sendUserId: id,
+                content,
+                createdAt: dbNow(),
+            },
+            include: {
+                sendUser: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

@@ -17,4 +17,5 @@ Router.post(
     ChatServices.MainChat
 );
 
+Router.get("/room/:roomId", ChatServices.RoomCatLog);
 export default Router;
