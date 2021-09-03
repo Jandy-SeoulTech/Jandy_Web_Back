@@ -1,7 +1,10 @@
 import * as ChannelRepository from "../repositories/ChannelRepository";
+import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
 import * as UserRepository from "../repositories/UserRepository";
+import * as PostRepository from "../repositories/PostRepository";
 import resFormat from "../utils/resFormat";
-
+import schedule from "node-schedule";
+//잡담방 채팅 로그
 export const MainChatLog = async (req, res, next) => {
     try {
         let lastId = parseInt(req.query.lastId, 10);
@@ -23,7 +26,7 @@ export const MainChatLog = async (req, res, next) => {
         next(err);
     }
 };
-
+//잡담방 채팅 보내기
 export const MainChat = async (req, res, next) => {
     try {
         const joinUser = await UserRepository.CheckJoinChannel(

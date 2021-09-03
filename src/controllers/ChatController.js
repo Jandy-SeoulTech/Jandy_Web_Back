@@ -1,19 +1,20 @@
 import express from "express";
 import * as AuthHandler from "../middlewares/AuthHandler";
 import * as ChatValidation from "../validations/ChatValidation";
-import * as ChatService from "../services/ChatService";
+import * as ChatServices from "../services/ChatServices";
 const Router = express.Router();
 
 Router.get(
     "/channel/:channelId",
     ChatValidation.ChannelLogRequestValid,
-    ChatService.MainChatLog
+    ChatServices.MainChatLog
 );
 
 Router.post(
     "/channel/:channelId/chat",
     AuthHandler.isLoggedIn,
     ChatValidation.ChatRequestValid,
-    ChatService.MainChat
+    ChatServices.MainChat
 );
+
 export default Router;
