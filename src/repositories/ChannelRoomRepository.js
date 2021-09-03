@@ -16,6 +16,7 @@ export const CreateRoom = async (bodyData, userId) => {
                 roomParticipant: {
                     create: {
                         userId,
+                        status: "Owner",
                     },
                 },
             },
@@ -39,6 +40,7 @@ export const ReserveRoom = async (bodyData, userId) => {
                 roomParticipant: {
                     create: {
                         userId,
+                        status: "Owner",
                     },
                 },
             },

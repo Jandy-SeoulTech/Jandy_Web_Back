@@ -25,7 +25,7 @@ model User {
   ban             Ban[]         @relation("ban")
   roomOwner       ChannelRoom[] @relation("RoomOwner")
   chatMessage     ChatMessage[]
-  roomParticipant RoomUser?
+  roomParticipant RoomUser[]
   post            Post[]        @relation("post")
   comment         Comment[]     @relation("comment")
   attention       Attention[]   @relation("Attention")
@@ -142,12 +142,13 @@ model Channel {
 }
 
 model RoomUser {
-  user          User        @relation(fields: [userId], references: [id])
-  userId        Int
   channelRoom   ChannelRoom @relation(fields: [channelRoomId], references: [id])
   channelRoomId Int
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
+  status        String      @default("active")
 
-  @@unique([userId, channelRoomId], name: "RoomParticipant")
+  @@unique([channelRoomId, userId], name: "RoomUser")
   @@map(name: "room_users")
 }
 
