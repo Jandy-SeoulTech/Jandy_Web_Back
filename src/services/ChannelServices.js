@@ -342,7 +342,7 @@ const CreateOption = (bodydata) => {
         name: bodydata.name,
         introduce: bodydata.introduce,
         tags: {
-            create: ChangeObject(bodydata.tag),
+            create: ChangeObject(bodydata.tags),
         },
         category: {
             create: {
@@ -375,9 +375,9 @@ const UpdateOption = (bodydata) => {
     if (bodydata.introduce) {
         Option.introduce = bodydata.introduce;
     }
-    if (bodydata.tag) {
+    if (bodydata.tags) {
         Option.tags = {
-            create: ChangeObject(bodydata.tag),
+            create: ChangeObject(bodydata.tags),
         };
     }
     if (bodydata.category) {
@@ -393,7 +393,7 @@ const UpdateOption = (bodydata) => {
             },
         };
     }
-    if (bodydata.channelImage) {
+    if (bodydata.src) {
         Option.channelImage = {
             update: {
                 src: bodydata.src,
