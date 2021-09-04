@@ -122,11 +122,11 @@ export const findPostByChannelId = async (channelId) => {
         return await prisma.post.findMany({
             where: {
                 channelId,
-                NOT :[
+                NOT: [
                     {
-                        status : 'Clear'
-                    }
-                ]
+                        status: "Clear",
+                    },
+                ],
             },
             orderBy: [
                 {
@@ -163,7 +163,7 @@ export const findPostByChannelId = async (channelId) => {
     }
 };
 
-export const CheckMyPost = async (id, authorId) => {
+export const checkMyPost = async (id, authorId) => {
     try {
         return await prisma.post.findMany({
             where: {
@@ -176,7 +176,7 @@ export const CheckMyPost = async (id, authorId) => {
     }
 };
 
-export const CheckPostClosed = async (id) => {
+export const checkPostClosed = async (id) => {
     try {
         return await prisma.post.findMany({
             where: {
@@ -195,7 +195,7 @@ export const CheckPostClosed = async (id) => {
     }
 };
 
-export const UpdateOpen = async (id) => {
+export const updateOpen = async (id) => {
     try {
         return await prisma.post.update({
             where: {
@@ -210,7 +210,7 @@ export const UpdateOpen = async (id) => {
     }
 };
 
-export const UpdateReserve = async (id, date) => {
+export const updateReserve = async (id, date) => {
     try {
         return await prisma.post.update({
             where: {
@@ -219,6 +219,21 @@ export const UpdateReserve = async (id, date) => {
             data: {
                 status: "Reservation",
                 reservedAt: StringToDate(date),
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updateClaer = async (id) => {
+    try {
+        return await prisma.post.update({
+            where: {
+                id,
+            },
+            data: {
+                status: "Clear",
             },
         });
     } catch (err) {

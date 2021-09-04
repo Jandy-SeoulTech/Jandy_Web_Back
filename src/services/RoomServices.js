@@ -11,7 +11,7 @@ import resFormat from "../utils/resFormat";
 
 export const RoomCreate = async (req, res, next) => {
     try {
-        const checkPostClose = await PostRepository.CheckPostClosed(
+        const checkPostClose = await PostRepository.checkPostClosed(
             parseInt(req.body.postId, 10)
         );
         if (!checkPostClose[0]) {
@@ -19,7 +19,7 @@ export const RoomCreate = async (req, res, next) => {
                 .status(401)
                 .send(resFormat.fail(401, "안열린 채팅방이 아닙니다."));
         }
-        const checkAuthor = await PostRepository.CheckMyPost(
+        const checkAuthor = await PostRepository.checkMyPost(
             parseInt(req.body.postId),
             req.user.id
         );
@@ -39,7 +39,7 @@ export const RoomCreate = async (req, res, next) => {
                 req.body,
                 req.user.id
             );
-            const openPost = await PostRepository.UpdateOpen(
+            const openPost = await PostRepository.updateOpen(
                 parseInt(req.body.postId, 10)
             );
             if (response && openPost) {
@@ -56,7 +56,7 @@ export const RoomCreate = async (req, res, next) => {
                 req.body,
                 req.user.id
             );
-            const reservePost = await PostRepository.UpdateReserve(
+            const reservePost = await PostRepository.updateReserve(
                 parseInt(req.body.postId, 10),
                 req.body.reservedTime
             );
@@ -141,10 +141,8 @@ export const RoomClose = async (req, res, next) => {
                 .status(500)
                 .send(resFormat.fail(500, "알수 없는 에러 발생"));
         }
-
-        /*
-         게시글 상태 변경 로직 추가 예정
-        */
+        //post 상태 clear변경
+        await PostRepository.updateClaer(exRoom.postId);
 
         return res
             .status(200)
