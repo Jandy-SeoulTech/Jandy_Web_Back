@@ -22,7 +22,7 @@ export const findById = async (id) => {
                     select: {
                         id: true,
                         email: true,
-                        nickname : true,
+                        nickname: true,
                         profile: {
                             select: {
                                 profileImage: {
@@ -30,17 +30,17 @@ export const findById = async (id) => {
                                         src: true,
                                     },
                                 },
-                            }
-                        }
+                            },
+                        },
                     },
                 },
                 participants: {
                     select: {
                         userId: true,
-                        user : {
+                        user: {
                             select: {
                                 id: true,
-                                nickname : true,
+                                nickname: true,
                                 profile: {
                                     select: {
                                         profileImage: {
@@ -48,10 +48,10 @@ export const findById = async (id) => {
                                                 src: true,
                                             },
                                         },
-                                    }
-                                }
+                                    },
+                                },
                             },
-                        }
+                        },
                     },
                 },
                 category: {
@@ -77,8 +77,8 @@ export const findById = async (id) => {
                 channelImage: {
                     select: {
                         src: true,
-                    }
-                }
+                    },
+                },
             },
         });
     } catch (err) {
@@ -97,7 +97,7 @@ export const findManyByUserid = async (id) => {
                     select: {
                         id: true,
                         email: true,
-                        nickname : true,
+                        nickname: true,
                     },
                 },
                 participants: {
@@ -123,8 +123,8 @@ export const findManyByUserid = async (id) => {
                 channelImage: {
                     select: {
                         src: true,
-                    }
-                }
+                    },
+                },
             },
         });
     } catch (err) {
@@ -257,7 +257,7 @@ export const findChatByChannelId = async (channelId, lastId) => {
             },
             cursor: lastId
                 ? {
-                      id: lastId,
+                      id: lastId - 1,
                   }
                 : undefined,
             orderBy: {

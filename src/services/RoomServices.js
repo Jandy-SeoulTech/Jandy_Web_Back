@@ -2,6 +2,7 @@ import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as BanRepository from "../repositories/BanRepository";
 import * as LikeRepository from "../repositories/LikeReposiotry";
 import * as UserRepository from "../repositories/UserRepository";
+import * as RoomUserRepository from "../repositories/RoomUserRepository";
 import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
 import * as PostRepository from "../repositories/PostRepository";
 import schedule from "node-schedule";
@@ -90,6 +91,99 @@ export const GetRoomList = async (req, res, next) => {
         return res
             .status(200)
             .send(resFormat.successData(200, "조회성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const RoomExit = async (req, res, next) => {
+    try {
+        const response = await RoomUserRepository.updateOneStatus(
+            parseInt(req.body.roomId, 10),
+            parseInt(req.user.id, 10)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러 발생"));
+        }
+
+        const participantInfo = await RoomUserRepository.findManyByRoomId(
+            parseInt(req.body.roomId, 10)
+        );
+        const io = req.app.get("io");
+        io.of(`/room-${req.body.roomId}`).emit("RoomInfo", participantInfo);
+
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "채팅방 나가기 성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const RoomClose = async (req, res, next) => {
+    try {
+        const exRoom = await ChannelRoomRepository.findById(
+            parseInt(req.body.roomId, 10)
+        );
+        if (exRoom.userId != req.user.id) {
+            return res
+                .status(401)
+                .send(resFormat.fail(401, "방주인만 방을 끝낼 수 있습니다."));
+        }
+
+        const response = await ChannelRoomRepository.updateCloseRoom(exRoom.id);
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러 발생"));
+        }
+
+        /*
+         게시글 상태 변경 로직 추가 예정
+        */
+
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "채팅방 끝내기 성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+export const join = async (req, res, next) => {
+    try {
+        const response = await RoomUserRepository.findOneByRoomAndUserId(
+            parseInt(req.body.roomId, 10),
+            parseInt(req.user.id, 10)
+        );
+        console.log("response", response);
+        if (!response) {
+            const make = await RoomUserRepository.joinRoomUser(
+                parseInt(req.body.roomId, 10),
+                parseInt(req.user.id, 10)
+            );
+            return res.send(make);
+        }
+        return res.send(response);
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const list = async (req, res, next) => {
+    try {
+        const participantInfo = await RoomUserRepository.findManyByRoomId(
+            parseInt(req.body.roomId, 10)
+        );
+        if (!participantInfo) {
+            return res.send("실패");
+        }
+        return res.send(participantInfo);
     } catch (err) {
         console.error(err);
         next(err);

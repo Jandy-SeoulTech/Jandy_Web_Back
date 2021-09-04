@@ -20,12 +20,15 @@ export default (server, app) => {
         console.log(socket.nsp.name);
 
         socket.on("join", async ({ roomId, user }) => {
-            const response = await RoomUserRepository.findByRoomAndUserId(
+            const response = await RoomUserRepository.findOneByRoomAndUserId(
                 parseInt(roomId, 10),
                 parseInt(user.id, 10)
             );
             if (!response) {
-                await RoomUserRepository.joinRoomUser(roomId, userId);
+                await RoomUserRepository.joinRoomUser(
+                    parseInt(roomId, 10),
+                    parseInt(user.id, 10)
+                );
             }
 
             newNamespace.emit(
@@ -33,11 +36,11 @@ export default (server, app) => {
                 `${user.nickname} 님이 입장하셨습니다.`
             );
 
-            const roomInfo = await ChannelRoomRepository.findById(
+            const participantInfo = await RoomUserRepository.findManyByRoomId(
                 parseInt(roomId, 10)
             );
 
-            newNamespace.emit("RoomInfo", roomInfo);
+            newNamespace.emit("RoomInfo", participantInfo);
         });
 
         socket.on("disconnect", () => {

@@ -3,12 +3,14 @@ import { dbNow, StringToDate } from "../utils/dayUtils";
 
 const prisma = new PrismaClient();
 
-export const findByRoomAndUserId = async (channelRoomId, userId) => {
+export const findOneByRoomAndUserId = async (channelRoomId, userId) => {
     try {
         return await prisma.roomUser.findUnique({
             where: {
-                channelRoomId,
-                userId,
+                RoomUser: {
+                    channelRoomId,
+                    userId,
+                },
             },
         });
     } catch (err) {
@@ -18,10 +20,71 @@ export const findByRoomAndUserId = async (channelRoomId, userId) => {
 
 export const joinRoomUser = async (channelRoomId, userId) => {
     try {
-        return await roomUser.create({
+        return await prisma.roomUser.create({
             data: {
                 channelRoomId,
                 userId,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findManyByRoomId = async (channelRoomId) => {
+    try {
+        return await prisma.roomUser.findMany({
+            where: {
+                OR: [
+                    {
+                        status: "Owner",
+                    },
+                    {
+                        status: "active",
+                    },
+                ],
+                AND: {
+                    channelRoomId,
+                },
+            },
+            orderBy: {
+                status: "desc",
+            },
+            select: {
+                status: true,
+                user: {
+                    select: {
+                        id: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updateOneStatus = async (channelRoomId, userId) => {
+    try {
+        return await prisma.roomUser.update({
+            where: {
+                RoomUser: {
+                    channelRoomId,
+                    userId,
+                },
+            },
+            data: {
+                status: "inactive",
             },
         });
     } catch (err) {

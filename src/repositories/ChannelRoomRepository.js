@@ -3,6 +3,18 @@ import { dbNow, StringToDate } from "../utils/dayUtils";
 
 const prisma = new PrismaClient();
 
+export const findById = async (id) => {
+    try {
+        return await prisma.channelRoom.findUnique({
+            where: {
+                id,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 export const CreateRoom = async (bodyData, userId) => {
     try {
         return await prisma.channelRoom.create({
@@ -112,40 +124,6 @@ export const CheckParticipantRoom = async (id) => {
     }
 };
 
-export const findById = async (id) => {
-    try {
-        return await prisma.channelRoom.findUnique({
-            where: {
-                id,
-            },
-            select: {
-                id: true,
-                status: true,
-                name: true,
-                channelId: true,
-                roomOwner: {
-                    select: {
-                        nickname: true,
-                        email: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-                roomParticipant: true,
-            },
-        });
-    } catch (err) {
-        console.error(err);
-    }
-};
-
 export const findChatByRoomId = async (channelRoomId, lastId) => {
     try {
         return await prisma.chatMessage.findMany({
@@ -155,7 +133,7 @@ export const findChatByRoomId = async (channelRoomId, lastId) => {
             },
             cursor: lastId
                 ? {
-                      id: lastId,
+                      id: lastId - 1,
                   }
                 : undefined,
             orderBy: {
@@ -211,6 +189,43 @@ export const createChat = async (id, channelRoomId, content) => {
                         },
                     },
                 },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updateCloseRoom = async (id) => {
+    try {
+        return await prisma.channelRoom.update({
+            where: {
+                id,
+            },
+            data: {
+                status: "close",
+                roomParticipant: {
+                    updateMany: {
+                        where: {
+                            status: "active",
+                        },
+                        data: {
+                            status: "inactive",
+                        },
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findByUserId = async (userId) => {
+    try {
+        return await prisma.channelRoom.findMany({
+            where: {
+                userId,
             },
         });
     } catch (err) {

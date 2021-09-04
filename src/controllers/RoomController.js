@@ -17,5 +17,8 @@ Router.get(
     RoomValidation.GetInfoRequestValid,
     RoomService.GetRoomList
 );
-
+Router.patch("/exit", AuthHandler.isLoggedIn, RoomService.RoomExit);
+Router.patch("/close", AuthHandler.isLoggedIn, RoomService.RoomClose);
+Router.post("/join", AuthHandler.isLoggedIn, RoomService.join);
+Router.post("/list", RoomService.list);
 export default Router;
