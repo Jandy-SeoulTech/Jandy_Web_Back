@@ -40,7 +40,7 @@ export const RoomInfoRequestValid = async (req, res, next) => {
     validationFunction(req, res, next);
 };
 
-export const ReviewRequestValid = async (Req, res, next) => {
+export const ReviewRequestValid = async (req, res, next) => {
     await check("roomId")
         .exists()
         .withMessage("roomId가 존재하지 않습니다.")

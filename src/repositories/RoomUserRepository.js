@@ -135,10 +135,8 @@ export const findReviewStatus = async (channelRoomId, userId) => {
             where: {
                 AND: [
                     {
-                        RoomUser: {
-                            channelRoomId,
-                            userId,
-                        },
+                        channelRoomId,
+                        userId,
                     },
                     {
                         status: "inactive",

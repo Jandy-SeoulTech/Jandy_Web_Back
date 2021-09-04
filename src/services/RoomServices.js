@@ -156,7 +156,8 @@ export const Review = async (req, res, next) => {
             parseInt(req.body.roomId, 10),
             req.user.id
         );
-        if (!reviewCheck) {
+
+        if (!reviewCheck[0]) {
             return res
                 .status(401)
                 .send(resFormat.fail(401, "리뷰를 하실수 없습니다."));
@@ -178,15 +179,6 @@ export const Review = async (req, res, next) => {
             parseInt(req.body.roomId, 10),
             req.user.id
         );
-        const CheckExUser = await RoomUserRepository.findByExUser(
-            parseInt(req.body.roomId, 10)
-        );
-        if (!CheckExUser) {
-            //유저에 더이상 리뷰 할 사람이 없는 경우,
-            await ChannelRoomRepository.deleteRoom(
-                parseInt(req.body.roomId, 10)
-            );
-        }
 
         if (review && deleteRoomUser) {
             return res

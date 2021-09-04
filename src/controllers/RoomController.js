@@ -20,13 +20,13 @@ Router.get(
 Router.patch(
     "/exit",
     AuthHandler.isLoggedIn,
-    RoomValidation.GetInfoRequestValid,
+    RoomValidation.RoomInfoRequestValid,
     RoomService.RoomExit
 );
 Router.patch(
     "/close",
     AuthHandler.isLoggedIn,
-    RoomValidation.GetInfoRequestValid,
+    RoomValidation.RoomInfoRequestValid,
     RoomService.RoomClose
 );
 Router.post(
