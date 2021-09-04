@@ -127,6 +127,11 @@ export const findPostByChannelId = async (channelId) => {
         return await prisma.post.findMany({
             where: {
                 channelId,
+                NOT :[
+                    {
+                        status : 'Clear'
+                    }
+                ]
             },
             orderBy: [
                 {

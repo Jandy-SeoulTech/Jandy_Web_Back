@@ -306,4 +306,5 @@ enum Status {
   Open
   Reservation
   Close
+  Clear
 }
