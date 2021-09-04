@@ -172,17 +172,17 @@ model ChannelRoom {
 }
 
 model ChatMessage {
-  id            Int          @id @default(autoincrement())
-  content       String
-  sendUserId    Int
-  sendUser      User         @relation(fields: [sendUserId], references: [id])
-  baseRoomChat  Channel?     @relation(fields: [channelId], references: [id])
-  channelRoom   ChannelRoom? @relation(fields: [channelRoomId], references: [id])
-  answered      ChatMessage? @relation("answer", fields: [answeredId], references: [id])
-  chatMessage   ChatMessage? @relation("answer")
-  answeredId    Int? // 답장 글인지 여부, null-> 답장글 아님, id 값이면 ChatMessage에 있음. 그 값이.
-  channelRoomId Int? // 채널 방 id( 채널 소규모 채팅 방에서 사용)
-  channelId     Int? // 채널 id(채널 잡담방 사용)
+  id              Int          @id @default(autoincrement())
+  content         String
+  sendUserId      Int
+  sendUser        User         @relation(fields: [sendUserId], references: [id])
+  baseRoomChat    Channel?     @relation(fields: [channelId], references: [id])
+  channelRoom     ChannelRoom? @relation(fields: [channelRoomId], references: [id])
+  answered        ChatMessage? @relation("answer", fields: [answeredId], references: [id])
+  answeredMessage ChatMessage? @relation("answer")
+  answeredId      Int? // 답장 글인지 여부, null-> 답장글 아님, id 값이면 ChatMessage에 있음. 그 값이.
+  channelRoomId   Int? // 채널 방 id( 채널 소규모 채팅 방에서 사용)
+  channelId       Int? // 채널 id(채널 잡담방 사용)
 
   createdAt DateTime
   updatedAt DateTime?

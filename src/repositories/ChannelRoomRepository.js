@@ -196,6 +196,65 @@ export const createChat = async (id, channelRoomId, content) => {
     }
 };
 
+export const createChatAnswer = async (
+    id,
+    channelRoomId,
+    content,
+    answeredId
+) => {
+    try {
+        return await prisma.chatMessage.create({
+            data: {
+                channelRoomId,
+                sendUserId: id,
+                content,
+                createdAt: dbNow(),
+                answeredId,
+            },
+            include: {
+                answeredMessage: {
+                    include: {
+                        sendUser: {
+                            select: {
+                                id: true,
+                                email: true,
+                                nickname: true,
+                                profile: {
+                                    select: {
+                                        profileImage: {
+                                            select: {
+                                                src: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    sendUser: {
+                        select: {
+                            id: true,
+                            email: true,
+                            nickname: true,
+                            profile: {
+                                select: {
+                                    profileImage: {
+                                        select: {
+                                            src: true,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 export const updateCloseRoom = async (id) => {
     try {
         return await prisma.channelRoom.update({

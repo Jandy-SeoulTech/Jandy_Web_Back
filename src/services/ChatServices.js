@@ -53,7 +53,9 @@ export const MainChat = async (req, res, next) => {
         const io = req.app.get("io");
         io.of(`/channel-${req.params.channelId}`).emit("message", response);
 
-        return res.status(200).send(resFormat.success(200, "성공"));
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "성공", response));
     } catch (err) {
         console.error(err);
         next(err);
@@ -61,7 +63,7 @@ export const MainChat = async (req, res, next) => {
 };
 
 //룸 채팅 로그
-export const RoomCatLog = async (req, res, next) => {
+export const RoomChatLog = async (req, res, next) => {
     try {
         let lastId = parseInt(req.query.lastId, 10);
         if (req.query.lastId === "null") {
@@ -84,7 +86,7 @@ export const RoomCatLog = async (req, res, next) => {
 };
 
 //룸 채팅 보내기
-export const RoomCat = async (req, res, next) => {
+export const RoomChat = async (req, res, next) => {
     try {
         const response = await ChannelRoomRepository.createChat(
             req.user.id,
@@ -98,7 +100,32 @@ export const RoomCat = async (req, res, next) => {
         const io = req.app.get("io");
         io.of(`/room-${req.params.roomId}`).emit("message", response);
 
-        return res.status(200).send(resFormat.success(200, "성공"));
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const RoomChatAnswer = async (req, res, next) => {
+    try {
+        const response = await ChannelRoomRepository.createChatAnswer(
+            req.user.id,
+            parseInt(req.params.roomId),
+            req.body.content,
+            parseInt(req.body.answeredId, 10)
+        );
+        if (!response) {
+            return res.status(400).send(resFormat.fail(400, "실패"));
+        }
+        const io = req.app.get("io");
+        io.of(`/room-${req.params.roomId}`).emit("message", response);
+
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "성공", response));
     } catch (err) {
         console.error(err);
         next(err);
