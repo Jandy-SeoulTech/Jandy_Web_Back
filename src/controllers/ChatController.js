@@ -17,8 +17,23 @@ Router.post(
     ChatServices.MainChat
 );
 
-Router.get("/room/:roomId", ChatServices.RoomChatLog);
-Router.post("/room/:roomId/chat", ChatServices.RoomChat);
-Router.post("/room/:roomId/answer", ChatServices.RoomChatAnswer);
+Router.get(
+    "/room/:roomId",
+    AuthHandler.isLoggedIn,
+    ChatValidation.RoomLogRequestValid,
+    ChatServices.RoomChatLog
+);
+Router.post(
+    "/room/:roomId/chat",
+    AuthHandler.isLoggedIn,
+    ChatValidation.RoomChatRequestValid,
+    ChatServices.RoomChat
+);
+Router.post(
+    "/room/:roomId/answer",
+    AuthHandler.isLoggedIn,
+    ChatValidation.RoomAnswerChatRequestValid,
+    ChatServices.RoomChatAnswer
+);
 
 export default Router;
