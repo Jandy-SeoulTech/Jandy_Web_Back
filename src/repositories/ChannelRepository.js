@@ -86,52 +86,6 @@ export const findById = async (id) => {
     }
 };
 
-export const findManyByUserid = async (id) => {
-    try {
-        return await prisma.channel.findMany({
-            where: {
-                adminId: id,
-            },
-            include: {
-                admin: {
-                    select: {
-                        id: true,
-                        email: true,
-                        nickname: true,
-                    },
-                },
-                participants: {
-                    select: {
-                        userId: true,
-                    },
-                },
-                category: {
-                    include: {
-                        category: true,
-                    },
-                },
-                tags: {
-                    include: {
-                        tag: true,
-                    },
-                },
-                channellike: {
-                    select: {
-                        userId: true,
-                    },
-                },
-                channelImage: {
-                    select: {
-                        src: true,
-                    },
-                },
-            },
-        });
-    } catch (err) {
-        console.error(err);
-    }
-};
-
 export const updateChannel = async (data) => {
     try {
         await prisma.channel.update({

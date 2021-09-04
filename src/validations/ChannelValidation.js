@@ -38,9 +38,9 @@ export const CreateRequestValid = async (req, res, next) => {
         .isString()
         .withMessage("category는 String 형식에 맞게 들어와야 합니다.")
         .run(req);        
-    await check("tag")
+    await check("tags")
         .exists()
-        .withMessage("tag가 존재하지 않습니다.")
+        .withMessage("tags가 존재하지 않습니다.")
         .if((value, { req }) => value !== null)
         .isArray()
         .withMessage("배열만 가능합니다.")
@@ -50,8 +50,8 @@ export const CreateRequestValid = async (req, res, next) => {
         .withMessage("src가 존재하지 않습니다.")
         .run(req);
 
-    if (!(req.body.tag === null)) {
-        await check("tag.*")
+    if (!(req.body.tags === null)) {
+        await check("tags.*")
             .trim()
             .notEmpty()
             .withMessage("값이 없습니다.")

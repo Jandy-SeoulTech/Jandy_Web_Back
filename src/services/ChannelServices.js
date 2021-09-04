@@ -33,17 +33,25 @@ export const CreateChannel = async (req, res, next) => {
 
 export const GetChannelList = async (req, res, next) => {
     try {
-        const data = await ChannelRepository.findManyByUserid(
-            parseInt(req.params.userId, 10)
+        const adminChannel = await ChannelRepository.findAdminChannel(
+            req.params.id,
+            SelectOption
         );
-        if (!data) {
-            return res
-                .status(403)
-                .send(resFormat.fail(403, "채널이 존재 하지 않습니다."));
+        const ParticipantChannel = await ChannelRepository.findParticipantChannel(
+            req.params.id,
+            SelectOption
+        );
+
+        if (!ParticipantChannel) {
+            return res.status(500).send(resFormat.fail(500, "알수없는 에러"));
+        } else {
+            return res.status(200).send(
+                resFormat.successData(200, "채널 정보 리스트", {
+                    adminChannl: adminChannel,
+                    participantChannel: ParticipantChannel,
+                })
+            );
         }
-        return res
-            .status(200)
-            .send(resFormat.successData(200, "채널 목록 가져오기 성공", data));
     } catch (err) {
         console.error(err);
         next(err);
@@ -53,8 +61,7 @@ export const GetChannelList = async (req, res, next) => {
 export const GetChannelInfo = async (req, res, nex) => {
     try {
         const data = await ChannelRepository.findById(
-            parseInt(req.params.channelId),
-            10
+            parseInt(req.params.channelId, 10)
         );
         if (!data) {
             return res
@@ -307,7 +314,7 @@ const CreateOption = (bodydata) => {
         name: bodydata.name,
         introduce: bodydata.introduce,
         tags: {
-            create: ChangeObject(bodydata.tag),
+            create: ChangeObject(bodydata.tags),
         },
         category: {
             create: {
@@ -340,9 +347,9 @@ const UpdateOption = (bodydata) => {
     if (bodydata.introduce) {
         Option.introduce = bodydata.introduce;
     }
-    if (bodydata.tag) {
+    if (bodydata.tags) {
         Option.tags = {
-            create: ChangeObject(bodydata.tag),
+            create: ChangeObject(bodydata.tags),
         };
     }
     if (bodydata.category) {
@@ -358,7 +365,7 @@ const UpdateOption = (bodydata) => {
             },
         };
     }
-    if (bodydata.channelImage) {
+    if (bodydata.src) {
         Option.channelImage = {
             update: {
                 src: bodydata.src,
@@ -377,4 +384,37 @@ const ChangeObject = (arr) => {
         });
     });
     return ArrayChange;
+};
+const SelectOption = {
+    id: true,
+    name: true,
+    introduce: true,
+    participants: {
+        select: {
+            userId: true,
+        },
+    },
+    channelImage: {
+        select: {
+            src: true,
+        },
+    },
+    tags: {
+        include: {
+            tag: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    },
+    category: {
+        include: {
+            category: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    },
 };

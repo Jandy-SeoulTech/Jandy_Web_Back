@@ -260,23 +260,24 @@ model Ban {
 }
 
 model Post {
-  id          Int          @id @default(autoincrement())
-  status      Staus
-  content     String
-  comment     Comment[]
-  images      Image[]
-  author      User         @relation("post", fields: [authorId], references: [id])
-  authorId    Int
-  channel     Channel      @relation(fields: [channelId], references: [id])
-  channelId   Int
-  attention   Attention[]
-  ChannelRoom ChannelRoom?
+  id        Int         @id @default(autoincrement())
+  title     String
+  status    Status
+  content   String
+  comment   Comment[]
+  images    Image[]
+  author    User        @relation("post", fields: [authorId], references: [id])
+  authorId  Int
+  channel   Channel     @relation(fields: [channelId], references: [id])
+  channelId Int
+  attention Attention[]
 
   reservedAt DateTime?
   createdAt  DateTime
   updatedAt  DateTime?
 
   @@map("posts")
+  ChannelRoom ChannelRoom[]
 }
 
 model Comment {
@@ -304,9 +305,10 @@ model Attention {
   @@map("attention")
 }
 
-enum Staus {
+enum Status {
   Notice
   Open
   Reservation
   Close
+  Clear
 }
