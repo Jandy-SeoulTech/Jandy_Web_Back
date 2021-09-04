@@ -29,6 +29,9 @@ model User {
   post            Post[]        @relation("post")
   comment         Comment[]     @relation("comment")
   attention       Attention[]   @relation("Attention")
+  reviewed        Review[]      @relation("reviewed")
+  reviewer        Review[]      @relation("reviewer")
+
   @@map(name: "users")
 }
 
@@ -276,8 +279,8 @@ model Post {
   createdAt  DateTime
   updatedAt  DateTime?
 
-  @@map("posts")
   ChannelRoom ChannelRoom[]
+  @@map("posts")
 }
 
 model Comment {
@@ -303,6 +306,18 @@ model Attention {
 
   @@unique([userId, postId], name: "attentionKey")
   @@map("attention")
+}
+
+model Review {
+  id             Int    @id @default(autoincrement())
+  content        String
+  status         String //good, soso, bad
+  reviewedUser   User   @relation("reviewed", fields: [reviewedUserId], references: [id])
+  reviewedUserId Int
+  reviewer       User   @relation("reviewer", fields: [reviewerId], references: [id])
+  reviewerId     Int
+
+  @@map("reviews")
 }
 
 enum Status {

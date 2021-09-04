@@ -291,3 +291,15 @@ export const findByUserId = async (userId) => {
         console.error(err);
     }
 };
+
+export const deleteRoom = async (id) => {
+    try {
+        return await prisma.channelRoom.delete({
+            where: {
+                id,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

@@ -91,3 +91,62 @@ export const updateOneStatus = async (channelRoomId, userId) => {
         console.error(err);
     }
 };
+
+export const deleteOne = async (channelRoomId, userId) => {
+    try {
+        return await prisma.roomUser.delete({
+            where: {
+                RoomUser: {
+                    channelRoomId,
+                    userId,
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findByExUser = async (channelRoomId) => {
+    try {
+        return await prisma.roomUser.findMany({
+            where: {
+                OR: [
+                    {
+                        status: "inactive",
+                    },
+                    {
+                        status: "active",
+                    },
+                ],
+                AND: {
+                    channelRoomId,
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findReviewStatus = async (channelRoomId, userId) => {
+    try {
+        return await prisma.roomUser.findMany({
+            where: {
+                AND: [
+                    {
+                        RoomUser: {
+                            channelRoomId,
+                            userId,
+                        },
+                    },
+                    {
+                        status: "inactive",
+                    },
+                ],
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
