@@ -140,6 +140,26 @@ export const findChatByRoomId = async (channelRoomId, lastId) => {
                 createdAt: "desc",
             },
             include: {
+                answeredMessage: {
+                    include: {
+                        sendUser: {
+                            select: {
+                                id: true,
+                                email: true,
+                                nickname: true,
+                                profile: {
+                                    select: {
+                                        profileImage: {
+                                            select: {
+                                                src: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
                 sendUser: {
                     select: {
                         id: true,
@@ -231,17 +251,17 @@ export const createChatAnswer = async (
                             },
                         },
                     },
-                    sendUser: {
-                        select: {
-                            id: true,
-                            email: true,
-                            nickname: true,
-                            profile: {
-                                select: {
-                                    profileImage: {
-                                        select: {
-                                            src: true,
-                                        },
+                },
+                sendUser: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
                                     },
                                 },
                             },
