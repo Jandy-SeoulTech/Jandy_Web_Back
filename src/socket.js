@@ -29,12 +29,11 @@ export default (server, app) => {
                     parseInt(roomId, 10),
                     parseInt(user.id, 10)
                 );
+                newNamespace.emit(
+                    "joinUser",
+                    `${user.nickname} 님이 입장하셨습니다.`
+                );
             }
-
-            newNamespace.emit(
-                "joinUser",
-                `${user.nickname} 님이 입장하셨습니다.`
-            );
 
             const participantInfo = await RoomUserRepository.findManyByRoomId(
                 parseInt(roomId, 10)
