@@ -22,7 +22,7 @@ export const findById = async (id) => {
                     select: {
                         id: true,
                         email: true,
-                        nickname: true,
+                        nickname : true,
                         profile: {
                             select: {
                                 profileImage: {
@@ -30,7 +30,6 @@ export const findById = async (id) => {
                                         src: true,
                                     },
                                 },
-
                                 wellTalent: {
                                     select: {
                                         contents: true,
@@ -48,10 +47,10 @@ export const findById = async (id) => {
                 participants: {
                     select: {
                         userId: true,
-                        user: {
+                        user : {
                             select: {
                                 id: true,
-                                nickname: true,
+                                nickname : true,
                                 profile: {
                                     select: {
                                         profileImage: {
@@ -59,7 +58,6 @@ export const findById = async (id) => {
                                                 src: true,
                                             },
                                         },
-
                                         wellTalent: {
                                             select: {
                                                 contents: true,
@@ -73,7 +71,7 @@ export const findById = async (id) => {
                                     }
                                 }
                             },
-                        },
+                        }
                     },
                 },
                 category: {
@@ -99,14 +97,15 @@ export const findById = async (id) => {
                 channelImage: {
                     select: {
                         src: true,
-                    },
-                },
+                    }
+                }
             },
         });
     } catch (err) {
         console.error(err);
     }
 };
+
 
 export const updateChannel = async (data) => {
     try {
@@ -233,7 +232,7 @@ export const findChatByChannelId = async (channelId, lastId) => {
             },
             cursor: lastId
                 ? {
-                      id: lastId - 1,
+                      id: lastId,
                   }
                 : undefined,
             orderBy: {
@@ -262,3 +261,94 @@ export const findChatByChannelId = async (channelId, lastId) => {
         console.error(err);
     }
 };
+
+export const findByKeyword = async(category, keyword, lastId) => {
+    try{
+        return await prisma.channel.findMany({
+            take: 6,
+            where: {
+                OR : [
+                    {
+                        name : {
+                            contains : keyword,
+                        },
+                    },
+                    {
+                        tags : {
+                            some: {
+                                tag : {
+                                    name : {
+                                        contains : keyword
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ],
+                AND : [
+                    {
+                        category :{
+                            category : {
+                                name : {
+                                    contains : category,
+                                },
+                            },
+                        },
+                    },
+                ]
+                
+            },
+            cursor: lastId
+                ? {
+                      id: lastId,
+                  }
+                : undefined,
+            include: {
+                admin: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname : true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                                wellTalent: {
+                                    select: {
+                                        contents: true,
+                                    },
+                                },
+                                interestTalent: {
+                                    select: {
+                                        contents: true,
+                                    },
+                                },
+                            }
+                        }
+                    },
+                },
+                category: {
+                    include: {
+                        category: true,
+                    },
+                },
+                tags: {
+                    include: {
+                        tag: true,
+                    },
+                },
+                channelImage: {
+                    select: {
+                        src: true,
+                    }
+                }
+            },
+        })
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
