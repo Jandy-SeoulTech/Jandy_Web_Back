@@ -30,6 +30,16 @@ export const findById = async (id) => {
                                         src: true,
                                     },
                                 },
+                                wellTalent: {
+                                    select: {
+                                        contents: true,
+                                    },
+                                },
+                                interestTalent: {
+                                    select: {
+                                        contents: true,
+                                    },
+                                },
                             }
                         }
                     },
@@ -46,6 +56,16 @@ export const findById = async (id) => {
                                         profileImage: {
                                             select: {
                                                 src: true,
+                                            },
+                                        },
+                                        wellTalent: {
+                                            select: {
+                                                contents: true,
+                                            },
+                                        },
+                                        interestTalent: {
+                                            select: {
+                                                contents: true,
                                             },
                                         },
                                     }
