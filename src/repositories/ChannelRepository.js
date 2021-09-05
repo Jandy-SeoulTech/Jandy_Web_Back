@@ -30,8 +30,19 @@ export const findById = async (id) => {
                                         src: true,
                                     },
                                 },
-                            },
-                        },
+
+                                wellTalent: {
+                                    select: {
+                                        contents: true,
+                                    },
+                                },
+                                interestTalent: {
+                                    select: {
+                                        contents: true,
+                                    },
+                                },
+                            }
+                        }
                     },
                 },
                 participants: {
@@ -48,8 +59,19 @@ export const findById = async (id) => {
                                                 src: true,
                                             },
                                         },
-                                    },
-                                },
+
+                                        wellTalent: {
+                                            select: {
+                                                contents: true,
+                                            },
+                                        },
+                                        interestTalent: {
+                                            select: {
+                                                contents: true,
+                                            },
+                                        },
+                                    }
+                                }
                             },
                         },
                     },
