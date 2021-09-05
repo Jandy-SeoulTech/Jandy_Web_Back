@@ -4,8 +4,6 @@ import * as LikeRepository from "../repositories/LikeReposiotry";
 import * as UserRepository from "../repositories/UserRepository";
 import { dbNow } from "../utils/dayUtils";
 
-import bcrypt from "bcrypt";
-
 import resFormat from "../utils/resFormat";
 
 export const CreateChannel = async (req, res, next) => {
@@ -63,7 +61,7 @@ export const GetChannelList = async (req, res, next) => {
 export const GetChannelInfo = async (req, res, nex) => {
     try {
         const data = await ChannelRepository.findById(
-            parseInt(req.params.channelId,10)
+            parseInt(req.params.channelId, 10)
         );
         if (!data) {
             return res
@@ -307,32 +305,6 @@ export const Ban = async (req, res, next) => {
     }
 };
 
-export const GetMyChannelInfo = async (req, res, next) => {
-    try {
-        const adminChannel = await ChannelRepository.findAdminChannel(
-            req.user.id,
-            SelectOption
-        );
-        const ParticipantChannel = await ChannelRepository.findParticipantChannel(
-            req.user.id,
-            SelectOption
-        );
-
-        if (!ParticipantChannel) {
-            return res.status(500).send(resFormat.fail(500, "알수없는 에러"));
-        } else {
-            return res.status(200).send(
-                resFormat.successData(200, "내 채널 정보", {
-                    adminChannl: adminChannel,
-                    participantChannel: ParticipantChannel,
-                })
-            );
-        }
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-};
 // Option 생성
 const CreateOption = (bodydata) => {
     // DB에 맞추어 Option 설정
@@ -413,8 +385,6 @@ const ChangeObject = (arr) => {
     });
     return ArrayChange;
 };
-
-//MyChannel Page SelectOption
 const SelectOption = {
     id: true,
     name: true,

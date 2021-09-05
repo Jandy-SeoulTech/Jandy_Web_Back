@@ -1,6 +1,8 @@
 import * as UserRepository from "../repositories/UserRepository";
 import * as ProfileRepository from "../repositories/ProfileRepository";
 import * as FollowRepository from "../repositories/FollowRepository";
+import * as ChannelRepository from "../repositories/ChannelRepository";
+import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
 import bcrypt from "bcrypt";
 import resFormat from "../utils/resFormat";
 import { dbNow } from "../utils/dayUtils";
@@ -296,6 +298,36 @@ export const FollowingList = async (req, res, next) => {
         next(err);
     }
 };
+
+export const GetMyChannelInfo = async (req, res, next) => {
+    try {
+        const adminChannel = await ChannelRepository.findAdminChannel(
+            req.user.id,
+            SelectOption
+        );
+        const participantChannel = await ChannelRepository.findParticipantChannel(
+            req.user.id,
+            SelectOption
+        );
+        const participantRoom = await ChannelRoomRepository.CheckParticipantRoom(
+            req.user.id
+        );
+        if (!participantChannel) {
+            return res.status(500).send(resFormat.fail(500, "알수없는 에러"));
+        } else {
+            return res.status(200).send(
+                resFormat.successData(200, "내 채널 정보", {
+                    adminChannl: adminChannel,
+                    participantChannel: participantChannel,
+                    participantRoom: participantRoom,
+                })
+            );
+        }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
 //옵션 생성 함수
 const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
     // DB data 옵션 설정.
@@ -332,4 +364,38 @@ const ChangeObject = (arr) => {
         ArrayChange.push({ contents: v, createdAt: dbNow() });
     });
     return ArrayChange;
+};
+//MyChannel Page SelectOption
+const SelectOption = {
+    id: true,
+    name: true,
+    introduce: true,
+    participants: {
+        select: {
+            userId: true,
+        },
+    },
+    channelImage: {
+        select: {
+            src: true,
+        },
+    },
+    tags: {
+        include: {
+            tag: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    },
+    category: {
+        include: {
+            category: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    },
 };

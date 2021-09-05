@@ -22,7 +22,7 @@ export const findById = async (id) => {
                     select: {
                         id: true,
                         email: true,
-                        nickname : true,
+                        nickname: true,
                         profile: {
                             select: {
                                 profileImage: {
@@ -30,6 +30,7 @@ export const findById = async (id) => {
                                         src: true,
                                     },
                                 },
+
                                 wellTalent: {
                                     select: {
                                         contents: true,
@@ -47,10 +48,10 @@ export const findById = async (id) => {
                 participants: {
                     select: {
                         userId: true,
-                        user : {
+                        user: {
                             select: {
                                 id: true,
-                                nickname : true,
+                                nickname: true,
                                 profile: {
                                     select: {
                                         profileImage: {
@@ -58,6 +59,7 @@ export const findById = async (id) => {
                                                 src: true,
                                             },
                                         },
+
                                         wellTalent: {
                                             select: {
                                                 contents: true,
@@ -71,7 +73,7 @@ export const findById = async (id) => {
                                     }
                                 }
                             },
-                        }
+                        },
                     },
                 },
                 category: {
@@ -97,15 +99,14 @@ export const findById = async (id) => {
                 channelImage: {
                     select: {
                         src: true,
-                    }
-                }
+                    },
+                },
             },
         });
     } catch (err) {
         console.error(err);
     }
 };
-
 
 export const updateChannel = async (data) => {
     try {
@@ -232,7 +233,7 @@ export const findChatByChannelId = async (channelId, lastId) => {
             },
             cursor: lastId
                 ? {
-                      id: lastId,
+                      id: lastId - 1,
                   }
                 : undefined,
             orderBy: {

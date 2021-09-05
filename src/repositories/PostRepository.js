@@ -1,13 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { dbNow } from "../utils/dayUtils";
+import { dbNow, StringToDate } from "../utils/dayUtils";
 
-const now = dbNow();
 const prisma = new PrismaClient();
 
 export const findById = async (id) => {
-    try{
+    try {
         return prisma.post.findUnique({
-            where: {id},
+            where: { id },
             include: {
                 author: {
                     select: {
@@ -25,7 +24,7 @@ export const findById = async (id) => {
                         },
                     },
                 },
-                comment : {
+                comment: {
                     select: {
                         author: {
                             select: {
@@ -43,51 +42,49 @@ export const findById = async (id) => {
                                 },
                             },
                         },
-                        content:true,
+                        content: true,
                         createdAt: true,
-                        updatedAt: true
-                    }
+                        updatedAt: true,
+                    },
                 },
-                attention : {
+                attention: {
                     select: {
-                        user : {
+                        user: {
                             select: {
                                 id: true,
                                 email: true,
                                 nickname: true,
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
-                images : {
+                images: {
                     select: {
-                        src: true
-                    }
-                }
+                        src: true,
+                    },
+                },
             },
         });
-    }
-    catch(err){
+    } catch (err) {
         console.error(err);
     }
-}
+};
 
 export const createPost = async (data) => {
-    try{
+    try {
         return await prisma.post.create({
             data,
             include: {
-                images : true
-            }
+                images: true,
+            },
         });
-    }
-    catch(err){
+    } catch (err) {
         console.error(err);
     }
-}
+};
 
 export const updatePost = async (data) => {
-    try{
+    try {
         await prisma.post.update({
             where: {
                 id: parseInt(data.id, 10),
@@ -96,53 +93,51 @@ export const updatePost = async (data) => {
                 images: {
                     deleteMany: {},
                 },
-            }
-        })
+            },
+        });
         return await prisma.post.update({
             where: { id: parseInt(data.id, 10) },
             data,
             include: {
-                images : true
-            }
+                images: true,
+            },
         });
-    }
-    catch(err){
+    } catch (err) {
         console.error(err);
     }
-}
+};
 
 export const deletePost = async (id) => {
-    try{
+    try {
         return await prisma.post.delete({
-            where : {id}
-        })
-    }
-    catch (err) {
+            where: { id },
+        });
+    } catch (err) {
         console.error(err);
     }
-}
+};
 
 export const findPostByChannelId = async (channelId) => {
     try {
         return await prisma.post.findMany({
             where: {
                 channelId,
-                NOT :[
+                NOT: [
                     {
-                        status : 'Clear'
-                    }
-                ]
+                        status: "Clear",
+                    },
+                ],
             },
             orderBy: [
                 {
-                    status: "asc"
+                    status: "asc",
                 },
                 {
                     createdAt: "desc",
                 },
                 {
-                    updatedAt: "desc"
-                }
+                    updatedAt: "desc",
+                },
             ],
             include: {
                 author: {
@@ -168,16 +163,80 @@ export const findPostByChannelId = async (channelId) => {
     }
 };
 
-export const CheckMyPost = async (id,authorId) => {
-    try{
+export const checkMyPost = async (id, authorId) => {
+    try {
         return await prisma.post.findMany({
-           where: {
-               id,
-               authorId
-           }
-        })
+            where: {
+                id,
+                authorId,
+            },
+        });
+    } catch (err) {
+        console.error(err);
     }
-    catch (err) {
+};
+
+export const checkPostClosed = async (id) => {
+    try {
+        return await prisma.post.findMany({
+            where: {
+                AND: [
+                    {
+                        id,
+                    },
+                    {
+                        status: "Close",
+                    },
+                ],
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updateOpen = async (id) => {
+    try {
+        return await prisma.post.update({
+            where: {
+                id,
+            },
+            data: {
+                status: "Open",
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updateReserve = async (id, date) => {
+    try {
+        return await prisma.post.update({
+            where: {
+                id,
+            },
+            data: {
+                status: "Reservation",
+                reservedAt: StringToDate(date),
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updateClaer = async (id) => {
+    try {
+        return await prisma.post.update({
+            where: {
+                id,
+            },
+            data: {
+                status: "Clear",
+            },
+        });
+    } catch (err) {
         console.error(err);
     }
 };

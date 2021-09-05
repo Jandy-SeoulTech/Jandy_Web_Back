@@ -17,11 +17,6 @@ Router.patch(
     ProfileValidation.UpdateRequestValid,
     ProfileServices.UpdateUserProfile
 );
-Router.get(
-    "/:userId",
-    ProfileValidation.GetRequestValid,
-    ProfileServices.GetUserProfile
-);
 Router.post(
     "/password",
     AuthHandler.isLoggedIn,
@@ -57,5 +52,15 @@ Router.get(
     AuthHandler.isLoggedIn,
     ProfileValidation.GetRequestValid,
     ProfileServices.FollowingList
+);
+Router.get(
+    "/mychannel",
+    AuthHandler.isLoggedIn,
+    ProfileServices.GetMyChannelInfo
+);
+Router.get(
+    "/:userId",
+    ProfileValidation.GetRequestValid,
+    ProfileServices.GetUserProfile
 );
 export default Router;
