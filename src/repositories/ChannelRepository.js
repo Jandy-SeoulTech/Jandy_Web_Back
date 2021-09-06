@@ -262,9 +262,10 @@ export const findChatByChannelId = async (channelId, lastId) => {
     }
 };
 
-export const findByKeyword = async(category, keyword, lastId) => {
+export const findByKeyword = async(category, keyword, offset=0) => {
     try{
         return await prisma.channel.findMany({
+            skip: offset,
             take: 6,
             where: {
                 OR : [
@@ -298,11 +299,6 @@ export const findByKeyword = async(category, keyword, lastId) => {
                 ]
                 
             },
-            cursor: lastId
-                ? {
-                      id: lastId,
-                  }
-                : undefined,
             include: {
                 admin: {
                     select: {
