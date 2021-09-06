@@ -62,11 +62,43 @@ export const ReserveRoom = async (bodyData, userId) => {
     }
 };
 
-export const findByChannelId = async (channelId) => {
+export const findOpenRoomByChannelId = async (channelId) => {
     try {
         return await prisma.channelRoom.findMany({
             where: {
                 channelId,
+                status: "Open",
+            },
+            include: {
+                roomParticipant: true,
+                roomOwner: {
+                    select: {
+                        id: true,
+                        nickname: true,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findReservedRoomByChannelId = async (channelId) => {
+    try {
+        return await prisma.channelRoom.findMany({
+            where: {
+                channelId,
+                status: "Reservation",
+            },
+            include: {
+                roomParticipant: true,
+                roomOwner: {
+                    select: {
+                        id: true,
+                        nickname: true,
+                    },
+                },
             },
         });
     } catch (err) {
@@ -140,6 +172,26 @@ export const findChatByRoomId = async (channelRoomId, lastId) => {
                 createdAt: "desc",
             },
             include: {
+                answeredMessage: {
+                    include: {
+                        sendUser: {
+                            select: {
+                                id: true,
+                                email: true,
+                                nickname: true,
+                                profile: {
+                                    select: {
+                                        profileImage: {
+                                            select: {
+                                                src: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
                 sendUser: {
                     select: {
                         id: true,
@@ -231,17 +283,17 @@ export const createChatAnswer = async (
                             },
                         },
                     },
-                    sendUser: {
-                        select: {
-                            id: true,
-                            email: true,
-                            nickname: true,
-                            profile: {
-                                select: {
-                                    profileImage: {
-                                        select: {
-                                            src: true,
-                                        },
+                },
+                sendUser: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
                                     },
                                 },
                             },
