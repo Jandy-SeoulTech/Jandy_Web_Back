@@ -510,3 +510,68 @@ export const NotAttention = async (userId, postId) => {
         console.error(err);
     }
 };
+
+export const findByKeyword = async(keyword, lastId) => {
+    try{
+        return await prisma.user.findMany({
+            take: 6,
+            where: {
+                OR : [
+                    {
+                        nickname : {
+                            contains : keyword,
+                        },
+                    },
+                    {
+                        profile : {
+                            wellTalent: {
+                                some: {
+                                    contents : {
+                                        contains : keyword
+                                    },
+                                },
+                            }
+                        },
+                    },
+                    {
+                        profile : {
+                            interestTalent: {
+                                some: {
+                                    contents : {
+                                        contains : keyword
+                                    },
+                                },
+                            }
+                        },
+                    },
+                ],
+            },
+            cursor: lastId
+                ? {
+                      id: lastId,
+                  }
+                : undefined,
+            select: {
+                id: true,
+                email: true,
+                nickname: true,
+                profile: {
+                    select: {
+                        department: true,
+                        introduce: true,
+                        wellTalent: true,
+                        interestTalent: true,
+                        profileImage: {
+                            select: {
+                                src: true,
+                            },
+                        },
+                    },
+                },
+            },
+        })
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
