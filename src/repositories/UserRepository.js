@@ -351,69 +351,127 @@ export const Ban = async (userId, channelId) => {
         console.error(err);
     }
 };
-
-export const findFollowerListById = async (id) => {
+export const findFollwerListNotFollowing = async (
+    findUserId,
+    loginedUserId,
+    FollowListSelectOption
+) => {
     try {
         return await prisma.user.findMany({
             where: {
-                followings: {
-                    some: {
-                        followingId: id,
-                    },
-                },
-            },
-            select: {
-                id: true,
-                email: true,
-                nickname: true,
-                profile: {
-                    select: {
-                        department: true,
-                        introduce: true,
-                        wellTalent: true,
-                        interestTalent: true,
-                        profileImage: {
-                            select: {
-                                src: true,
+                AND: [
+                    {
+                        followings: {
+                            some: {
+                                followingId: findUserId,
                             },
                         },
                     },
-                },
+                    {
+                        followers: {
+                            some: {
+                                followingId: loginedUserId,
+                            },
+                        },
+                    },
+                ],
             },
+            select: FollowListSelectOption,
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+export const findFollowerListAleadyFollowing = async (
+    findUserId,
+    loginedUserId,
+    FollowListSelectOption
+) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                AND: [
+                    {
+                        followings: {
+                            some: {
+                                followingId: findUserId,
+                            },
+                        },
+                    },
+                    {
+                        followers: {
+                            none: {
+                                followingId: loginedUserId,
+                            },
+                        },
+                    },
+                ],
+            },
+            select: FollowListSelectOption,
         });
     } catch (err) {
         console.error(err);
     }
 };
 
-export const findFollowingListById = async (id) => {
+export const findFollowingListAleadyFollowing = async (
+    findUserId,
+    loginedUserId,
+    FollowListSelectOption
+) => {
     try {
         return await prisma.user.findMany({
             where: {
-                followers: {
-                    some: {
-                        followerId: id,
-                    },
-                },
-            },
-            select: {
-                id: true,
-                email: true,
-                nickname: true,
-                profile: {
-                    select: {
-                        department: true,
-                        introduce: true,
-                        wellTalent: true,
-                        interestTalent: true,
-                        profileImage: {
-                            select: {
-                                src: true,
+                AND: [
+                    {
+                        followers: {
+                            some: {
+                                followerId: findUserId,
                             },
                         },
                     },
-                },
+                    {
+                        followings: {
+                            some: {
+                                followingId: loginedUserId,
+                            },
+                        },
+                    },
+                ],
             },
+            select: FollowListSelectOption,
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findFollowingListNotFollowing = async (
+    findUserId,
+    loginedUserId,
+    FollowListSelectOption
+) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                AND: [
+                    {
+                        followers: {
+                            some: {
+                                followerId: findUserId,
+                            },
+                        },
+                    },
+                    {
+                        followings: {
+                            none: {
+                                followingId: loginedUserId,
+                            },
+                        },
+                    },
+                ],
+            },
+            select: FollowListSelectOption,
         });
     } catch (err) {
         console.error(err);
