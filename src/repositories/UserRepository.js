@@ -573,3 +573,67 @@ export const NotAttention = async (userId, postId) => {
         console.error(err);
     }
 };
+<<<<<<< HEAD
+=======
+
+export const findByKeyword = async(keyword, offset=0) => {
+    try{
+        return await prisma.user.findMany({
+            skip: offset,
+            take: 6,
+            where: {
+                OR : [
+                    {
+                        nickname : {
+                            contains : keyword,
+                        },
+                    },
+                    {
+                        profile : {
+                            wellTalent: {
+                                some: {
+                                    contents : {
+                                        contains : keyword
+                                    },
+                                },
+                            }
+                        },
+                    },
+                    {
+                        profile : {
+                            interestTalent: {
+                                some: {
+                                    contents : {
+                                        contains : keyword
+                                    },
+                                },
+                            }
+                        },
+                    },
+                ],
+            },
+            select: {
+                id: true,
+                email: true,
+                nickname: true,
+                profile: {
+                    select: {
+                        department: true,
+                        introduce: true,
+                        wellTalent: true,
+                        interestTalent: true,
+                        profileImage: {
+                            select: {
+                                src: true,
+                            },
+                        },
+                    },
+                },
+            },
+        })
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+>>>>>>> dev

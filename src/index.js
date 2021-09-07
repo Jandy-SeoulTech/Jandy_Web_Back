@@ -16,6 +16,7 @@ import OAuthController from "./controllers/OAuthController";
 import ChannelController from "./controllers/ChannelController";
 import ChatController from "./controllers/ChatController";
 import RoomController from "./controllers/RoomController";
+import SearchController from "./controllers/SearchController";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use("/api/Profile", ProfileController);
 app.use("/api/Channel", ChannelController);
 app.use("/api/Room", RoomController);
 app.use("/api/Chat", ChatController);
+app.use("/api/Search", SearchController);
 
 //404 handler
 app.use(ErrorHandler.routerHanlder);
