@@ -573,41 +573,39 @@ export const NotAttention = async (userId, postId) => {
         console.error(err);
     }
 };
-<<<<<<< HEAD
-=======
 
-export const findByKeyword = async(keyword, offset=0) => {
-    try{
+export const findByKeyword = async (keyword, offset = 0) => {
+    try {
         return await prisma.user.findMany({
             skip: offset,
             take: 6,
             where: {
-                OR : [
+                OR: [
                     {
-                        nickname : {
-                            contains : keyword,
+                        nickname: {
+                            contains: keyword,
                         },
                     },
                     {
-                        profile : {
+                        profile: {
                             wellTalent: {
                                 some: {
-                                    contents : {
-                                        contains : keyword
+                                    contents: {
+                                        contains: keyword,
                                     },
                                 },
-                            }
+                            },
                         },
                     },
                     {
-                        profile : {
+                        profile: {
                             interestTalent: {
                                 some: {
-                                    contents : {
-                                        contains : keyword
+                                    contents: {
+                                        contains: keyword,
                                     },
                                 },
-                            }
+                            },
                         },
                     },
                 ],
@@ -630,10 +628,8 @@ export const findByKeyword = async(keyword, offset=0) => {
                     },
                 },
             },
-        })
-    }
-    catch (err) {
+        });
+    } catch (err) {
         console.error(err);
     }
-}
->>>>>>> dev
+};
