@@ -220,16 +220,40 @@ export const findParticipantRoom = async (id) => {
     }
 };
 
-export const findChatByRoomId = async (channelRoomId, lastId) => {
+export const findChatLastId = async (roomId, lastId) => {
     try {
         return await prisma.chatMessage.findMany({
-            take: 10,
+            where: {
+                AND: [
+                    {
+                        channelRoomId: roomId,
+                    },
+                    {
+                        id: {
+                            lt: lastId,
+                        },
+                    },
+                ],
+            },
+            orderBy: {
+                id: "desc",
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findChatByRoomId = async (channelRoomId, lastId, limit) => {
+    try {
+        return await prisma.chatMessage.findMany({
+            take: limit,
             where: {
                 channelRoomId,
             },
             cursor: lastId
                 ? {
-                      id: lastId - 1,
+                      id: lastId,
                   }
                 : undefined,
             orderBy: {

@@ -16,6 +16,8 @@ export const ChannelLogRequestValid = async (req, res, next) => {
         .exists()
         .withMessage("lastId가 존재하지 않습니다.")
         .run(req);
+    await check("limit").isNumeric("숫자 형태여야 합니다").run(req);
+
     validationFunction(req, res, next);
 };
 
@@ -49,6 +51,7 @@ export const RoomLogRequestValid = async (req, res, next) => {
         .exists()
         .withMessage("lastId가 존재하지 않습니다.")
         .run(req);
+    await check("limit").isNumeric("숫자 형태여야 합니다").run(req);
     validationFunction(req, res, next);
 };
 

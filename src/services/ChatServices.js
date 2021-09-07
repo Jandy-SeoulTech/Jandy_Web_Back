@@ -10,10 +10,24 @@ export const MainChatLog = async (req, res, next) => {
         let lastId = parseInt(req.query.lastId, 10);
         if (req.query.lastId === "null") {
             lastId = null;
+        } else {
+            const findLastId = await ChannelRepository.findLastId(
+                parseInt(req.params.channelId),
+                lastId
+            );
+            if (!findLastId[0]) {
+                return res
+                    .status(200)
+                    .send(
+                        resFormat.successData(200, "마지막 채팅입니다", null)
+                    );
+            }
+            lastId = findLastId[0].id;
         }
         const response = await ChannelRepository.findChatByChannelId(
             parseInt(req.params.channelId),
-            lastId
+            lastId,
+            parseInt(req.query.limit, 10)
         );
         if (!response) {
             return res.status(400).send(resFormat.fail(400, "실패"));
@@ -68,12 +82,26 @@ export const RoomChatLog = async (req, res, next) => {
         let lastId = parseInt(req.query.lastId, 10);
         if (req.query.lastId === "null") {
             lastId = null;
+        } else {
+            const findLastId = await ChannelRoomRepository.findChatLastId(
+                parseInt(req.params.roomId),
+                lastId
+            );
+            if (!findLastId[0]) {
+                return res
+                    .status(200)
+                    .send(
+                        resFormat.successData(200, "마지막 채팅입니다.", null)
+                    );
+            }
+            lastId = findLastId[0].id;
         }
         const response = await ChannelRoomRepository.findChatByRoomId(
             parseInt(req.params.roomId),
-            lastId
+            lastId,
+            parseInt(req.query.limit, 10)
         );
-        if (!response) {
+        if (!response[0]) {
             return res.status(400).send(resFormat.fail(400, "실패"));
         }
         return res
