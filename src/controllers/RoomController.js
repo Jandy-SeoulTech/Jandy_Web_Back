@@ -35,6 +35,12 @@ Router.post(
     RoomValidation.ReviewRequestValid,
     RoomService.Review
 );
+Router.get(
+    "/info/:roomId",
+    AuthHandler.isLoggedIn,
+    RoomValidation.RoomInfoRequestValid,
+    RoomService.GetRoomInfo
+);
 
 Router.post("/join", AuthHandler.isLoggedIn, RoomService.join);
 Router.post("/list", RoomService.list);

@@ -9,6 +9,23 @@ export const findById = async (id) => {
             where: {
                 id,
             },
+            include: {
+                roomOwner: {
+                    select: {
+                        id: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         });
     } catch (err) {
         console.error(err);

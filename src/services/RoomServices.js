@@ -198,6 +198,25 @@ export const Review = async (req, res, next) => {
     }
 };
 
+export const GetRoomInfo = async (req, res, next) => {
+    try {
+        const response = await ChannelRoomRepository.findById(
+            parseInt(req.params.roomId)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "방을 찾을수 없습니다"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "방 조회 성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
 export const join = async (req, res, next) => {
     try {
         const response = await RoomUserRepository.findOneByRoomAndUserId(
