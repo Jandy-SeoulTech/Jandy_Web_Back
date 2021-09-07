@@ -9,6 +9,23 @@ export const findById = async (id) => {
             where: {
                 id,
             },
+            include: {
+                roomOwner: {
+                    select: {
+                        id: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         });
     } catch (err) {
         console.error(err);
@@ -120,22 +137,69 @@ export const updateOpenRoom = async (id) => {
         console.error(err);
     }
 };
-
-export const CheckParticipantRoom = async (id) => {
+export const findOwnerRoom = async (userId) => {
     try {
         return await prisma.channelRoom.findMany({
             where: {
-                roomParticipant: {
-                    every: {
-                        userId: id,
-                    },
-                },
+                userId,
+            },
+            orderBy: {
+                status: "asc",
             },
             select: {
                 id: true,
                 status: true,
                 name: true,
                 createdAt: true,
+                reservedAt: true,
+                roomOwner: {
+                    select: {
+                        email: true,
+                        nickname: true,
+                    },
+                },
+                roomParticipant: true,
+                channel: {
+                    select: {
+                        name: true,
+                        channelImage: true,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findParticipantRoom = async (id) => {
+    try {
+        return await prisma.channelRoom.findMany({
+            where: {
+                AND: [
+                    {
+                        userId: {
+                            not: id,
+                        },
+                    },
+                    {
+                        roomParticipant: {
+                            some: {
+                                userId: id,
+                            },
+                        },
+                    },
+                ],
+            },
+            orderBy: {
+                status: "asc",
+            },
+            select: {
+                id: true,
+                status: true,
+                name: true,
+                createdAt: true,
+                reservedAt: true,
                 roomOwner: {
                     select: {
                         email: true,
@@ -314,7 +378,7 @@ export const updateCloseRoom = async (id) => {
                 id,
             },
             data: {
-                status: "close",
+                status: "Close",
                 roomParticipant: {
                     updateMany: {
                         where: {

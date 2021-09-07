@@ -7,7 +7,8 @@ export const createReview = async (
     reviewerId,
     reviewedUserId,
     content,
-    status
+    status,
+    channelId
 ) => {
     try {
         return await prisma.review.create({
@@ -16,9 +17,36 @@ export const createReview = async (
                 reviewedUserId,
                 content,
                 status,
+                channelId,
+                createdAt: dbNow(),
             },
         });
     } catch (err) {
         console.error(err);
+    }
+};
+
+export const findReviewByUserId = async (id) => {
+    try {
+        return await prisma.review.findMany({
+            where: {
+                reviewedUserId: id,
+            },
+            include: {
+                reviewChannel: {
+                    select: {
+                        name: true,
+                        channelImage: {
+                            select: {
+                                src: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+        next(err);
     }
 };

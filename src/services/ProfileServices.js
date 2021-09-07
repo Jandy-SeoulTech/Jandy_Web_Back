@@ -3,6 +3,7 @@ import * as ProfileRepository from "../repositories/ProfileRepository";
 import * as FollowRepository from "../repositories/FollowRepository";
 import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
+import * as ReviewRepository from "../repositories/ReviewRepository";
 import bcrypt from "bcrypt";
 import resFormat from "../utils/resFormat";
 import { dbNow } from "../utils/dayUtils";
@@ -261,19 +262,30 @@ export const UserUnFollow = async (req, res, next) => {
     }
 };
 
-export const FollowerList = async (req, res) => {
+export const FollowerList = async (req, res, next) => {
     try {
-        const response = await UserRepository.findFollowerListById(
-            parseInt(req.params.userId)
+        let followerUserAleadyFollowing = await UserRepository.findFollowerListAleadyFollowing(
+            parseInt(req.params.userId),
+            req.user.id,
+            FollowListSelectOption
         );
-        if (!response) {
-            return res
-                .status(500)
-                .send(resFormat.fail(500, "팔로워 리스트 조회 실패"));
+        let followerUserNotFollowing = await UserRepository.findFollwerListNotFollowing(
+            parseInt(req.params.userId),
+            req.user.id,
+            FollowListSelectOption
+        );
+        if (!followerUserAleadyFollowing[0]) {
+            followerUserAleadyFollowing = null;
         }
-        return res
-            .status(200)
-            .send(resFormat.successData(200, "팔로워 리스트", response));
+        if (!followerUserNotFollowing[0]) {
+            followerUserNotFollowing = null;
+        }
+        return res.status(200).send(
+            resFormat.successData(200, "팔로워 리스트", {
+                aleadyFollwed: followerUserAleadyFollowing,
+                aleadyNotFollowed: followerUserNotFollowing,
+            })
+        );
     } catch (err) {
         console.error(err);
         next(err);
@@ -282,17 +294,28 @@ export const FollowerList = async (req, res) => {
 
 export const FollowingList = async (req, res, next) => {
     try {
-        const response = await UserRepository.findFollowingListById(
-            parseInt(req.params.userId)
+        let followingUserAleadyFollowing = await UserRepository.findFollowingListAleadyFollowing(
+            parseInt(req.params.userId),
+            req.user.id,
+            FollowListSelectOption
         );
-        if (!response) {
-            return res
-                .status(500)
-                .send(resFormat.fail(500, "팔로윙 리스트 조회 실패"));
+        let followingUserNotFollowing = await UserRepository.findFollowingListNotFollowing(
+            parseInt(req.params.userId),
+            req.user.id,
+            FollowListSelectOption
+        );
+        if (!followingUserAleadyFollowing[0]) {
+            followingUserAleadyFollowing = null;
         }
-        return res
-            .status(200)
-            .send(resFormat.successData(200, "팔로윙 리스트", response));
+        if (!followingUserNotFollowing[0]) {
+            followingUserNotFollowing = null;
+        }
+        return res.status(200).send(
+            resFormat.successData(200, "팔로윙 리스트", {
+                aleadyFollowd: followingUserAleadyFollowing,
+                aleadyNotFollowd: followingUserNotFollowing,
+            })
+        );
     } catch (err) {
         console.error(err);
         next(err);
@@ -309,7 +332,10 @@ export const GetMyChannelInfo = async (req, res, next) => {
             req.user.id,
             SelectOption
         );
-        const participantRoom = await ChannelRoomRepository.CheckParticipantRoom(
+        const ownerRoom = await ChannelRoomRepository.findOwnerRoom(
+            req.user.id
+        );
+        const participantRoom = await ChannelRoomRepository.findParticipantRoom(
             req.user.id
         );
         if (!participantChannel) {
@@ -319,10 +345,32 @@ export const GetMyChannelInfo = async (req, res, next) => {
                 resFormat.successData(200, "내 채널 정보", {
                     adminChannl: adminChannel,
                     participantChannel: participantChannel,
+                    ownerRoom: ownerRoom,
                     participantRoom: participantRoom,
                 })
             );
         }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetReviewList = async (req, res, next) => {
+    try {
+        const findReviews = await ReviewRepository.findReviewByUserId(
+            req.user.id
+        );
+        if (!findReviews[0]) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러발생"));
+        }
+        return res
+            .status(200)
+            .send(
+                resFormat.successData(200, "리뷰 리스트 조회 성공", findReviews)
+            );
     } catch (err) {
         console.error(err);
         next(err);
@@ -394,6 +442,26 @@ const SelectOption = {
             category: {
                 select: {
                     name: true,
+                },
+            },
+        },
+    },
+};
+//Follower & FollowingList SelectOption
+
+const FollowListSelectOption = {
+    id: true,
+    email: true,
+    nickname: true,
+    profile: {
+        select: {
+            department: true,
+            introduce: true,
+            wellTalent: true,
+            interestTalent: true,
+            profileImage: {
+                select: {
+                    src: true,
                 },
             },
         },

@@ -135,6 +135,7 @@ model Channel {
   channelRoom  ChannelRoom[]
   baseRoomChat ChatMessage[]
   post         Post[]
+  Review       Review[]
 
 
   createdAt DateTime
@@ -157,7 +158,7 @@ model RoomUser {
 
 model ChannelRoom {
   id              Int           @id @default(autoincrement())
-  status          String
+  status          RoomStatus
   name            String
   channelId       Int
   userId          Int
@@ -309,13 +310,16 @@ model Attention {
 }
 
 model Review {
-  id             Int    @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   content        String
   status         String //good, soso, bad
-  reviewedUser   User   @relation("reviewed", fields: [reviewedUserId], references: [id])
+  reviewedUser   User     @relation("reviewed", fields: [reviewedUserId], references: [id])
   reviewedUserId Int
-  reviewer       User   @relation("reviewer", fields: [reviewerId], references: [id])
+  reviewer       User     @relation("reviewer", fields: [reviewerId], references: [id])
   reviewerId     Int
+  reviewChannel  Channel  @relation(fields: [channelId], references: [id])
+  channelId      Int
+  createdAt      DateTime
 
   @@map("reviews")
 }
@@ -326,4 +330,10 @@ enum Status {
   Reservation
   Close
   Clear
+}
+
+enum RoomStatus {
+  Open
+  Reservation
+  Close
 }
