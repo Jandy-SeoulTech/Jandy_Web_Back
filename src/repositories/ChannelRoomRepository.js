@@ -220,10 +220,10 @@ export const findParticipantRoom = async (id) => {
     }
 };
 
-export const findChatByRoomId = async (channelRoomId, lastId) => {
+export const findChatByRoomId = async (channelRoomId, lastId, limit) => {
     try {
         return await prisma.chatMessage.findMany({
-            take: 10,
+            take: limit,
             where: {
                 channelRoomId,
             },
