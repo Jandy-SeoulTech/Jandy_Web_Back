@@ -157,7 +157,7 @@ model RoomUser {
 
 model ChannelRoom {
   id              Int           @id @default(autoincrement())
-  status          String
+  status          RoomStatus
   name            String
   channelId       Int
   userId          Int
@@ -326,4 +326,10 @@ enum Status {
   Reservation
   Close
   Clear
+}
+
+enum RoomStatus {
+  Open
+  Reservation
+  Close
 }

@@ -309,7 +309,10 @@ export const GetMyChannelInfo = async (req, res, next) => {
             req.user.id,
             SelectOption
         );
-        const participantRoom = await ChannelRoomRepository.CheckParticipantRoom(
+        const ownerRoom = await ChannelRoomRepository.findOwnerRoom(
+            req.user.id
+        );
+        const participantRoom = await ChannelRoomRepository.findParticipantRoom(
             req.user.id
         );
         if (!participantChannel) {
@@ -319,6 +322,7 @@ export const GetMyChannelInfo = async (req, res, next) => {
                 resFormat.successData(200, "내 채널 정보", {
                     adminChannl: adminChannel,
                     participantChannel: participantChannel,
+                    ownerRoom: ownerRoom,
                     participantRoom: participantRoom,
                 })
             );
