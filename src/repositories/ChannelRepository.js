@@ -22,7 +22,7 @@ export const findById = async (id) => {
                     select: {
                         id: true,
                         email: true,
-                        nickname : true,
+                        nickname: true,
                         profile: {
                             select: {
                                 profileImage: {
@@ -40,17 +40,17 @@ export const findById = async (id) => {
                                         contents: true,
                                     },
                                 },
-                            }
-                        }
+                            },
+                        },
                     },
                 },
                 participants: {
                     select: {
                         userId: true,
-                        user : {
+                        user: {
                             select: {
                                 id: true,
-                                nickname : true,
+                                nickname: true,
                                 profile: {
                                     select: {
                                         profileImage: {
@@ -68,10 +68,10 @@ export const findById = async (id) => {
                                                 contents: true,
                                             },
                                         },
-                                    }
-                                }
+                                    },
+                                },
                             },
-                        }
+                        },
                     },
                 },
                 category: {
@@ -97,15 +97,14 @@ export const findById = async (id) => {
                 channelImage: {
                     select: {
                         src: true,
-                    }
-                }
+                    },
+                },
             },
         });
     } catch (err) {
         console.error(err);
     }
 };
-
 
 export const updateChannel = async (data) => {
     try {
@@ -223,10 +222,10 @@ export const createChat = async (id, channelId, content) => {
     }
 };
 
-export const findChatByChannelId = async (channelId, lastId) => {
+export const findChatByChannelId = async (channelId, lastId, limit) => {
     try {
         return await prisma.chatMessage.findMany({
-            take: 10,
+            take: limit,
             where: {
                 channelId,
             },
@@ -262,49 +261,48 @@ export const findChatByChannelId = async (channelId, lastId) => {
     }
 };
 
-export const findByKeyword = async(category, keyword, offset=0) => {
-    try{
+export const findByKeyword = async (category, keyword, offset = 0) => {
+    try {
         return await prisma.channel.findMany({
             skip: offset,
             take: 6,
             where: {
-                OR : [
+                OR: [
                     {
-                        name : {
-                            contains : keyword,
+                        name: {
+                            contains: keyword,
                         },
                     },
                     {
-                        tags : {
+                        tags: {
                             some: {
-                                tag : {
-                                    name : {
-                                        contains : keyword
+                                tag: {
+                                    name: {
+                                        contains: keyword,
                                     },
                                 },
                             },
                         },
                     },
                 ],
-                AND : [
+                AND: [
                     {
-                        category :{
-                            category : {
-                                name : {
-                                    contains : category,
+                        category: {
+                            category: {
+                                name: {
+                                    contains: category,
                                 },
                             },
                         },
                     },
-                ]
-                
+                ],
             },
             include: {
                 admin: {
                     select: {
                         id: true,
                         email: true,
-                        nickname : true,
+                        nickname: true,
                         profile: {
                             select: {
                                 profileImage: {
@@ -322,8 +320,8 @@ export const findByKeyword = async(category, keyword, offset=0) => {
                                         contents: true,
                                     },
                                 },
-                            }
-                        }
+                            },
+                        },
                     },
                 },
                 category: {
@@ -339,12 +337,11 @@ export const findByKeyword = async(category, keyword, offset=0) => {
                 channelImage: {
                     select: {
                         src: true,
-                    }
-                }
+                    },
+                },
             },
-        })
-    }
-    catch (err) {
+        });
+    } catch (err) {
         console.error(err);
     }
-}
+};

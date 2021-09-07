@@ -13,7 +13,8 @@ export const MainChatLog = async (req, res, next) => {
         }
         const response = await ChannelRepository.findChatByChannelId(
             parseInt(req.params.channelId),
-            lastId
+            lastId,
+            req.query.limit
         );
         if (!response) {
             return res.status(400).send(resFormat.fail(400, "실패"));
@@ -71,7 +72,8 @@ export const RoomChatLog = async (req, res, next) => {
         }
         const response = await ChannelRoomRepository.findChatByRoomId(
             parseInt(req.params.roomId),
-            lastId
+            lastId,
+            req.query.limit
         );
         if (!response) {
             return res.status(400).send(resFormat.fail(400, "실패"));
