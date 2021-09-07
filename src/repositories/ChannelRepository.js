@@ -221,7 +221,29 @@ export const createChat = async (id, channelId, content) => {
         console.error(err);
     }
 };
-
+export const findLastId = async (channelId, lastId) => {
+    try {
+        return await prisma.chatMessage.findMany({
+            where: {
+                AND: [
+                    {
+                        channelId,
+                    },
+                    {
+                        id: {
+                            lt: lastId,
+                        },
+                    },
+                ],
+            },
+            orderBy: {
+                id: "desc",
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
 export const findChatByChannelId = async (channelId, lastId, limit) => {
     try {
         return await prisma.chatMessage.findMany({
