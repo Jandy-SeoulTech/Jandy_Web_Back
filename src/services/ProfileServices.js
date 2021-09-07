@@ -3,6 +3,7 @@ import * as ProfileRepository from "../repositories/ProfileRepository";
 import * as FollowRepository from "../repositories/FollowRepository";
 import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
+import * as ReviewRepository from "../repositories/ReviewRepository";
 import bcrypt from "bcrypt";
 import resFormat from "../utils/resFormat";
 import { dbNow } from "../utils/dayUtils";
@@ -327,6 +328,27 @@ export const GetMyChannelInfo = async (req, res, next) => {
                 })
             );
         }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetReviewList = async (req, res, next) => {
+    try {
+        const findReviews = await ReviewRepository.findReviewByUserId(
+            req.user.id
+        );
+        if (!findReviews[0]) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러발생"));
+        }
+        return res
+            .status(200)
+            .send(
+                resFormat.successData(200, "리뷰 리스트 조회 성공", findReviews)
+            );
     } catch (err) {
         console.error(err);
         next(err);

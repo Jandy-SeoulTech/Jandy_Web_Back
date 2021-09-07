@@ -173,7 +173,8 @@ export const Review = async (req, res, next) => {
             req.user.id,
             parseInt(req.body.reviewedUserId, 10),
             req.body.content,
-            req.body.status
+            req.body.status,
+            parseInt(req.body.channelId, 10)
         );
         if (!review) {
             return res

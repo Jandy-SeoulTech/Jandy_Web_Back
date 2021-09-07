@@ -112,6 +112,11 @@ export const findByIdWithProfile = async (id) => {
                         },
                     },
                 },
+                reviewed: {
+                    where: {
+                        status: "good",
+                    },
+                },
             },
         });
     } catch (err) {
