@@ -22,8 +22,12 @@ const app = express();
 
 passportConfig(passport);
 
-app.use(morgan("dev"));
-app.use("/", express.static(path.join(__dirname, "..", "uploads")));
+if (process.env.NODE_ENV === "production") {
+    app.use(morgan("combined"));
+} else {
+    // development
+    app.use(morgan("dev"));
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // 받은 데이터를 req에 넣어줌.
 app.use(cors({ origin: true, credentials: true }));
@@ -39,9 +43,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //router
-app.get("/", (req, res, next) => {
-    return res.send("Hello world!");
-});
+
 app.use("/api/Auth", AuthController);
 app.use("/api/Oauth", OAuthController);
 app.use("/api/Image", ImageController);
@@ -51,13 +53,24 @@ app.use("/api/Room", RoomController);
 app.use("/api/Chat", ChatController);
 app.use("/api/Search", SearchController);
 
-//404 handler
-app.use(ErrorHandler.routerHanlder);
+//404 api handler
+app.use(`/api/*`, ErrorHandler.routerHanlder);
 
 //error loghandler
 app.use(ErrorHandler.logHandler);
 //errorhandler
 app.use(ErrorHandler.errorHandler);
+
+if (process.env.NODE_ENV === "production") {
+    const buildDirectory = path.resolve(__dirname, "../../client/build");
+    console.log(buildDirectory);
+    app.use(express.static(buildDirectory));
+    app.use((req, res, next) => {
+        if (req.path.indexOf("/api") === -1) {
+            return res.sendFile("index.html", { root: buildDirectory });
+        }
+    });
+}
 
 const server = app.listen(env.PORT, () => {
     console.log(env.PORT, "서버시작");

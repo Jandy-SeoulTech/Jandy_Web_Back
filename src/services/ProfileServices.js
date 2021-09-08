@@ -340,12 +340,14 @@ export const GetMyChannelInfo = async (req, res, next) => {
 export const GetReviewList = async (req, res, next) => {
     try {
         const findReviews = await ReviewRepository.findReviewByUserId(
-            req.user.id
+            parseInt(req.params.userId, 10)
         );
         if (!findReviews[0]) {
             return res
-                .status(500)
-                .send(resFormat.fail(500, "알수 없는 에러발생"));
+                .status(200)
+                .send(
+                    resFormat.successData(200, "등록된 리뷰가 없습니다.", null)
+                );
         }
         return res
             .status(200)
