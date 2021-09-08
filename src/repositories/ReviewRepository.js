@@ -28,6 +28,7 @@ export const createReview = async (
 
 export const findReviewByUserId = async (id) => {
     try {
+        console.log(id);
         return await prisma.review.findMany({
             where: {
                 reviewedUserId: id,
