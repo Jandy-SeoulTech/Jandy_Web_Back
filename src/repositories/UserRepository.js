@@ -633,3 +633,74 @@ export const findByKeyword = async (keyword, offset = 0) => {
         console.error(err);
     }
 };
+
+export const findFollowerList = async (findUserId) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                followings: {
+                    some: {
+                        followingId: findUserId,
+                    },
+                },
+            },
+            select: {
+                id: true,
+                email: true,
+                nickname: true,
+                profile: {
+                    select: {
+                        department: true,
+                        introduce: true,
+                        wellTalent: true,
+                        interestTalent: true,
+                        profileImage: {
+                            select: {
+                                src: true,
+                            },
+                        },
+                    },
+                },
+                followers: true,
+                followings: true,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+export const findFollowingList = async (findUserId) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                followers: {
+                    some: {
+                        followerId: findUserId,
+                    },
+                },
+            },
+            select: {
+                id: true,
+                email: true,
+                nickname: true,
+                profile: {
+                    select: {
+                        department: true,
+                        introduce: true,
+                        wellTalent: true,
+                        interestTalent: true,
+                        profileImage: {
+                            select: {
+                                src: true,
+                            },
+                        },
+                    },
+                },
+                followers: true,
+                followings: true,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
