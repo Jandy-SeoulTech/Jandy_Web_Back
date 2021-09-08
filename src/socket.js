@@ -13,13 +13,14 @@ export default (server, app) => {
         transport: { webSocket: true },
     });
     app.set("io", SocketServer);
-    SocketServer.of(/^\.+/).on("connection", (socket) => {
+    SocketServer.of(/^\/.+/).on("connection", (socket) => {
         const newNamespace = socket.nsp;
         console.log("소켓 연결 성공");
         console.log(socket.id);
         console.log(socket.nsp.name);
 
         socket.on("join", async ({ roomId, user }) => {
+            console.log("다른 유저 접속 성공");
             const response = await RoomUserRepository.findOneByRoomAndUserId(
                 parseInt(roomId, 10),
                 parseInt(user.id, 10)
