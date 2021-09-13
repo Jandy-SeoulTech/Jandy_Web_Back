@@ -12,9 +12,16 @@
 
 
 ## 서비스 결과물
+|유저프로필|재능공유채널|
+|---|---|
+|![UpgleResult1](https://user-images.githubusercontent.com/28949213/133066233-e6ea34ea-8a83-436a-9a6b-9fb3ad5a3db8.gif)|![UpgleResult2](https://user-images.githubusercontent.com/28949213/133066262-6df4f062-74b4-4f84-8046-dfed3a936605.gif)|
+   
+   
+|채널 잡담방 | 재능 공유방 |
+|---|---|
+|![UpgleResult3](https://user-images.githubusercontent.com/28949213/133066761-2c7c7604-4ac4-4017-bb13-ab06f2029bd6.gif)|![UpgleResult4](https://user-images.githubusercontent.com/28949213/133066786-9dbc7306-e2c5-4089-bd6d-070108beaeda.gif)|
 
-9월 초에 업데이트 예정
-
+`9월말~10월 화상 기능 업데이트 예정`
 
 ## 프로젝트 구조
 
