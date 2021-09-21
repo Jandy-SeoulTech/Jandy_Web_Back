@@ -37,10 +37,11 @@ export const GetChannelList = async (req, res, next) => {
             req.params.id,
             SelectOption
         );
-        const ParticipantChannel = await ChannelRepository.findParticipantChannel(
-            req.params.id,
-            SelectOption
-        );
+        const ParticipantChannel =
+            await ChannelRepository.findParticipantChannel(
+                req.params.id,
+                SelectOption
+            );
 
         if (!ParticipantChannel) {
             return res.status(500).send(resFormat.fail(500, "알수없는 에러"));
@@ -58,7 +59,7 @@ export const GetChannelList = async (req, res, next) => {
     }
 };
 
-export const GetChannelInfo = async (req, res, nex) => {
+export const GetChannelInfo = async (req, res, next) => {
     try {
         const data = await ChannelRepository.findById(
             parseInt(req.params.channelId, 10)

@@ -48,6 +48,5 @@ export const findReviewByUserId = async (id) => {
         });
     } catch (err) {
         console.error(err);
-        next(err);
     }
 };

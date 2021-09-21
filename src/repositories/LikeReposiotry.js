@@ -4,17 +4,17 @@ import { dbNow } from "../utils/dayUtils";
 const now = dbNow();
 const prisma = new PrismaClient();
 
-export const findLike = async(userId, channelId)=>{
+export const findLike = async (userId, channelId) => {
     try {
         return await prisma.channelLike.findUnique({
-            where: { 
-                userId_channelId :{
+            where: {
+                userId_channelId: {
                     userId,
-                    channelId
-                }
-             },
+                    channelId,
+                },
+            },
         });
     } catch (err) {
         console.error(err);
     }
-}
+};

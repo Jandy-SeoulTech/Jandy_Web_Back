@@ -1,4 +1,4 @@
-import { body, check} from "express-validator";
+import { body, check } from "express-validator";
 import validationFunction from "./validationFunction";
 import resFormat from "../utils/resFormat";
 
@@ -37,7 +37,7 @@ export const CreateRequestValid = async (req, res, next) => {
         .bail()
         .isString()
         .withMessage("category는 String 형식에 맞게 들어와야 합니다.")
-        .run(req);        
+        .run(req);
     await check("tags")
         .exists()
         .withMessage("tags가 존재하지 않습니다.")
@@ -62,7 +62,7 @@ export const CreateRequestValid = async (req, res, next) => {
     validationFunction(req, res, next);
 };
 
-export const UpdateRequestValid = async (req,res,next) => {
+export const UpdateRequestValid = async (req, res, next) => {
     await check("channelId")
         .exists()
         .withMessage("channelId가 존재하지 않습니다.")
@@ -70,8 +70,8 @@ export const UpdateRequestValid = async (req,res,next) => {
         .isNumeric()
         .withMessage("숫자 형식이어야 합니다.")
         .run(req);
-    CreateRequestValid(req,res,next);
-}
+    CreateRequestValid(req, res, next);
+};
 
 export const GetListRequestValid = async (req, res, next) => {
     await check("userId")
@@ -104,7 +104,7 @@ export const LikeRequestValid = async (req, res, next) => {
         .withMessage("숫자 형식이어야 합니다.")
         .run(req);
     validationFunction(req, res, next);
-}
+};
 
 export const EnterRequestValid = async (req, res, next) => {
     await check("channelId")
@@ -122,7 +122,7 @@ export const EnterRequestValid = async (req, res, next) => {
         .withMessage("숫자 형식이어야 합니다.")
         .run(req);
     validationFunction(req, res, next);
-}
+};
 
 export const ManageRequestValid = async (req, res, next) => {
     await check("channelId")
@@ -147,4 +147,4 @@ export const ManageRequestValid = async (req, res, next) => {
         .withMessage("숫자 형식이어야 합니다.")
         .run(req);
     validationFunction(req, res, next);
-}
+};

@@ -309,10 +309,11 @@ export const GetMyChannelInfo = async (req, res, next) => {
             req.user.id,
             SelectOption
         );
-        const participantChannel = await ChannelRepository.findParticipantChannel(
-            req.user.id,
-            SelectOption
-        );
+        const participantChannel =
+            await ChannelRepository.findParticipantChannel(
+                req.user.id,
+                SelectOption
+            );
         const ownerRoom = await ChannelRoomRepository.findOwnerRoom(
             req.user.id
         );
