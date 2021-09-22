@@ -77,17 +77,19 @@ export const RoomCreate = async (req, res, next) => {
 
 export const GetRoomList = async (req, res, next) => {
     try {
-        const findOpenRoom = await ChannelRoomRepository.findOpenRoomByChannelId(
-            parseInt(req.params.channelId, 10)
-        );
+        const findOpenRoom =
+            await ChannelRoomRepository.findOpenRoomByChannelId(
+                parseInt(req.params.channelId, 10)
+            );
         if (!findOpenRoom[0]) {
             return res
                 .status(500)
                 .send(resFormat.fail(500, "알수 없는 에러 발생"));
         }
-        const findReservedRoom = await ChannelRoomRepository.findReservedRoomByChannelId(
-            parseInt(req.params.channelId, 10)
-        );
+        const findReservedRoom =
+            await ChannelRoomRepository.findReservedRoomByChannelId(
+                parseInt(req.params.channelId, 10)
+            );
         return res.status(200).send(
             resFormat.successData(200, "조회성공", {
                 openRoom: findOpenRoom,

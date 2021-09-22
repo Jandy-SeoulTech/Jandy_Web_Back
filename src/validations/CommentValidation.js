@@ -33,8 +33,8 @@ export const UpdateRequestValid = async (req, res, next) => {
         .isNumeric()
         .withMessage("commentId에는 숫자가 들어와야 합니다.")
         .run(req);
-    CreateRequestValid(req,res,next);
-}
+    CreateRequestValid(req, res, next);
+};
 
 export const DeleteRequestValid = async (req, res, next) => {
     await check("commentId")
@@ -44,4 +44,4 @@ export const DeleteRequestValid = async (req, res, next) => {
         .withMessage("postId는 숫자 형식이여야 합니다.")
         .run(req);
     validationFunction(req, res, next);
-}
+};

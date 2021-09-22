@@ -9,21 +9,21 @@ Router.post(
     "/google",
     AuthHandler.isNotLoggedIn,
     OAuthValidation.TokenRequestValid,
-    OAuthHandler.GoogleData, 
+    OAuthHandler.GoogleData,
     OAuthServices.OAuthLogin
 );
 Router.post(
     "/kakao",
     AuthHandler.isNotLoggedIn,
     OAuthValidation.TokenRequestValid,
-    OAuthHandler.KakaoData, 
+    OAuthHandler.KakaoData,
     OAuthServices.OAuthLogin
 );
 Router.post(
     "/naver",
     AuthHandler.isNotLoggedIn,
     OAuthValidation.TokenRequestValid,
-    OAuthHandler.NaverData, 
+    OAuthHandler.NaverData,
     OAuthServices.OAuthLogin
 );
 

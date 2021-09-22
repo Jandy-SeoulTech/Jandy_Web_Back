@@ -5,7 +5,7 @@ import passport from "passport";
 import resFormat from "../utils/resFormat";
 import nodemailer from "nodemailer";
 import mail from "../configs/email";
-import env from "../configs"
+import env from "../configs";
 export const SingUp = async (req, res, next) => {
     try {
         //nickname, email, password
@@ -154,9 +154,9 @@ export const EmailAuth = async (req, res, next) => {
         let message = {
             from: env.MAIL_EMAIL,
             to: req.body.email,
-            subject: '이메일 인증 요청 메일입니다.',
-            html: `<p> 다음 인증번호 6자리를 입력해주세요! <br> ${RandomAuth} </p>`
-        }
+            subject: "이메일 인증 요청 메일입니다.",
+            html: `<p> 다음 인증번호 6자리를 입력해주세요! <br> ${RandomAuth} </p>`,
+        };
 
         let transporter = nodemailer.createTransport(mail.mailConfig);
         let info = await transporter.sendMail(message);
@@ -172,13 +172,14 @@ export const EmailAuth = async (req, res, next) => {
             setTimeout(() => {
                 AuthRepository.deleteAuth(data);
             }, 60000 * 3);
-            if(response){
+            if (response) {
+                return res
+                    .status(200)
+                    .send(resFormat.success(200, "인증번호 생성 성공"));
+            }
             return res
-                .status(200)
-                .send(
-                    resFormat.success(200, "인증번호 생성 성공")
-                );
-            } return res.status(403).send(resFormat.fail(403,"인증번호 생성 실패"))
+                .status(403)
+                .send(resFormat.fail(403, "인증번호 생성 실패"));
         } else {
             return res
                 .status(401)

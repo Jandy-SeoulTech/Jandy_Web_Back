@@ -37,7 +37,7 @@ export const updateAuth = async (data) => {
             },
             data: {
                 auth: data.auth,
-                updatedAt: now,
+                updatedAt: dbNow(),
             },
         });
     } catch (err) {
@@ -55,7 +55,6 @@ export const AuthGenerate = async (data) => {
         }
     } catch (err) {
         console.error(err);
-        next(err);
     }
 };
 
@@ -75,6 +74,5 @@ export const deleteAuth = async (data) => {
         });
     } catch (err) {
         console.error(err);
-        next(err);
     }
 };

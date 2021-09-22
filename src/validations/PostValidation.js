@@ -53,8 +53,8 @@ export const UpdateRequestValid = async (req, res, next) => {
         .isNumeric()
         .withMessage("postId에는 숫자가 들어와야 합니다.")
         .run(req);
-    CreateRequestValid(req,res,next);
-}
+    CreateRequestValid(req, res, next);
+};
 
 export const GetRequestValid = async (req, res, next) => {
     await check("postId")
@@ -68,8 +68,8 @@ export const GetRequestValid = async (req, res, next) => {
 
 export const DeleteRequestValid = async (req, res, next) => {
     GetRequestValid(req, res, next);
-}
+};
 
 export const AttentionRequestValid = async (req, res, next) => {
-    GetRequestValid(req,res,next);
-}
+    GetRequestValid(req, res, next);
+};
