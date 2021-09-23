@@ -10,7 +10,7 @@ export const CreateComment = async (req, res, next) => {
     try {
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.params.channelId, 10)
+            parseInt(req.body.channelId, 10)
         );
         if (!joinUser[0]) {
             return res
@@ -23,7 +23,7 @@ export const CreateComment = async (req, res, next) => {
                 );
         }
         const response = await CommentRepository.CreateComment(
-            CreateOption(req.user.id, parseInt(req.params.postId, 10), req.body)
+            CreateOption(req.user.id, parseInt(req.body.postId, 10), req.body)
         );
         if (!response) {
             return res
@@ -45,7 +45,7 @@ export const UpdateComment = async (req, res, next) => {
     try {
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.params.channelId)
+            parseInt(req.body.channelId)
         );
         if (!joinUser[0]) {
             return res
@@ -58,12 +58,12 @@ export const UpdateComment = async (req, res, next) => {
                 );
         }
         const checkAuthor = await CommentRepository.CheckMyComment(
-            parseInt(req.body.commentId),
+            parseInt(req.params.commentId),
             req.user.id
         );
         const checkAdmin = await UserRepository.CheckMyChannel(
             req.user.id,
-            parseInt(req.params.channelId)
+            parseInt(req.body.channelId)
         );
         if (!checkAuthor[0] && !checkAdmin[0]) {
             return res
