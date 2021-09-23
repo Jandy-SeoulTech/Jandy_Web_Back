@@ -22,7 +22,7 @@ export const CreateComment = async (req, res, next) => {
                     )
                 );
         }
-        const response = await CommentRepository.CreateComment(
+        const response = await CommentRepository.createComment(
             CreateOption(req.user.id, parseInt(req.body.postId, 10), req.body)
         );
         if (!response) {
@@ -43,35 +43,17 @@ export const CreateComment = async (req, res, next) => {
 
 export const UpdateComment = async (req, res, next) => {
     try {
-        const joinUser = await UserRepository.CheckJoinChannel(
-            req.user.id,
-            parseInt(req.body.channelId)
-        );
-        if (!joinUser[0]) {
-            return res
-                .status(401)
-                .send(
-                    resFormat.fail(
-                        401,
-                        "참여한 채널에만 댓글 작성이 가능합니다."
-                    )
-                );
-        }
-        const checkAuthor = await CommentRepository.CheckMyComment(
-            parseInt(req.params.commentId),
+        const checkAuthor = await CommentRepository.checkMyComment(
+            parseInt(req.params.commentId,10),
             req.user.id
         );
-        const checkAdmin = await UserRepository.CheckMyChannel(
-            req.user.id,
-            parseInt(req.body.channelId)
-        );
-        if (!checkAuthor[0] && !checkAdmin[0]) {
+        if (!checkAuthor[0]) {
             return res
                 .status(401)
                 .send(resFormat.fail(401, "댓글 삭제 권한이 없습니다."));
         }
-        const response = await CommentRepository.UpdateComment(
-            UpdateOption(req.body)
+        const response = await CommentRepository.updateComment(
+            UpdateOption(parseInt(req.params.commentId,10),req.body)
         );
         if (!response) {
             return res
@@ -89,24 +71,24 @@ export const UpdateComment = async (req, res, next) => {
 
 export const DeleteComment = async (req, res, next) => {
     try {
-        const checkAuthor = await CommentRepository.CheckMyComment(
-            parseInt(req.params.commentId),
+        const checkAuthor = await CommentRepository.checkMyComment(
+            parseInt(req.params.commentId,10),
             req.user.id
         );
         if (!checkAuthor[0]) {
             return res
                 .status(401)
-                .send(resFormat.fail(401, "자신의 포스트만 삭제 가능합니다."));
+                .send(resFormat.fail(401, "자신의 댓글만 삭제 가능합니다."));
         }
-        const response = await CommentRepository.DeleteComment(
-            parseInt(req.params.commentId)
+        const response = await CommentRepository.deleteComment(
+            parseInt(req.params.commentId,10)
         );
         if (!response) {
             return res
                 .status(500)
                 .send(resFormat.fail(500, "알수 없는 에러로 삭제 실패"));
         }
-        return res.status(200).send(resFormat.success(200, "포스트 삭제 성공"));
+        return res.status(200).send(resFormat.success(200, "댓글 삭제 성공"));
     } catch (err) {
         console.error(err);
         next(err);
@@ -132,14 +114,12 @@ const CreateOption = (id, postId, bodydata) => {
     return Option;
 };
 
-const UpdateOption = (bodydata) => {
+const UpdateOption = (id,bodydata) => {
     // DB에 맞추어 Option 설정
-    let Option = {
-        id: parseInt(bodydata.commentId, 10),
+    const Option = {
+        id: parseInt(id, 10),
+        content: bodydata.content,
         updatedAt: dbNow(),
     };
-    if (bodydata.content) {
-        Option.content = bodydata.content;
-    }
     return Option;
 };

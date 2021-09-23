@@ -176,10 +176,18 @@ export const UnLikeChannel = async (req, res, next) => {
 
 export const EnterChannel = async (req, res, next) => {
     try {
-        if (parseInt(req.body.adminId, 10) === req.user.id) {
+        const checkAdmin = await UserRepository.CheckMyChannel(req.user.id,parseInt(req.body.channelId,10));
+        
+        if (checkAdmin[0]) {
             return res
-                .status(401)
-                .send(resFormat.fail(401, "본인소유의 채널은 참여하기 불가능"));
+            .status(401)
+            .send(resFormat.fail(401, "본인소유의 채널은 참여하기 불가능"));
+        }
+        const checkJoin = await UserRepository.CheckJoinChannel(req.user.id,parseInt(req.body.channelId,10));
+        if (checkJoin[0]) {
+            return res
+            .status(401)
+            .send(resFormat.fail(401, "본인이 이미 참여한 채널입니다."));
         }
         const exBan = await BanRepository.findBan(
             req.user.id,
@@ -215,15 +223,17 @@ export const EnterChannel = async (req, res, next) => {
 
 export const ExitChannel = async (req, res, next) => {
     try {
-        if (parseInt(req.body.adminId, 10) === req.user.id) {
+        const checkAdmin = await UserRepository.CheckMyChannel(req.user.id,parseInt(req.body.channelId,10));
+        if (checkAdmin[0]) {
             return res
-                .status(401)
-                .send(
-                    resFormat.fail(
-                        401,
-                        "본인소유의 채널은 참여하기 취소 불가능"
-                    )
-                );
+            .status(401)
+            .send(resFormat.fail(401, "본인소유의 채널은 나가기 불가능"));
+        }
+        const checkJoin = await UserRepository.CheckJoinChannel(req.user.id,parseInt(req.body.channelId,10));
+        if (!checkJoin[0]) {
+            return res
+            .status(401)
+            .send(resFormat.fail(401, "본인이 참여한 채널이 아닙니다."));
         }
         const response = await UserRepository.ExitChannel(
             req.user.id,

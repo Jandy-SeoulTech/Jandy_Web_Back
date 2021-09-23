@@ -4,7 +4,7 @@ import { dbNow } from "../utils/dayUtils";
 const now = dbNow();
 const prisma = new PrismaClient();
 
-export const CreateComment = async (data) => {
+export const createComment = async (data) => {
     try {
         return await prisma.comment.create({
             data,
@@ -14,7 +14,7 @@ export const CreateComment = async (data) => {
     }
 };
 
-export const UpdateComment = async (data) => {
+export const updateComment = async (data) => {
     try {
         return await prisma.comment.update({
             where: { id: data.id },
@@ -25,7 +25,7 @@ export const UpdateComment = async (data) => {
     }
 };
 
-export const DeleteComment = async (id) => {
+export const deleteComment = async (id) => {
     try {
         return await prisma.comment.delete({
             where: { id },
@@ -35,7 +35,7 @@ export const DeleteComment = async (id) => {
     }
 };
 
-export const CheckMyComment = async (id, authorId) => {
+export const checkMyComment = async (id, authorId) => {
     try {
         return await prisma.comment.findMany({
             where: {
