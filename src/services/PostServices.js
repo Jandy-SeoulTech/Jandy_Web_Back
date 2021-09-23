@@ -11,7 +11,7 @@ export const CreatePost = async (req, res, next) => {
     try {
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.params.channelId, 10)
+            parseInt(req.body.channelId, 10)
         );
         if (!joinUser[0]) {
             return res
@@ -26,7 +26,7 @@ export const CreatePost = async (req, res, next) => {
         const response = await PostRepository.createPost(
             CreateOption(
                 req.user.id,
-                parseInt(req.params.channelId, 10),
+                parseInt(req.body.channelId, 10),
                 req.body
             )
         );
@@ -50,7 +50,7 @@ export const UpdatePost = async (req, res, next) => {
     try {
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.params.channelId)
+            parseInt(req.body.channelId)
         );
         if (!joinUser[0]) {
             return res
@@ -63,7 +63,7 @@ export const UpdatePost = async (req, res, next) => {
                 );
         }
         const checkAuthor = await PostRepository.CheckMyPost(
-            parseInt(req.body.postId),
+            parseInt(req.params.postId),
             req.user.id
         );
         if (!checkAuthor[0]) {
@@ -98,7 +98,7 @@ export const DeletePost = async (req, res, next) => {
         );
         const checkAdmin = await UserRepository.CheckMyChannel(
             req.user.id,
-            parseInt(req.params.channelId)
+            parseInt(req.body.channelId)
         );
         if (!checkAuthor[0] && !checkAdmin[0]) {
             return res

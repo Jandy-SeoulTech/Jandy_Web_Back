@@ -14,6 +14,7 @@ import ImageController from "./controllers/ImageController";
 import ProfileController from "./controllers/ProfileController";
 import OAuthController from "./controllers/OAuthController";
 import ChannelController from "./controllers/ChannelController";
+import PostController from "./controllers/PostController";
 import ChatController from "./controllers/ChatController";
 import RoomController from "./controllers/RoomController";
 import SearchController from "./controllers/SearchController";
@@ -45,10 +46,11 @@ app.use(passport.session());
 //router
 
 app.use("/api/Auth", AuthController);
-app.use("/api/Oauth", OAuthController);
+app.use("/api/OAuth", OAuthController);
 app.use("/api/Image", ImageController);
 app.use("/api/Profile", ProfileController);
 app.use("/api/Channel", ChannelController);
+app.use("/api/Post", PostController);
 app.use("/api/Room", RoomController);
 app.use("/api/Chat", ChatController);
 app.use("/api/Search", SearchController);
