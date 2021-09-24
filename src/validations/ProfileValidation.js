@@ -1,6 +1,5 @@
-import { body, check, validationResult } from "express-validator";
+import { check } from "express-validator";
 import validationFunction from "./validationFunction";
-import resFormat from "../utils/resFormat";
 
 //요청 단위 컨벤션 : [요청네임]ReqeustValid
 
