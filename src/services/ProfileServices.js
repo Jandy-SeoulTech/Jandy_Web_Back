@@ -338,28 +338,6 @@ export const GetMyChannelInfo = async (req, res, next) => {
     }
 };
 
-export const GetReviewList = async (req, res, next) => {
-    try {
-        const findReviews = await ReviewRepository.findReviewByUserId(
-            parseInt(req.params.userId, 10)
-        );
-        if (!findReviews[0]) {
-            return res
-                .status(200)
-                .send(
-                    resFormat.successData(200, "등록된 리뷰가 없습니다.", null)
-                );
-        }
-        return res
-            .status(200)
-            .send(
-                resFormat.successData(200, "리뷰 리스트 조회 성공", findReviews)
-            );
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-};
 //옵션 생성 함수
 const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
     // DB data 옵션 설정.

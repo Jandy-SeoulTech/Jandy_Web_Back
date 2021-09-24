@@ -17,6 +17,7 @@ import ChannelController from "./controllers/ChannelController";
 import ChatController from "./controllers/ChatController";
 import RoomController from "./controllers/RoomController";
 import SearchController from "./controllers/SearchController";
+import ReviewController from "./controllers/ReviewController";
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.use("/api/Channel", ChannelController);
 app.use("/api/Room", RoomController);
 app.use("/api/Chat", ChatController);
 app.use("/api/Search", SearchController);
+app.use("/api/Review", ReviewController);
 
 //404 api handler
 app.use(`/api/*`, ErrorHandler.routerHanlder);
