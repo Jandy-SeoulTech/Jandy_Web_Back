@@ -1,6 +1,5 @@
 import { check } from "express-validator";
 import validationFunction from "./validationFunction";
-import resFormat from "../utils/resFormat";
 
 //email nicnname password
 export const SignUpRequestValid = async (req, res, next) => {
