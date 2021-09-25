@@ -83,11 +83,11 @@ export const createPost = async (data) => {
     }
 };
 
-export const updatePost = async (data) => {
+export const updatePost = async (id,data) => {
     try {
         await prisma.post.update({
             where: {
-                id: parseInt(data.id, 10),
+                id : id
             },
             data: {
                 images: {
@@ -96,7 +96,7 @@ export const updatePost = async (data) => {
             },
         });
         return await prisma.post.update({
-            where: { id: parseInt(data.id, 10) },
+            where: { id },
             data,
             include: {
                 images: true,

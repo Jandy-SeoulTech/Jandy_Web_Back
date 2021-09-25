@@ -11,7 +11,7 @@ export const CreatePost = async (req, res, next) => {
     try {
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.params.channelId, 10)
+            parseInt(req.body.channelId, 10)
         );
         if (!joinUser[0]) {
             return res
@@ -26,7 +26,7 @@ export const CreatePost = async (req, res, next) => {
         const response = await PostRepository.createPost(
             CreateOption(
                 req.user.id,
-                parseInt(req.params.channelId, 10),
+                parseInt(req.body.channelId, 10),
                 req.body
             )
         );
@@ -50,7 +50,7 @@ export const UpdatePost = async (req, res, next) => {
     try {
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.params.channelId)
+            parseInt(req.body.channelId,10)
         );
         if (!joinUser[0]) {
             return res
@@ -62,8 +62,8 @@ export const UpdatePost = async (req, res, next) => {
                     )
                 );
         }
-        const checkAuthor = await PostRepository.CheckMyPost(
-            parseInt(req.body.postId),
+        const checkAuthor = await PostRepository.checkMyPost(
+            parseInt(req.params.postId,10),
             req.user.id
         );
         if (!checkAuthor[0]) {
@@ -74,6 +74,7 @@ export const UpdatePost = async (req, res, next) => {
                 );
         }
         const response = await PostRepository.updatePost(
+            parseInt(req.params.postId,10),
             UpdateOption(req.body)
         );
         if (!response) {
@@ -92,13 +93,13 @@ export const UpdatePost = async (req, res, next) => {
 
 export const DeletePost = async (req, res, next) => {
     try {
-        const checkAuthor = await PostRepository.CheckMyPost(
+        const checkAuthor = await PostRepository.checkMyPost(
             parseInt(req.params.postId),
             req.user.id
         );
         const checkAdmin = await UserRepository.CheckMyChannel(
             req.user.id,
-            parseInt(req.params.channelId)
+            parseInt(req.body.channelId)
         );
         if (!checkAuthor[0] && !checkAdmin[0]) {
             return res
@@ -268,7 +269,6 @@ const CreateOption = (id, channelId, bodydata) => {
 const UpdateOption = (bodydata) => {
     // DB에 맞추어 Option 설정
     let Option = {
-        id: parseInt(bodydata.postId, 10),
         updatedAt: dbNow(),
     };
     if (bodydata.title) {
