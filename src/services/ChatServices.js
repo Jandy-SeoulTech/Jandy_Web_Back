@@ -1,9 +1,6 @@
-import * as ChannelRepository from "../repositories/ChannelRepository";
-import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
 import * as UserRepository from "../repositories/UserRepository";
-import * as PostRepository from "../repositories/PostRepository";
+import * as ChatMessageRepository from "../repositories/ChatMessageRepository";
 import resFormat from "../utils/resFormat";
-import schedule from "node-schedule";
 //잡담방 채팅 로그
 export const MainChatLog = async (req, res, next) => {
     try {
@@ -11,10 +8,11 @@ export const MainChatLog = async (req, res, next) => {
         if (req.query.lastId === "null") {
             lastId = null;
         } else {
-            const findLastId = await ChannelRepository.findLastId(
-                parseInt(req.params.channelId),
-                lastId
-            );
+            const findLastId =
+                await ChatMessageRepository.findChanelMainChatLastId(
+                    parseInt(req.params.channelId),
+                    lastId
+                );
             if (!findLastId[0]) {
                 return res
                     .status(200)
@@ -24,7 +22,7 @@ export const MainChatLog = async (req, res, next) => {
             }
             lastId = findLastId[0].id;
         }
-        const response = await ChannelRepository.findChatByChannelId(
+        const response = await ChatMessageRepository.findChatByChannelId(
             parseInt(req.params.channelId),
             lastId,
             parseInt(req.query.limit, 10)
@@ -55,7 +53,7 @@ export const MainChat = async (req, res, next) => {
                 );
         }
 
-        const response = await ChannelRepository.createChat(
+        const response = await ChatMessageRepository.createChannelMainChat(
             req.user.id,
             parseInt(req.params.channelId),
             req.body.content
@@ -83,7 +81,7 @@ export const RoomChatLog = async (req, res, next) => {
         if (req.query.lastId === "null") {
             lastId = null;
         } else {
-            const findLastId = await ChannelRoomRepository.findChatLastId(
+            const findLastId = await ChatMessageRepository.findRoomChatLastId(
                 parseInt(req.params.roomId),
                 lastId
             );
@@ -96,7 +94,7 @@ export const RoomChatLog = async (req, res, next) => {
             }
             lastId = findLastId[0].id;
         }
-        const response = await ChannelRoomRepository.findChatByRoomId(
+        const response = await ChatMessageRepository.findChatByRoomId(
             parseInt(req.params.roomId),
             lastId,
             parseInt(req.query.limit, 10)
@@ -116,7 +114,7 @@ export const RoomChatLog = async (req, res, next) => {
 //룸 채팅 보내기
 export const RoomChat = async (req, res, next) => {
     try {
-        const response = await ChannelRoomRepository.createChat(
+        const response = await ChatMessageRepository.createRoomChat(
             req.user.id,
             parseInt(req.params.roomId),
             req.body.content
@@ -139,7 +137,7 @@ export const RoomChat = async (req, res, next) => {
 
 export const RoomChatAnswer = async (req, res, next) => {
     try {
-        const response = await ChannelRoomRepository.createChatAnswer(
+        const response = await ChatMessageRepository.createRoomChatAnswer(
             req.user.id,
             parseInt(req.params.roomId),
             req.body.content,

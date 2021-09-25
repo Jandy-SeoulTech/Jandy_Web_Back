@@ -58,12 +58,7 @@ Router.get(
     AuthHandler.isLoggedIn,
     ProfileServices.GetMyChannelInfo
 );
-Router.get(
-    "/reviewlist/:userId",
-    AuthHandler.isLoggedIn,
-    ProfileValidation.GetRequestValid,
-    ProfileServices.GetReviewList
-);
+
 Router.get(
     "/:userId",
     ProfileValidation.GetRequestValid,

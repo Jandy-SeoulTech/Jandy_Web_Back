@@ -29,12 +29,7 @@ Router.patch(
     RoomValidation.RoomInfoRequestValid,
     RoomService.RoomClose
 );
-Router.post(
-    "/review",
-    AuthHandler.isLoggedIn,
-    RoomValidation.ReviewRequestValid,
-    RoomService.Review
-);
+
 Router.get(
     "/info/:roomId",
     AuthHandler.isLoggedIn,
