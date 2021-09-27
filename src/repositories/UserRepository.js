@@ -117,6 +117,20 @@ export const findByIdWithProfile = async (id) => {
                         status: "good",
                     },
                 },
+                admin: {
+                    include: {
+                        channelImage: true,
+                    },
+                },
+                participants: {
+                    select: {
+                        channel: {
+                            include: {
+                                channelImage: true,
+                            },
+                        },
+                    },
+                },
             },
         });
     } catch (err) {
