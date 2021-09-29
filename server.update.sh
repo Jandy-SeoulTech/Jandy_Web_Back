@@ -1,20 +1,19 @@
-cd JANDY_WEB_BACK
+cd Jandy_Web_Back
 git fetch origin 
 git checkout -t origin/dev dev
 git reset --hard HEAD
 git pull
 cd ..
 
-cd JANDY_WEB_CLIENT
+cd Jandy_Web_Front
 git fetch origin
 git checkout -t origin/main main
 git reset --hard HEAD
 git pull
-npm install -g yarn
 yarn build
 cd ..
 
-cd JANDY_WEB_BACK
+cd Jandy_Web_Back
 docker stop upgle
 docker rm upgle
 docker rmi upgle
