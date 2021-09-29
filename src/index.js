@@ -68,7 +68,10 @@ app.use(ErrorHandler.logHandler);
 app.use(ErrorHandler.errorHandler);
 
 if (process.env.NODE_ENV === "production") {
-    const buildDirectory = path.resolve(__dirname, "../../client/build");
+    const buildDirectory = path.resolve(
+        __dirname,
+        "../../JANDY_WEB_CLIENT/build"
+    );
     console.log(buildDirectory);
     app.use(express.static(buildDirectory));
     app.use((req, res, next) => {

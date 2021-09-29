@@ -6,7 +6,8 @@
     "scripts": {
         "dev": "cross-env NODE_ENV=development nodemon src/index.js --exec babel-node",
         "build": "babel src -d dist",
-        "start": "cross-env NODE_ENV=production pm2 start ./dist/index.js"
+        "start": "cross-env NODE_ENV=production pm2 start ./dist/index.js",
+        "db:push": "dotenv -e .env.prod -- npx prisma db push"
     },
     "repository": {
         "type": "git",
@@ -29,6 +30,7 @@
         "cross-env": "^7.0.3",
         "dayjs": "^1.10.6",
         "dotenv": "^10.0.0",
+        "dotenv-cli": "^4.0.0",
         "express": "^4.17.1",
         "express-session": "^1.17.2",
         "express-validator": "^6.12.1",
