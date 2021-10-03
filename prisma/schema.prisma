@@ -31,7 +31,7 @@ model User {
   attention       Attention[]   @relation("Attention")
   reviewed        Review[]      @relation("reviewed")
   reviewer        Review[]      @relation("reviewer")
-
+  archive         Archive[]     @relation("archive")
   @@map(name: "users")
 }
 
@@ -136,7 +136,7 @@ model Channel {
   baseRoomChat ChatMessage[]
   post         Post[]
   Review       Review[]
-
+  archive      Archive[]
 
   createdAt DateTime
   updatedAt DateTime?
@@ -187,6 +187,9 @@ model ChatMessage {
   answeredId       Int? // 답장 글인지 여부, null-> 답장글 아님, id 값이면 ChatMessage에 있음. 그 값이.
   channelRoomId    Int? // 채널 방 id( 채널 소규모 채팅 방에서 사용)
   channelId        Int? // 채널 id(채널 잡담방 사용)
+
+  archive         Archive?  @relation(fields: [archiveId], references: [id])
+  archiveId       Int? // 질문 답쌍을 전달하기 위한 아카이브
 
   createdAt DateTime
   updatedAt DateTime?
@@ -281,6 +284,7 @@ model Post {
   updatedAt  DateTime?
 
   ChannelRoom ChannelRoom[]
+  archive         Archive?
   @@map("posts")
 }
 
@@ -289,8 +293,10 @@ model Comment {
   content   String
   author    User      @relation("comment", fields: [authorId], references: [id])
   authorId  Int
-  post      Post      @relation(fields: [postId], references: [id])
+  post      Post?      @relation(fields: [postId], references: [id])
   postId    Int
+  archive   Archive? @relation(fields: [archiveId], references: [id])
+  archiveId Int
   createdAt DateTime
   updatedAt DateTime?
 
@@ -336,4 +342,26 @@ enum RoomStatus {
   Open
   Reservation
   Close
+}
+
+model Archive {
+  id                  Int @id @default(autoincrement())
+  status              ArchiveStatus // Private, Public
+  content             String
+  archiveComment      Comment[]
+  owner               User @relation("archive", fields: [ownerId], references: [id])
+  ownerId             Int
+  channel             Channel? @relation(fields: [channelId], references: [id])
+  channelId           Int
+  post                Post? @relation(fields: [postId], references: [id])
+  postId              Int
+  chatMessage         ChatMessage[]
+  createdAt           DateTime
+  updatedAt           DateTime?
+  @@map("archives")
+}
+
+enum ArchiveStatus {
+  Private
+  Public
 }
