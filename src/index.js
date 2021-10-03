@@ -70,7 +70,7 @@ app.use(ErrorHandler.errorHandler);
 if (process.env.NODE_ENV === "production") {
     const buildDirectory = path.resolve(
         __dirname,
-        "../../Jandy_Web_Front/build"
+        "../front_build"
     );
     console.log(buildDirectory);
     app.use(express.static(buildDirectory));
