@@ -21,13 +21,15 @@ export const CreateArchive = async (req, res, next) => {
                     )
                 );
         }
-        const checkPostCleared = await PostRepository.checkPostCleared(
-            parseInt(req.body.postId, 10)
-        );
-        if (!checkPostCleared[0]) {
-            return res
-                .status(401)
-                .send(resFormat.fail(401, "종료된 채팅방이 아닙니다."));
+        if(req.body.postId){
+            const checkPostCleared = await PostRepository.checkPostCleared(
+                parseInt(req.body.postId, 10)
+            );
+            if (!checkPostCleared[0]) {
+                return res
+                    .status(401)
+                    .send(resFormat.fail(401, "종료된 채팅방이 아닙니다."));
+            }
         }
         
         const response = await ArchiveRepository.createArchive(
