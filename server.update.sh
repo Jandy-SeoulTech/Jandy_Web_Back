@@ -1,16 +1,14 @@
 cd Jandy_Web_Back
-git fetch origin 
-git checkout -t origin/dev dev
-git reset --hard HEAD
+
+git fetch origin
 git pull
 cd ..
 
 cd Jandy_Web_Front
-git fetch origin
-git checkout -t origin/main main
-git reset --hard HEAD
-git pull
-yarn build
+rm -rf front_build
+cp -r build front_build
+rm -rf ../Jandy_Web_Back/front_build
+mv ./front_build ../Jandy_Web_Back
 cd ..
 
 cd Jandy_Web_Back
