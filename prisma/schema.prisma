@@ -190,9 +190,6 @@ model ChatMessage {
   channelRoomId    Int? // 채널 방 id( 채널 소규모 채팅 방에서 사용)
   channelId        Int? // 채널 id(채널 잡담방 사용)
 
-  archive         Archive?  @relation(fields: [archiveId], references: [id])
-  archiveId       Int? // 질문 답쌍을 전달하기 위한 아카이브
-
   createdAt DateTime
   updatedAt DateTime?
 
@@ -352,14 +349,13 @@ model Archive {
   status              ArchiveStatus // Private, Public 공개범위
   content             String // 아카이빙에 들어갈 (게시글, 질문답쌍,) 내용
   archiveComment      Comment[] // 아카이빙에 속하는 댓글 목록
-   images             Image[]
+  images             Image[]
   owner               User @relation("archive", fields: [ownerId], references: [id]) 
   ownerId             Int // 아카이빙의 소유주 
   channel             Channel @relation(fields: [channelId], references: [id])
   channelId           Int // 공개범위가 Private시 속한 채널의 유저를 판별하기위한 값
   post                Post? @relation(fields: [postId], references: [id])
-  postId              Int // 주제가 되는 POST 정보
-  chatMessage         ChatMessage[] // 질문답쌍의 정보
+  postId              Int? // 주제가 되는 POST 정보
   createdAt           DateTime
   updatedAt           DateTime?
   @@map("archives")

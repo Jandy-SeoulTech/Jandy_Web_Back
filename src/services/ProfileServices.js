@@ -325,10 +325,10 @@ export const GetMyChannelInfo = async (req, res, next) => {
         } else {
             return res.status(200).send(
                 resFormat.successData(200, "내 채널 정보", {
-                    adminChannl: adminChannel,
-                    participantChannel: participantChannel,
-                    ownerRoom: ownerRoom,
-                    participantRoom: participantRoom,
+                    adminChannel,
+                    participantChannel,
+                    ownerRoom,
+                    participantRoom,
                 })
             );
         }

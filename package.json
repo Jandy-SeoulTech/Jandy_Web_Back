@@ -6,7 +6,8 @@
     "scripts": {
         "dev": "cross-env NODE_ENV=development nodemon src/index.js --exec babel-node",
         "build": "babel src -d dist",
-        "start": "cross-env NODE_ENV=production pm2 start ./dist/index.js"
+        "start": "cross-env NODE_ENV=production pm2 start ./dist/index.js",
+        "db:push": "dotenv -e .env.prod -- npx prisma db push"
     },
     "repository": {
         "type": "git",
@@ -20,8 +21,8 @@
     "homepage": "https://github.com/Jandy-SeoulTech/Jandy_Web_Back#readme",
     "dependencies": {
         "@babel/runtime": "^7.14.8",
-        "@google-cloud/storage": "^5.12.0",
         "@prisma/client": "^2.28.0",
+        "aws-sdk": "^2.999.0",
         "bcrypt": "^5.0.1",
         "body-parser": "^1.19.0",
         "cookie-parser": "^1.4.5",
@@ -29,11 +30,13 @@
         "cross-env": "^7.0.3",
         "dayjs": "^1.10.6",
         "dotenv": "^10.0.0",
+        "dotenv-cli": "^4.0.0",
         "express": "^4.17.1",
         "express-session": "^1.17.2",
         "express-validator": "^6.12.1",
         "morgan": "^1.10.0",
         "multer": "^1.4.2",
+        "multer-s3": "^2.9.0",
         "node-schedule": "^2.0.0",
         "nodemailer": "^6.6.3",
         "passport": "^0.4.1",

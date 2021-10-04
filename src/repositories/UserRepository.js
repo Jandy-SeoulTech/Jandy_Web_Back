@@ -117,6 +117,20 @@ export const findByIdWithProfile = async (id) => {
                         status: "good",
                     },
                 },
+                admin: {
+                    include: {
+                        channelImage: true,
+                    },
+                },
+                participants: {
+                    select: {
+                        channel: {
+                            include: {
+                                channelImage: true,
+                            },
+                        },
+                    },
+                },
             },
         });
     } catch (err) {
@@ -572,6 +586,29 @@ export const findFollowingList = async (findUserId) => {
                 },
                 followers: true,
                 followings: true,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const CheckMyArchive = async (id, archiveId) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                OR: [
+                    {
+                        archive: {
+                            some: {
+                                id: archiveId,
+                            },
+                        },
+                    },
+                ],
+                AND: {
+                    id,
+                },
             },
         });
     } catch (err) {

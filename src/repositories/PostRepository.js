@@ -240,3 +240,22 @@ export const updateClaer = async (id) => {
         console.error(err);
     }
 };
+
+export const checkPostCleared = async (id) => {
+    try {
+        return await prisma.post.findMany({
+            where: {
+                AND: [
+                    {
+                        id,
+                    },
+                    {
+                        status: "Clear",
+                    },
+                ],
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
