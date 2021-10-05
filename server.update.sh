@@ -1,4 +1,5 @@
 cd Jandy_Web_Back
+
 git fetch origin
 git pull
 cd ..
@@ -17,4 +18,3 @@ docker rmi upgle
 
 docker build -t upgle .
 docker run -d -p 4000:4000 --name upgle upgle
-

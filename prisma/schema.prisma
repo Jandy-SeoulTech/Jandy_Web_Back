@@ -31,7 +31,7 @@ model User {
   attention       Attention[]   @relation("Attention")
   reviewed        Review[]      @relation("reviewed")
   reviewer        Review[]      @relation("reviewer")
-
+  archive         Archive[]     @relation("archive")
   @@map(name: "users")
 }
 
@@ -83,6 +83,8 @@ model Image {
   channelId Int?
   post      Post?     @relation(fields: [postId], references: [id])
   postId    Int?
+  archive   Archive? @relation(fields: [archiveId], references: [id])
+  archiveId Int?
 
   @@map(name: "images")
 }
@@ -136,7 +138,7 @@ model Channel {
   baseRoomChat ChatMessage[]
   post         Post[]
   Review       Review[]
-
+  archive      Archive[]
 
   createdAt DateTime
   updatedAt DateTime?
@@ -281,6 +283,7 @@ model Post {
   updatedAt  DateTime?
 
   ChannelRoom ChannelRoom[]
+  archive         Archive?
   @@map("posts")
 }
 
@@ -289,8 +292,10 @@ model Comment {
   content   String
   author    User      @relation("comment", fields: [authorId], references: [id])
   authorId  Int
-  post      Post      @relation(fields: [postId], references: [id])
+  post      Post?      @relation(fields: [postId], references: [id])
   postId    Int
+  archive   Archive? @relation(fields: [archiveId], references: [id])
+  archiveId Int
   createdAt DateTime
   updatedAt DateTime?
 
@@ -336,4 +341,27 @@ enum RoomStatus {
   Open
   Reservation
   Close
+}
+
+model Archive {
+  id                  Int @id @default(autoincrement())
+  title               String
+  status              ArchiveStatus // Private, Public 공개범위
+  content             String // 아카이빙에 들어갈 (게시글, 질문답쌍,) 내용
+  archiveComment      Comment[] // 아카이빙에 속하는 댓글 목록
+  images             Image[]
+  owner               User @relation("archive", fields: [ownerId], references: [id]) 
+  ownerId             Int // 아카이빙의 소유주 
+  channel             Channel @relation(fields: [channelId], references: [id])
+  channelId           Int // 공개범위가 Private시 속한 채널의 유저를 판별하기위한 값
+  post                Post? @relation(fields: [postId], references: [id])
+  postId              Int? // 주제가 되는 POST 정보
+  createdAt           DateTime
+  updatedAt           DateTime?
+  @@map("archives")
+}
+
+enum ArchiveStatus {
+  Private
+  Public
 }

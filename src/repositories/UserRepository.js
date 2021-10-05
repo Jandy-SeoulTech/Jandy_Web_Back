@@ -592,3 +592,26 @@ export const findFollowingList = async (findUserId) => {
         console.error(err);
     }
 };
+
+export const CheckMyArchive = async (id, archiveId) => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                OR: [
+                    {
+                        archive: {
+                            some: {
+                                id: archiveId,
+                            },
+                        },
+                    },
+                ],
+                AND: {
+                    id,
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

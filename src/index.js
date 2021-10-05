@@ -20,7 +20,7 @@ import ChatController from "./controllers/ChatController";
 import RoomController from "./controllers/RoomController";
 import SearchController from "./controllers/SearchController";
 import ReviewController from "./controllers/ReviewController";
-
+import ArchiveController from "./controllers/ArchiveController";
 const app = express();
 
 passportConfig(passport);
@@ -58,6 +58,7 @@ app.use("/api/Room", RoomController);
 app.use("/api/Chat", ChatController);
 app.use("/api/Search", SearchController);
 app.use("/api/Review", ReviewController);
+app.use("/api/Archive", ArchiveController);
 
 //404 api handler
 app.use(`/api/*`, ErrorHandler.routerHanlder);
