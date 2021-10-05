@@ -5,6 +5,7 @@ import { dbNow } from "../utils/dayUtils";
 import bcrypt from "bcrypt";
 
 import resFormat from "../utils/resFormat";
+import { query } from 'express-validator';
 
 export const CreateComment = async (req, res, next) => {
     try {
@@ -44,7 +45,7 @@ export const CreateComment = async (req, res, next) => {
 export const UpdateComment = async (req, res, next) => {
     try {
         const checkAuthor = await CommentRepository.checkMyComment(
-            parseInt(req.params.commentId,10),
+            parseInt(req.params.commentId, 10),
             req.user.id
         );
         if (!checkAuthor[0]) {
@@ -53,7 +54,7 @@ export const UpdateComment = async (req, res, next) => {
                 .send(resFormat.fail(401, "댓글 삭제 권한이 없습니다."));
         }
         const response = await CommentRepository.updateComment(
-            UpdateOption(parseInt(req.params.commentId,10),req.body)
+            UpdateOption(parseInt(req.params.commentId, 10), req.body)
         );
         if (!response) {
             return res
@@ -72,7 +73,7 @@ export const UpdateComment = async (req, res, next) => {
 export const DeleteComment = async (req, res, next) => {
     try {
         const checkAuthor = await CommentRepository.checkMyComment(
-            parseInt(req.params.commentId,10),
+            parseInt(req.params.commentId, 10),
             req.user.id
         );
         if (!checkAuthor[0]) {
@@ -81,7 +82,7 @@ export const DeleteComment = async (req, res, next) => {
                 .send(resFormat.fail(401, "자신의 댓글만 삭제 가능합니다."));
         }
         const response = await CommentRepository.deleteComment(
-            parseInt(req.params.commentId,10)
+            parseInt(req.params.commentId, 10)
         );
         if (!response) {
             return res
@@ -89,6 +90,46 @@ export const DeleteComment = async (req, res, next) => {
                 .send(resFormat.fail(500, "알수 없는 에러로 삭제 실패"));
         }
         return res.status(200).send(resFormat.success(200, "댓글 삭제 성공"));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetComment = async (req, res, next) => {
+    try {
+        const data = await CommentRepository.getCommentById(
+            parseInt(req.params.commentId, 10)
+        );
+        if (!data) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 불러오기 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "댓글 정보 제공", data));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetCommentList = async (req, res, next) => {
+    try {
+        console.log(req.query);
+        const data = await CommentRepository.getCommentByTypeId(
+            String(req.query.type),
+            parseInt(req.query.id, 10)
+        );
+        if (!data) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 불러오기 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "댓글 정보 리스트 제공", data));
     } catch (err) {
         console.error(err);
         next(err);
@@ -114,7 +155,7 @@ const CreateOption = (id, postId, bodydata) => {
     return Option;
 };
 
-const UpdateOption = (id,bodydata) => {
+const UpdateOption = (id, bodydata) => {
     // DB에 맞추어 Option 설정
     const Option = {
         id: parseInt(id, 10),

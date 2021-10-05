@@ -47,3 +47,35 @@ export const checkMyComment = async (id, authorId) => {
         console.error(err);
     }
 };
+
+export const getCommentById = async (id) => {
+    try {
+        return await prisma.comment.findUnique({
+            where: { id },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const getCommentByTypeId = async (type, id) => {
+    try {
+        const typeName = type == "post" ? "postId" : "archiveId";
+        const whereQuery = {};
+        whereQuery[typeName] = id;
+        console.log(whereQuery);
+        return await prisma.comment.findMany({
+            where: whereQuery,
+            orderBy: [
+                {
+                    createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc",
+                },
+            ],
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
