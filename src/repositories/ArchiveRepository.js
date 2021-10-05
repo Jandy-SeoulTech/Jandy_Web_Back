@@ -44,10 +44,148 @@ export const updateArchive = async (id, data) => {
     }
 };
 
-export const findById = async (id) => {
+export const getArchiveById = async (id) => {
     try {
         return prisma.archive.findUnique({
             where: { id },
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                post: {
+                    select: {
+                        title: true,
+                        content: true,
+                        createdAt: true,
+                        updatedAt: true,
+                        author: {
+                            select: {
+                                id: true,
+                                email: true,
+                                nickname: true,
+                                profile: {
+                                    select: {
+                                        profileImage: {
+                                            select: {
+                                                src: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                images: {
+                    select: {
+                        src: true,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const getArchiveListByChannelId = async (channelId, isPublic) => {
+    const status = isPublic ? "Public" : undefined;
+    try {
+        return prisma.archive.findMany({
+            where: {
+                channelId,
+                status,
+            },
+            orderBy: [
+                {
+                    createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc",
+                },
+            ],
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                post: {
+                    select: {
+                        title: true,
+                        content: true,
+                        createdAt: true,
+                        updatedAt: true,
+                        author: {
+                            select: {
+                                id: true,
+                                email: true,
+                                nickname: true,
+                                profile: {
+                                    select: {
+                                        profileImage: {
+                                            select: {
+                                                src: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                images: {
+                    select: {
+                        src: true,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const getArchiveListByUserId = async (userId, isPublic) => {
+    try {
+        const status = isPublic ? "Public" : undefined;
+        return prisma.archive.findMany({
+            where: {
+                ownerId: userId,
+                status,
+            },
+            orderBy: [
+                {
+                    createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc",
+                },
+            ],
             include: {
                 owner: {
                     select: {

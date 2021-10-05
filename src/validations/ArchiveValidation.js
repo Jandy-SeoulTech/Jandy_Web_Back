@@ -50,7 +50,6 @@ export const CreateRequestValid = async (req, res, next) => {
     validationFunction(req, res, next);
 };
 
-
 export const DeleteRequestValid = async (req, res, next) => {
     await check("archiveId")
         .notEmpty()
@@ -95,5 +94,35 @@ export const UpdateRequestValid = async (req, res, next) => {
             .withMessage("값이 없습니다.")
             .run(req);
     }
+    validationFunction(req, res, next);
+};
+
+export const GetRequestValid = async (req, res, next) => {
+    await check("archiveId")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .isNumeric()
+        .withMessage("archiveId는 숫자 형식이여야 합니다.")
+        .run(req);
+    validationFunction(req, res, next);
+};
+
+export const GetByChannelRequestValid = async (req, res, next) => {
+    await check("channelId")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .isNumeric()
+        .withMessage("channelId는 숫자 형식이여야 합니다.")
+        .run(req);
+    validationFunction(req, res, next);
+};
+
+export const GetByUserRequestValid = async (req, res, next) => {
+    await check("userId")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .isNumeric()
+        .withMessage("userId는 숫자 형식이여야 합니다.")
+        .run(req);
     validationFunction(req, res, next);
 };
