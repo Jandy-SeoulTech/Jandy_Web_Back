@@ -11,11 +11,13 @@ Router.post(
     RoomValidation.RoomCreateRequestValid,
     RoomService.RoomCreate
 );
+Router.get("/list", AuthHandler.isLoggedIn, RoomService.GetOwnerRoomList);
+
 Router.get(
     "/:channelId",
     AuthHandler.isLoggedIn,
     RoomValidation.GetInfoRequestValid,
-    RoomService.GetRoomList
+    RoomService.GetChannelRoomList
 );
 Router.patch(
     "/exit",
@@ -37,6 +39,6 @@ Router.get(
     RoomService.GetRoomInfo
 );
 
-Router.post("/join", AuthHandler.isLoggedIn, RoomService.join);
-Router.post("/list", RoomService.list);
+Router.post("/test/join", AuthHandler.isLoggedIn, RoomService.join);
+Router.post("/test/list", RoomService.list);
 export default Router;

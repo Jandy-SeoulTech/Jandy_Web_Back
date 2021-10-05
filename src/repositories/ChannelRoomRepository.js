@@ -268,3 +268,32 @@ export const deleteRoom = async (id) => {
         console.error(err);
     }
 };
+
+export const findOwnerCloseRoomByUserId = async (userId) => {
+    try {
+        let data = await prisma.channelRoom.findMany({
+            where: {
+                AND: [
+                    {
+                        userId,
+                    },
+                    {
+                        status: "Close",
+                    },
+                ],
+            },
+            include: {
+                roomOwner: true,
+                channel: {
+                    include: {
+                        channelImage: true,
+                    },
+                },
+            },
+        });
+        data.map((v) => delete v["roomOwner"]["password"]);
+        return data;
+    } catch (err) {
+        console.error(err);
+    }
+};
