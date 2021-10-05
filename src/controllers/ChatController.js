@@ -7,7 +7,7 @@ const Router = express.Router();
 Router.get(
     "/channel/:channelId",
     ChatValidation.ChannelLogRequestValid,
-    ChatServices.MainChatLog
+    ChatServices.GetMainChatLog
 );
 
 Router.post(
@@ -21,7 +21,7 @@ Router.get(
     "/room/:roomId",
     AuthHandler.isLoggedIn,
     ChatValidation.RoomLogRequestValid,
-    ChatServices.RoomChatLog
+    ChatServices.GetRoomChatLog
 );
 Router.post(
     "/room/:roomId/chat",
@@ -35,5 +35,10 @@ Router.post(
     ChatValidation.RoomAnswerChatRequestValid,
     ChatServices.RoomChatAnswer
 );
-
+Router.get(
+    "/room/:roomId/answer",
+    AuthHandler.isLoggedIn,
+    ChatValidation.RoomAnswerListRequestValid,
+    ChatServices.GetRoomChatAnswerList
+);
 export default Router;

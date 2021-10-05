@@ -2,7 +2,7 @@ import * as UserRepository from "../repositories/UserRepository";
 import * as ChatMessageRepository from "../repositories/ChatMessageRepository";
 import resFormat from "../utils/resFormat";
 //잡담방 채팅 로그
-export const MainChatLog = async (req, res, next) => {
+export const GetMainChatLog = async (req, res, next) => {
     try {
         let lastId = parseInt(req.query.lastId, 10);
         if (req.query.lastId === "null") {
@@ -75,7 +75,7 @@ export const MainChat = async (req, res, next) => {
 };
 
 //룸 채팅 로그
-export const RoomChatLog = async (req, res, next) => {
+export const GetRoomChatLog = async (req, res, next) => {
     try {
         let lastId = parseInt(req.query.lastId, 10);
         if (req.query.lastId === "null") {
@@ -152,6 +152,26 @@ export const RoomChatAnswer = async (req, res, next) => {
         return res
             .status(200)
             .send(resFormat.successData(200, "성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetRoomChatAnswerList = async (req, res, next) => {
+    try {
+        const findAnswer = await ChatMessageRepository.findRoomAnswerChat(
+            parseInt(req.params.roomId)
+        );
+        if (!findAnswer[0]) {
+            return res
+                .status(404)
+                .send(resFormat.fail(404, "답장쌍이 없습니다"));
+        }
+
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "조회성공", findAnswer));
     } catch (err) {
         console.error(err);
         next(err);
