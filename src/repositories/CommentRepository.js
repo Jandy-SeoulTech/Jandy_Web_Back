@@ -52,6 +52,24 @@ export const getCommentById = async (id) => {
     try {
         return await prisma.comment.findUnique({
             where: { id },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         });
     } catch (err) {
         console.error(err);
@@ -74,6 +92,24 @@ export const getCommentByTypeId = async (type, id) => {
                     updatedAt: "desc",
                 },
             ],
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         });
     } catch (err) {
         console.error(err);
