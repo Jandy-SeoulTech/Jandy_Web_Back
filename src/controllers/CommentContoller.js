@@ -25,8 +25,18 @@ Router.delete(
     CommentServices.DeleteComment
 );
 
-Router.get("/", AuthHandler.isLoggedIn, CommentServices.GetCommentList);
+Router.get(
+    "/",
+    AuthHandler.isLoggedIn,
+    CommentValidation.GetListRequestValid,
+    CommentServices.GetCommentList
+);
 
-Router.get("/:commentId", AuthHandler.isLoggedIn, CommentServices.GetComment);
+Router.get(
+    "/:commentId",
+    AuthHandler.isLoggedIn,
+    CommentValidation.GetRequestValid,
+    CommentServices.GetComment
+);
 
 export default Router;

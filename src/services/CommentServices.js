@@ -5,7 +5,6 @@ import { dbNow } from "../utils/dayUtils";
 import bcrypt from "bcrypt";
 
 import resFormat from "../utils/resFormat";
-import { query } from 'express-validator';
 
 export const CreateComment = async (req, res, next) => {
     try {
