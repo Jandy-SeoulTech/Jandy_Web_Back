@@ -2,9 +2,6 @@ import * as PostRepository from "../repositories/PostRepository";
 import * as UserRepository from "../repositories/UserRepository";
 import * as AttentionRepository from "../repositories/AttentionRepository";
 import { dbNow } from "../utils/dayUtils";
-
-import bcrypt from "bcrypt";
-
 import resFormat from "../utils/resFormat";
 
 export const CreatePost = async (req, res, next) => {
@@ -50,7 +47,7 @@ export const UpdatePost = async (req, res, next) => {
     try {
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
-            parseInt(req.body.channelId,10)
+            parseInt(req.body.channelId, 10)
         );
         if (!joinUser[0]) {
             return res
@@ -63,7 +60,7 @@ export const UpdatePost = async (req, res, next) => {
                 );
         }
         const checkAuthor = await PostRepository.checkMyPost(
-            parseInt(req.params.postId,10),
+            parseInt(req.params.postId, 10),
             req.user.id
         );
         if (!checkAuthor[0]) {
@@ -74,7 +71,7 @@ export const UpdatePost = async (req, res, next) => {
                 );
         }
         const response = await PostRepository.updatePost(
-            parseInt(req.params.postId,10),
+            parseInt(req.params.postId, 10),
             UpdateOption(req.body)
         );
         if (!response) {
