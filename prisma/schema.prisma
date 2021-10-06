@@ -21,7 +21,7 @@ model User {
   profile         Profile?
   admin           Channel[]     @relation("admin")
   participants    Participant[] @relation("Join")
-  channellike     ChannelLike[]
+  channelLike     ChannelLike[]
   ban             Ban[]         @relation("ban")
   roomOwner       ChannelRoom[] @relation("RoomOwner")
   chatMessage     ChatMessage[]
@@ -32,6 +32,7 @@ model User {
   reviewed        Review[]      @relation("reviewed")
   reviewer        Review[]      @relation("reviewer")
   archive         Archive[]     @relation("archive")
+  archiveLike     ArchiveLike[] 
   @@map(name: "users")
 }
 
@@ -132,7 +133,7 @@ model Channel {
   participants Participant[]    @relation("Participant")
   tags         ChannelTag[]
   category     ChannelCategory?
-  channellike  ChannelLike[]
+  channelLike  ChannelLike[]
   ban          Ban[]
   channelRoom  ChannelRoom[]
   baseRoomChat ChatMessage[]
@@ -356,6 +357,8 @@ model Archive {
   channelId           Int // 공개범위가 Private시 속한 채널의 유저를 판별하기위한 값
   post                Post? @relation(fields: [postId], references: [id])
   postId              Int? // 주제가 되는 POST 정보
+  archiveLike         ArchiveLike[]
+  
   createdAt           DateTime
   updatedAt           DateTime?
   @@map("archives")
@@ -364,4 +367,16 @@ model Archive {
 enum ArchiveStatus {
   Private
   Public
+}
+
+model ArchiveLike {
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  archive   Archive   @relation(fields: [archiveId], references: [id])
+  archiveId Int
+  createdAt DateTime
+  updatedAt DateTime?
+
+  @@unique([userId, archiveId], name: "archiveLikeKey")
+  @@map("archive_like")
 }
