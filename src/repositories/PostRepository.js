@@ -24,29 +24,6 @@ export const findById = async (id) => {
                         },
                     },
                 },
-                comment: {
-                    select: {
-                        author: {
-                            select: {
-                                id: true,
-                                email: true,
-                                nickname: true,
-                                profile: {
-                                    select: {
-                                        profileImage: {
-                                            select: {
-                                                src: true,
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        content: true,
-                        createdAt: true,
-                        updatedAt: true,
-                    },
-                },
                 attention: {
                     select: {
                         user: {
@@ -83,11 +60,11 @@ export const createPost = async (data) => {
     }
 };
 
-export const updatePost = async (id,data) => {
+export const updatePost = async (id, data) => {
     try {
         await prisma.post.update({
             where: {
-                id : id
+                id: id,
             },
             data: {
                 images: {

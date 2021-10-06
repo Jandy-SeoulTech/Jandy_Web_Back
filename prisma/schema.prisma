@@ -292,10 +292,10 @@ model Comment {
   content   String
   author    User      @relation("comment", fields: [authorId], references: [id])
   authorId  Int
-  post      Post?     @relation(fields: [postId], references: [id])
-  postId    Int
-  archive   Archive?  @relation(fields: [archiveId], references: [id])
-  archiveId Int
+  post      Post?      @relation(fields: [postId], references: [id])
+  postId    Int?
+  archive   Archive? @relation(fields: [archiveId], references: [id])
+  archiveId Int?
   createdAt DateTime
   updatedAt DateTime?
 

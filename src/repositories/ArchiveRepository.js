@@ -2,14 +2,13 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const createArchive = async(data) => {
+export const createArchive = async (data) => {
     try {
-        return prisma.archive.create({data});
-    }
-    catch (err) {
+        return prisma.archive.create({ data });
+    } catch (err) {
         console.error(err);
     }
-}
+};
 
 export const deleteArchive = async (id) => {
     try {
@@ -21,11 +20,11 @@ export const deleteArchive = async (id) => {
     }
 };
 
-export const updateArchive = async (id,data) => {
+export const updateArchive = async (id, data) => {
     try {
         await prisma.archive.update({
             where: {
-                id : id
+                id: id,
             },
             data: {
                 images: {
@@ -44,10 +43,11 @@ export const updateArchive = async (id,data) => {
         console.error(err);
     }
 };
-export const findById = async (id) => {
+
+export const getArchiveById = async (id) => {
     try {
         return prisma.archive.findUnique({
-            where : {id},
+            where: { id },
             include: {
                 owner: {
                     select: {
@@ -65,7 +65,7 @@ export const findById = async (id) => {
                         },
                     },
                 },
-                post : {
+                post: {
                     select: {
                         title: true,
                         content: true,
@@ -87,33 +87,59 @@ export const findById = async (id) => {
                                 },
                             },
                         },
-                        comment: {
+                    },
+                },
+                images: {
+                    select: {
+                        src: true,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const getArchiveListByChannelId = async (channelId, isPublic) => {
+    const status = isPublic ? "Public" : undefined;
+    try {
+        return prisma.archive.findMany({
+            where: {
+                channelId,
+                status,
+            },
+            orderBy: [
+                {
+                    createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc",
+                },
+            ],
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
                             select: {
-                                author: {
+                                profileImage: {
                                     select: {
-                                        id: true,
-                                        email: true,
-                                        nickname: true,
-                                        profile: {
-                                            select: {
-                                                profileImage: {
-                                                    select: {
-                                                        src: true,
-                                                    },
-                                                },
-                                            },
-                                        },
+                                        src: true,
                                     },
                                 },
-                                content: true,
-                                createdAt: true,
-                                updatedAt: true,
                             },
                         },
-                    }
+                    },
                 },
-                archiveComment: {
+                post: {
                     select: {
+                        title: true,
+                        content: true,
+                        createdAt: true,
+                        updatedAt: true,
                         author: {
                             select: {
                                 id: true,
@@ -130,9 +156,6 @@ export const findById = async (id) => {
                                 },
                             },
                         },
-                        content: true,
-                        createdAt: true,
-                        updatedAt: true,
                     },
                 },
                 images: {
@@ -142,8 +165,76 @@ export const findById = async (id) => {
                 },
             },
         });
-    }
-    catch (err) {
+    } catch (err) {
         console.error(err);
     }
-}
+};
+
+export const getArchiveListByUserId = async (userId, isPublic) => {
+    try {
+        const status = isPublic ? "Public" : undefined;
+        return prisma.archive.findMany({
+            where: {
+                ownerId: userId,
+                status,
+            },
+            orderBy: [
+                {
+                    createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc",
+                },
+            ],
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: {
+                            select: {
+                                profileImage: {
+                                    select: {
+                                        src: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                post: {
+                    select: {
+                        title: true,
+                        content: true,
+                        createdAt: true,
+                        updatedAt: true,
+                        author: {
+                            select: {
+                                id: true,
+                                email: true,
+                                nickname: true,
+                                profile: {
+                                    select: {
+                                        profileImage: {
+                                            select: {
+                                                src: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                images: {
+                    select: {
+                        src: true,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

@@ -47,7 +47,35 @@ export const DeleteRequestValid = async (req, res, next) => {
         .notEmpty()
         .withMessage("값이 없습니다")
         .isNumeric()
-        .withMessage("postId는 숫자 형식이여야 합니다.")
+        .withMessage("commentId는 숫자 형식이여야 합니다.")
+        .run(req);
+    validationFunction(req, res, next);
+};
+
+export const GetRequestValid = async (req, res, next) => {
+    await check("commentId")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .isNumeric()
+        .withMessage("commentId는 숫자 형식이여야 합니다.")
+        .run(req);
+    validationFunction(req, res, next);
+};
+
+export const GetListRequestValid = async (req, res, next) => {
+    await check("type")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .bail()
+        .isIn(["post", "archive"])
+        .withMessage("값은 post, archive 중에 하나입니다.")
+        .run(req);
+    await check("id")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .bail()
+        .isNumeric()
+        .withMessage("id는 숫자 형식이여야 합니다.")
         .run(req);
     validationFunction(req, res, next);
 };

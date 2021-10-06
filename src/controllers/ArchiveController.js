@@ -9,26 +9,42 @@ Router.post(
     "/",
     AuthHandler.isLoggedIn,
     ArchiveValidation.CreateRequestValid,
-    ArchiveServices.CreateArchive,
+    ArchiveServices.CreateArchive
 );
 
 Router.delete(
     "/:archiveId",
     AuthHandler.isLoggedIn,
     ArchiveValidation.DeleteRequestValid,
-    ArchiveServices.DeleteArchive,
+    ArchiveServices.DeleteArchive
 );
 
 Router.patch(
     "/:archiveId",
     AuthHandler.isLoggedIn,
     ArchiveValidation.UpdateRequestValid,
-    ArchiveServices.UpdateArchive,
+    ArchiveServices.UpdateArchive
 );
 
-// Test용 조회
 Router.get(
     "/:archiveId",
-    ArchiveServices.GetArchive,
+    AuthHandler.isLoggedIn,
+    ArchiveValidation.GetRequestValid,
+    ArchiveServices.GetArchive
 );
+
+Router.get(
+    "/channel/:channelId",
+    AuthHandler.isLoggedIn,
+    ArchiveValidation.GetByChannelRequestValid,
+    ArchiveServices.GetChannelArchiveList
+);
+
+Router.get(
+    "/profile/:userId",
+    AuthHandler.isLoggedIn,
+    ArchiveValidation.GetByUserRequestValid,
+    ArchiveServices.GetUserArchiveList
+);
+
 export default Router;

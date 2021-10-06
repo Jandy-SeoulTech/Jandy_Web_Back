@@ -127,10 +127,63 @@ export const UpdateArchive = async (req, res, next) => {
         next(err);
     }
 };
+
 export const GetArchive = async (req, res, next) => {
     try {
-        const response = await ArchiveRepository.findById(
+        const response = await ArchiveRepository.getArchiveById(
             parseInt(req.params.archiveId, 10)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 정보 얻기 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "정보 얻기 성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetChannelArchiveList = async (req, res, next) => {
+    try {
+        const joinUser = await UserRepository.CheckJoinChannel(
+            req.user.id,
+            parseInt(req.params.channelId, 10)
+        );
+        let isPublic = true;
+        if (joinUser[0]) {
+            isPublic = false;
+        }
+        const response = await ArchiveRepository.getArchiveListByChannelId(
+            parseInt(req.params.channelId, 10),
+            isPublic
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 정보 얻기 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "정보 얻기 성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetUserArchiveList = async (req, res, next) => {
+    try {
+        let isPublic = true;
+        if (parseInt(req.params.userId, 10) === req.user.id) {
+            isPublic = false;
+        }
+        const response = await ArchiveRepository.getArchiveListByUserId(
+            parseInt(req.params.userId, 10),
+            isPublic
         );
         if (!response) {
             return res
