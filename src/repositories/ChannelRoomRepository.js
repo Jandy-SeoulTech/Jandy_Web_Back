@@ -137,6 +137,22 @@ export const updateOpenRoom = async (id) => {
         console.error(err);
     }
 };
+
+export const updateArchivedRoom = async (postId) => {
+    try {
+        return await prisma.channelRoom.updateMany({
+            where: {
+                postId,
+            },
+            data: {
+                status: "Archived",
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 export const findOwnerRoom = async (userId) => {
     try {
         return await prisma.channelRoom.findMany({

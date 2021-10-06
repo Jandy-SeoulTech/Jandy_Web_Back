@@ -341,6 +341,7 @@ enum RoomStatus {
   Open
   Reservation
   Close
+  Archived
 }
 
 model Archive {
