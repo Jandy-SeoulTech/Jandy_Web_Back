@@ -1,6 +1,7 @@
 import * as ArchiveRepository from "../repositories/ArchiveRepository";
 import * as UserRepository from "../repositories/UserRepository";
 import * as PostRepository from "../repositories/PostRepository";
+import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
 import { dbNow } from "../utils/dayUtils";
 
 import resFormat from "../utils/resFormat";
@@ -50,6 +51,17 @@ export const CreateArchive = async (req, res, next) => {
                     )
                 );
         }
+        if (req.body.postId) {
+            const roomArchived = await ChannelRoomRepository.updateArchivedRoom(
+                parseInt(req.body.postId)
+            );
+            if (!roomArchived) {
+                return res
+                    .status(500)
+                    .send(resFormat.fail(500, "아카이빙 등록 실패"));
+            }
+        }
+
         return res
             .status(200)
             .send(resFormat.successData(200, "아카이브 작성 성공", response));
