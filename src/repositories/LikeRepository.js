@@ -18,3 +18,18 @@ export const findChannelLike = async (userId, channelId) => {
         console.error(err);
     }
 };
+
+export const findArchiveLike = async (userId, archiveId) => {
+    try {
+        return await prisma.archiveLike.findUnique({
+            where: {
+                archiveLikeKey: {
+                    userId,
+                    archiveId,
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

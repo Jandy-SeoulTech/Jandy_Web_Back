@@ -1,6 +1,6 @@
 import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as BanRepository from "../repositories/BanRepository";
-import * as LikeRepository from "../repositories/LikeReposiotry";
+import * as LikeRepository from "../repositories/LikeRepository";
 import * as UserRepository from "../repositories/UserRepository";
 import { dbNow } from "../utils/dayUtils";
 
@@ -121,7 +121,7 @@ export const LikeChannel = async (req, res, next) => {
                 .status(403)
                 .send(resFormat.fail(403, "이미 좋아요를 하였습니다."));
         }
-        const response = await UserRepository.findChannelLike(
+        const response = await UserRepository.LikeOnChannel(
             req.user.id,
             parseInt(req.body.channelId, 10)
         );

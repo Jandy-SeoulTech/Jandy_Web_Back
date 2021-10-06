@@ -47,4 +47,17 @@ Router.get(
     ArchiveServices.GetUserArchiveList
 );
 
+Router.post(
+    "/like",
+    AuthHandler.isLoggedIn,
+    ArchiveValidation.LikeRequestValid,
+    ArchiveServices.LikeArchive
+);
+Router.post(
+    "/unlike",
+    AuthHandler.isLoggedIn,
+    ArchiveValidation.UnLikeRequestValid,
+    ArchiveServices.UnLikeArchive
+);
+
 export default Router;
