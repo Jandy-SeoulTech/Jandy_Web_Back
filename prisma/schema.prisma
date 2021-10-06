@@ -45,7 +45,7 @@ model Profile {
   userId         Int
   wellTalent     WellTalent[]
   interestTalent InterestTalent[]
-  profileImage   Image?
+  profileImage   String?
 
   @@map(name: "profiles")
 }
@@ -77,10 +77,6 @@ model Image {
   src       String?   @db.VarChar(200)
   createdAt DateTime
   updatedAt DateTime?
-  profile   Profile?  @relation(fields: [profileId], references: [id])
-  profileId Int?
-  channel   Channel?  @relation(fields: [channelId], references: [id])
-  channelId Int?
   post      Post?     @relation(fields: [postId], references: [id])
   postId    Int?
   archive   Archive?  @relation(fields: [archiveId], references: [id])
@@ -126,7 +122,7 @@ model Channel {
   id           Int              @id @default(autoincrement())
   name         String
   introduce    String?          @db.Text
-  channelImage Image?
+  channelImage String?
   admin        User             @relation("admin", fields: [adminId], references: [id])
   adminId      Int
   participants Participant[]    @relation("Participant")
@@ -292,9 +288,9 @@ model Comment {
   content   String
   author    User      @relation("comment", fields: [authorId], references: [id])
   authorId  Int
-  post      Post?      @relation(fields: [postId], references: [id])
+  post      Post?     @relation(fields: [postId], references: [id])
   postId    Int?
-  archive   Archive? @relation(fields: [archiveId], references: [id])
+  archive   Archive?  @relation(fields: [archiveId], references: [id])
   archiveId Int?
   createdAt DateTime
   updatedAt DateTime?

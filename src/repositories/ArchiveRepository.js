@@ -54,15 +54,7 @@ export const getArchiveById = async (id) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
                 post: {
@@ -76,15 +68,7 @@ export const getArchiveById = async (id) => {
                                 id: true,
                                 email: true,
                                 nickname: true,
-                                profile: {
-                                    select: {
-                                        profileImage: {
-                                            select: {
-                                                src: true,
-                                            },
-                                        },
-                                    },
-                                },
+                                profile: true,
                             },
                         },
                     },
@@ -123,15 +107,7 @@ export const getArchiveListByChannelId = async (channelId, isPublic) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
                 post: {
@@ -145,15 +121,7 @@ export const getArchiveListByChannelId = async (channelId, isPublic) => {
                                 id: true,
                                 email: true,
                                 nickname: true,
-                                profile: {
-                                    select: {
-                                        profileImage: {
-                                            select: {
-                                                src: true,
-                                            },
-                                        },
-                                    },
-                                },
+                                profile: true,
                             },
                         },
                     },
@@ -192,15 +160,7 @@ export const getArchiveListByUserId = async (userId, isPublic) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
                 post: {
@@ -214,15 +174,7 @@ export const getArchiveListByUserId = async (userId, isPublic) => {
                                 id: true,
                                 email: true,
                                 nickname: true,
-                                profile: {
-                                    select: {
-                                        profileImage: {
-                                            select: {
-                                                src: true,
-                                            },
-                                        },
-                                    },
-                                },
+                                profile: true,
                             },
                         },
                     },

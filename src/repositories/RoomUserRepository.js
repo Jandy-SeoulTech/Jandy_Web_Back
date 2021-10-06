@@ -56,15 +56,7 @@ export const findManyByRoomId = async (channelRoomId) => {
                     select: {
                         id: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },

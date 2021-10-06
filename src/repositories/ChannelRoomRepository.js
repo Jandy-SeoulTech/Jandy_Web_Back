@@ -14,15 +14,7 @@ export const findById = async (id) => {
                     select: {
                         id: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },
@@ -300,11 +292,7 @@ export const findOwnerCloseRoomByUserId = async (userId) => {
             },
             include: {
                 roomOwner: true,
-                channel: {
-                    include: {
-                        channelImage: true,
-                    },
-                },
+                channel: true,
             },
         });
         data.map((v) => delete v["roomOwner"]["password"]);

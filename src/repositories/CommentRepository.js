@@ -58,15 +58,7 @@ export const getCommentById = async (id) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },
@@ -98,15 +90,7 @@ export const getCommentByTypeId = async (type, id) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },

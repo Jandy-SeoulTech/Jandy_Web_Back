@@ -37,11 +37,7 @@ export const findReviewByUserId = async (id) => {
                 reviewChannel: {
                     select: {
                         name: true,
-                        channelImage: {
-                            select: {
-                                src: true,
-                            },
-                        },
+                        channelImage: true,
                     },
                 },
             },

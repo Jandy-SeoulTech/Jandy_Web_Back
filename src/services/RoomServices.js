@@ -80,15 +80,16 @@ export const GetChannelRoomList = async (req, res, next) => {
             await ChannelRoomRepository.findOpenRoomByChannelId(
                 parseInt(req.params.channelId, 10)
             );
-        if (!findOpenRoom[0]) {
-            return res
-                .status(500)
-                .send(resFormat.fail(500, "알수 없는 에러 발생"));
-        }
         const findReservedRoom =
             await ChannelRoomRepository.findReservedRoomByChannelId(
                 parseInt(req.params.channelId, 10)
             );
+        if (!findOpenRoom[0] && !findReservedRoom[0]) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "채팅방이 없습니다"));
+        }
+
         return res.status(200).send(
             resFormat.successData(200, "조회성공", {
                 openRoom: findOpenRoom,

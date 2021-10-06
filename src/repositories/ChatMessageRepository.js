@@ -18,15 +18,7 @@ export const createChannelMainChat = async (id, channelId, content) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },
@@ -79,15 +71,7 @@ export const findChatByChannelId = async (channelId, lastId, limit) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },
@@ -144,15 +128,7 @@ export const findChatByRoomId = async (channelRoomId, lastId, limit) => {
                                 id: true,
                                 email: true,
                                 nickname: true,
-                                profile: {
-                                    select: {
-                                        profileImage: {
-                                            select: {
-                                                src: true,
-                                            },
-                                        },
-                                    },
-                                },
+                                profile: true,
                             },
                         },
                     },
@@ -162,15 +138,7 @@ export const findChatByRoomId = async (channelRoomId, lastId, limit) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },
@@ -195,15 +163,7 @@ export const createRoomChat = async (id, channelRoomId, content) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },
@@ -236,15 +196,7 @@ export const createRoomChatAnswer = async (
                                 id: true,
                                 email: true,
                                 nickname: true,
-                                profile: {
-                                    select: {
-                                        profileImage: {
-                                            select: {
-                                                src: true,
-                                            },
-                                        },
-                                    },
-                                },
+                                profile: true,
                             },
                         },
                     },
@@ -254,15 +206,7 @@ export const createRoomChatAnswer = async (
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },
