@@ -93,3 +93,14 @@ export const RoomAnswerChatRequestValid = async (req, res, next) => {
         .run(req);
     validationFunction(req, res, next);
 };
+
+export const RoomAnswerListRequestValid = async (req, res, next) => {
+    await check("roomId")
+        .exists()
+        .withMessage("roomId가 존재하지 않습니다.")
+        .bail()
+        .isNumeric()
+        .withMessage("숫자 형식이어야 합니다.")
+        .run(req);
+    validationFunction(req, res, next);
+};

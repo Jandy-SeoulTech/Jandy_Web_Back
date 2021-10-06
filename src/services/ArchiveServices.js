@@ -1,6 +1,7 @@
 import * as ArchiveRepository from "../repositories/ArchiveRepository";
 import * as UserRepository from "../repositories/UserRepository";
 import * as PostRepository from "../repositories/PostRepository";
+import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
 import { dbNow } from "../utils/dayUtils";
 
 import resFormat from "../utils/resFormat";
@@ -21,7 +22,7 @@ export const CreateArchive = async (req, res, next) => {
                     )
                 );
         }
-        if(req.body.postId){
+        if (req.body.postId) {
             const checkPostCleared = await PostRepository.checkPostCleared(
                 parseInt(req.body.postId, 10)
             );
@@ -31,7 +32,7 @@ export const CreateArchive = async (req, res, next) => {
                     .send(resFormat.fail(401, "종료된 채팅방이 아닙니다."));
             }
         }
-        
+
         const response = await ArchiveRepository.createArchive(
             CreateOption(
                 req.user.id,
@@ -44,9 +45,23 @@ export const CreateArchive = async (req, res, next) => {
             return res
                 .status(500)
                 .send(
-                    resFormat.fail(500, "알수 없는 에러로 아카이브 작성하기 실패")
+                    resFormat.fail(
+                        500,
+                        "알수 없는 에러로 아카이브 작성하기 실패"
+                    )
                 );
         }
+        if (req.body.postId) {
+            const roomArchived = await ChannelRoomRepository.updateArchivedRoom(
+                parseInt(req.body.postId)
+            );
+            if (!roomArchived) {
+                return res
+                    .status(500)
+                    .send(resFormat.fail(500, "아카이빙 등록 실패"));
+            }
+        }
+
         return res
             .status(200)
             .send(resFormat.successData(200, "아카이브 작성 성공", response));
@@ -60,7 +75,7 @@ export const DeleteArchive = async (req, res, next) => {
     try {
         const checkOwner = await UserRepository.CheckMyArchive(
             req.user.id,
-            parseInt(req.params.archiveId,10),
+            parseInt(req.params.archiveId, 10)
         );
         if (!checkOwner[0]) {
             return res
@@ -68,14 +83,16 @@ export const DeleteArchive = async (req, res, next) => {
                 .send(resFormat.fail(401, "아카이빙 삭제 권한이 없습니다."));
         }
         const response = await ArchiveRepository.deleteArchive(
-            parseInt(req.params.archiveId,10),
+            parseInt(req.params.archiveId, 10)
         );
         if (!response) {
             return res
                 .status(500)
                 .send(resFormat.fail(500, "알수 없는 에러로 삭제 실패"));
         }
-        return res.status(200).send(resFormat.success(200, "아카이브 삭제 성공"));
+        return res
+            .status(200)
+            .send(resFormat.success(200, "아카이브 삭제 성공"));
     } catch (err) {
         console.error(err);
         next(err);
@@ -86,7 +103,7 @@ export const UpdateArchive = async (req, res, next) => {
     try {
         const checkOwner = await UserRepository.CheckMyArchive(
             req.user.id,
-            parseInt(req.params.archiveId,10),
+            parseInt(req.params.archiveId, 10)
         );
         if (!checkOwner[0]) {
             return res
@@ -94,7 +111,7 @@ export const UpdateArchive = async (req, res, next) => {
                 .send(resFormat.fail(401, "아카이브 수정 권한이 없습니다."));
         }
         const response = await ArchiveRepository.updateArchive(
-            parseInt(req.params.archiveId,10),
+            parseInt(req.params.archiveId, 10),
             UpdateOption(req.body)
         );
         if (!response) {
@@ -110,17 +127,72 @@ export const UpdateArchive = async (req, res, next) => {
         next(err);
     }
 };
+
 export const GetArchive = async (req, res, next) => {
     try {
-        const response = await ArchiveRepository.findById(
-            parseInt(req.params.archiveId,10),
+        const response = await ArchiveRepository.getArchiveById(
+            parseInt(req.params.archiveId, 10)
         );
         if (!response) {
             return res
                 .status(500)
                 .send(resFormat.fail(500, "알수 없는 에러로 정보 얻기 실패"));
         }
-        return res.status(200).send(resFormat.successData(200, "정보 얻기 성공" , response));
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "정보 얻기 성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetChannelArchiveList = async (req, res, next) => {
+    try {
+        const joinUser = await UserRepository.CheckJoinChannel(
+            req.user.id,
+            parseInt(req.params.channelId, 10)
+        );
+        let isPublic = true;
+        if (joinUser[0]) {
+            isPublic = false;
+        }
+        const response = await ArchiveRepository.getArchiveListByChannelId(
+            parseInt(req.params.channelId, 10),
+            isPublic
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 정보 얻기 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "정보 얻기 성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const GetUserArchiveList = async (req, res, next) => {
+    try {
+        let isPublic = true;
+        if (parseInt(req.params.userId, 10) === req.user.id) {
+            isPublic = false;
+        }
+        const response = await ArchiveRepository.getArchiveListByUserId(
+            parseInt(req.params.userId, 10),
+            isPublic
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 정보 얻기 실패"));
+        }
+        return res
+            .status(200)
+            .send(resFormat.successData(200, "정보 얻기 성공", response));
     } catch (err) {
         console.error(err);
         next(err);
@@ -148,15 +220,15 @@ const CreateOption = (id, channelId, postId, bodydata) => {
         },
         createdAt: dbNow(),
     };
-    if(postId){
+    if (postId) {
         Option.post = {
-            connect : {
-            id : parseInt(postId, 10),
-        }}
+            connect: {
+                id: parseInt(postId, 10),
+            },
+        };
     }
     return Option;
 };
-
 
 const CreateObject = (arr) => {
     if (arr === null) return { src: null, createdAt: dbNow() };
@@ -166,7 +238,6 @@ const CreateObject = (arr) => {
     });
     return ArrayChange;
 };
-
 
 const UpdateOption = (bodydata) => {
     // DB에 맞추어 Option 설정

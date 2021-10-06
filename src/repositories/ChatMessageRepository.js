@@ -271,3 +271,37 @@ export const createRoomChatAnswer = async (
         console.error(err);
     }
 };
+
+export const findRoomAnswerChat = async (channelRoomId) => {
+    try {
+        let data = await prisma.chatMessage.findMany({
+            where: {
+                AND: [
+                    {
+                        channelRoomId,
+                    },
+                    {
+                        answeredId: {
+                            not: null,
+                        },
+                    },
+                ],
+            },
+            include: {
+                answeredMessage: {
+                    include: {
+                        sendUser: true,
+                    },
+                },
+                sendUser: true,
+            },
+        });
+        return data.map((v) => {
+            delete v.sendUser["password"];
+            delete v.answeredMessage.sendUser["password"];
+            return v;
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};

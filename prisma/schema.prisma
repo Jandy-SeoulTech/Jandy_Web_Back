@@ -84,7 +84,7 @@ model Image {
   channelId Int?
   post      Post?     @relation(fields: [postId], references: [id])
   postId    Int?
-  archive   Archive? @relation(fields: [archiveId], references: [id])
+  archive   Archive?  @relation(fields: [archiveId], references: [id])
   archiveId Int?
 
   @@map(name: "images")
@@ -186,7 +186,7 @@ model ChatMessage {
   baseRoomChat     Channel?      @relation(fields: [channelId], references: [id])
   channelRoom      ChannelRoom?  @relation(fields: [channelRoomId], references: [id])
   answeredMessage  ChatMessage?  @relation("answer", fields: [answeredId], references: [id])
-  asnweringMessage ChatMessage[] @relation("answer")
+  answeringMessage ChatMessage[] @relation("answer")
   answeredId       Int? // 답장 글인지 여부, null-> 답장글 아님, id 값이면 ChatMessage에 있음. 그 값이.
   channelRoomId    Int? // 채널 방 id( 채널 소규모 채팅 방에서 사용)
   channelId        Int? // 채널 id(채널 잡담방 사용)
@@ -284,7 +284,7 @@ model Post {
   updatedAt  DateTime?
 
   ChannelRoom ChannelRoom[]
-  archive         Archive?
+  archive     Archive?
   @@map("posts")
 }
 
@@ -294,9 +294,9 @@ model Comment {
   author    User      @relation("comment", fields: [authorId], references: [id])
   authorId  Int
   post      Post?      @relation(fields: [postId], references: [id])
-  postId    Int
+  postId    Int?
   archive   Archive? @relation(fields: [archiveId], references: [id])
-  archiveId Int
+  archiveId Int?
   createdAt DateTime
   updatedAt DateTime?
 
@@ -342,25 +342,26 @@ enum RoomStatus {
   Open
   Reservation
   Close
+  Archived
 }
 
 model Archive {
-  id                  Int @id @default(autoincrement())
-  title               String
-  status              ArchiveStatus // Private, Public 공개범위
-  content             String // 아카이빙에 들어갈 (게시글, 질문답쌍,) 내용
-  archiveComment      Comment[] // 아카이빙에 속하는 댓글 목록
-  images             Image[]
-  owner               User @relation("archive", fields: [ownerId], references: [id]) 
-  ownerId             Int // 아카이빙의 소유주 
-  channel             Channel @relation(fields: [channelId], references: [id])
-  channelId           Int // 공개범위가 Private시 속한 채널의 유저를 판별하기위한 값
-  post                Post? @relation(fields: [postId], references: [id])
-  postId              Int? // 주제가 되는 POST 정보
-  archiveLike         ArchiveLike[]
-  
-  createdAt           DateTime
-  updatedAt           DateTime?
+  id             Int           @id @default(autoincrement())
+  title          String
+  status         ArchiveStatus // Private, Public 공개범위
+  content        String // 아카이빙에 들어갈 (게시글, 질문답쌍,) 내용
+  archiveComment Comment[] // 아카이빙에 속하는 댓글 목록
+  images         Image[]
+  owner          User          @relation("archive", fields: [ownerId], references: [id])
+  ownerId        Int // 아카이빙의 소유주 
+  channel        Channel       @relation(fields: [channelId], references: [id])
+  channelId      Int // 공개범위가 Private시 속한 채널의 유저를 판별하기위한 값
+  post           Post?         @relation(fields: [postId], references: [id])
+  postId         Int? // 주제가 되는 POST 정보
+  archiveLike    ArchiveLike[]
+  createdAt      DateTime
+  updatedAt      DateTime?
+
   @@map("archives")
 }
 

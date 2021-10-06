@@ -137,6 +137,22 @@ export const updateOpenRoom = async (id) => {
         console.error(err);
     }
 };
+
+export const updateArchivedRoom = async (postId) => {
+    try {
+        return await prisma.channelRoom.updateMany({
+            where: {
+                postId,
+            },
+            data: {
+                status: "Archived",
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 export const findOwnerRoom = async (userId) => {
     try {
         return await prisma.channelRoom.findMany({
@@ -264,6 +280,35 @@ export const deleteRoom = async (id) => {
                 id,
             },
         });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findOwnerCloseRoomByUserId = async (userId) => {
+    try {
+        let data = await prisma.channelRoom.findMany({
+            where: {
+                AND: [
+                    {
+                        userId,
+                    },
+                    {
+                        status: "Close",
+                    },
+                ],
+            },
+            include: {
+                roomOwner: true,
+                channel: {
+                    include: {
+                        channelImage: true,
+                    },
+                },
+            },
+        });
+        data.map((v) => delete v["roomOwner"]["password"]);
+        return data;
     } catch (err) {
         console.error(err);
     }
