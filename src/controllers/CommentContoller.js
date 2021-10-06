@@ -4,7 +4,6 @@ import * as CommentValidation from "../validations/CommentValidation";
 import * as CommentServices from "../services/CommentServices";
 const Router = express.Router();
 
-
 Router.post(
     "/",
     AuthHandler.isLoggedIn,
@@ -24,6 +23,20 @@ Router.delete(
     AuthHandler.isLoggedIn,
     CommentValidation.DeleteRequestValid,
     CommentServices.DeleteComment
+);
+
+Router.get(
+    "/",
+    AuthHandler.isLoggedIn,
+    CommentValidation.GetListRequestValid,
+    CommentServices.GetCommentList
+);
+
+Router.get(
+    "/:commentId",
+    AuthHandler.isLoggedIn,
+    CommentValidation.GetRequestValid,
+    CommentServices.GetComment
 );
 
 export default Router;
