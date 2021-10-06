@@ -1,4 +1,4 @@
-import { check, body } from "express-validator";
+import { check, query } from "express-validator";
 import validationFunction from "./validationFunction";
 
 export const CreateRequestValid = async (req, res, next) => {
@@ -9,12 +9,19 @@ export const CreateRequestValid = async (req, res, next) => {
         .isNumeric()
         .withMessage("channelId에는 숫자가 들어와야 합니다.")
         .run(req);
-    await check("postId")
+    await check("type")
         .notEmpty()
-        .withMessage("postId가 존재하지 않습니다.")
+        .withMessage("값이 없습니다")
+        .bail()
+        .isIn(["post", "archive"])
+        .withMessage("값은 post, archive 중에 하나입니다.")
+        .run(req);
+    await check("id")
+        .notEmpty()
+        .withMessage("값이 없습니다")
         .bail()
         .isNumeric()
-        .withMessage("postId에는 숫자가 들어와야 합니다.")
+        .withMessage("id는 숫자 형식이여야 합니다.")
         .run(req);
     await check("content")
         .exists()
