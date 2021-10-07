@@ -8,7 +8,6 @@ import resFormat from "../utils/resFormat";
 
 export const CreateComment = async (req, res, next) => {
     try {
-        console.log(req.query);
         const joinUser = await UserRepository.CheckJoinChannel(
             req.user.id,
             parseInt(req.body.channelId, 10)

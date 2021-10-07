@@ -5,7 +5,6 @@ const now = dbNow();
 const prisma = new PrismaClient();
 
 export const createComment = async (data) => {
-    console.log(data);
     try {
         return await prisma.comment.create({
             data,

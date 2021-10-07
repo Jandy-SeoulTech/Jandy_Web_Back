@@ -202,6 +202,14 @@ export const GetUserArchiveList = async (req, res, next) => {
 
 export const LikeArchive = async (req, res, next) => {
     try {
+        const exArchive = await ArchiveRepository.getArchiveById(
+            parseInt(req.body.archiveId, 10)
+        );
+        if (!exArchive) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "존재하지 않는 아카이브 입니다."));
+        }
         const exLike = await LikeRepository.findArchiveLike(
             req.user.id,
             parseInt(req.body.archiveId, 10)
@@ -210,14 +218,6 @@ export const LikeArchive = async (req, res, next) => {
             return res
                 .status(403)
                 .send(resFormat.fail(403, "이미 좋아요를 하였습니다."));
-        }
-        const exArchive = await ArchiveRepository.getArchiveById(
-            parseInt(req.body.archiveId, 10)
-        );
-        if (!exArchive) {
-            return res
-                .status(403)
-                .send(resFormat.fail(403, "존재하지 않는 아카이브 입니다."));
         }
         if (exArchive.status == "Private") {
             if (req.body.channelId == null) {
