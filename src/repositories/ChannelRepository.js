@@ -25,11 +25,7 @@ export const findById = async (id) => {
                         nickname: true,
                         profile: {
                             select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
+                                profileImage: true,
                                 wellTalent: {
                                     select: {
                                         contents: true,
@@ -53,11 +49,7 @@ export const findById = async (id) => {
                                 nickname: true,
                                 profile: {
                                     select: {
-                                        profileImage: {
-                                            select: {
-                                                src: true,
-                                            },
-                                        },
+                                        profileImage: true,
                                         wellTalent: {
                                             select: {
                                                 contents: true,
@@ -92,11 +84,6 @@ export const findById = async (id) => {
                 ban: {
                     select: {
                         userId: true,
-                    },
-                },
-                channelImage: {
-                    select: {
-                        src: true,
                     },
                 },
             },
@@ -233,11 +220,7 @@ export const findByKeyword = async (category, keyword, offset = 0) => {
                         nickname: true,
                         profile: {
                             select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
+                                profileImage: true,
                                 wellTalent: {
                                     select: {
                                         contents: true,
@@ -262,11 +245,7 @@ export const findByKeyword = async (category, keyword, offset = 0) => {
                         tag: true,
                     },
                 },
-                channelImage: {
-                    select: {
-                        src: true,
-                    },
-                },
+                channelImage: true,
             },
         });
     } catch (err) {

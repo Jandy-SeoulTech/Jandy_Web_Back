@@ -356,12 +356,7 @@ const MakeOption = (bodydata, WellTalentArray, InterestArray) => {
                 data: ChangeObject(InterestArray),
             },
         },
-        profileImage: {
-            create: {
-                src: bodydata.src,
-                createdAt: dbNow(),
-            },
-        },
+        profileImage: bodydata.src,
     };
 
     return dataOption;
@@ -385,11 +380,7 @@ const SelectOption = {
             userId: true,
         },
     },
-    channelImage: {
-        select: {
-            src: true,
-        },
-    },
+    channelImage: true,
     tags: {
         include: {
             tag: {
@@ -421,11 +412,7 @@ const FollowListSelectOption = {
             introduce: true,
             wellTalent: true,
             interestTalent: true,
-            profileImage: {
-                select: {
-                    src: true,
-                },
-            },
+            profileImage: true,
         },
     },
 };

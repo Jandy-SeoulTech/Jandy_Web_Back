@@ -73,7 +73,7 @@ export const findByIdWithData = async (id) => {
 
 export const findByIdWithProfile = async (id) => {
     try {
-        return await prisma.user.findUnique({
+        let data = await prisma.user.findUnique({
             where: { id },
             select: {
                 id: true,
@@ -105,11 +105,7 @@ export const findByIdWithProfile = async (id) => {
                                 contents: true,
                             },
                         },
-                        profileImage: {
-                            select: {
-                                src: true,
-                            },
-                        },
+                        profileImage: true,
                     },
                 },
                 reviewed: {
@@ -117,22 +113,17 @@ export const findByIdWithProfile = async (id) => {
                         status: "good",
                     },
                 },
-                admin: {
-                    include: {
-                        channelImage: true,
-                    },
-                },
+                admin: true,
                 participants: {
                     select: {
-                        channel: {
-                            include: {
-                                channelImage: true,
-                            },
-                        },
+                        channel: true,
                     },
                 },
             },
         });
+        const participants = data.participants.map((v) => v.channel);
+
+        return { ...data, participants };
     } catch (err) {
         console.error(err);
     }
@@ -508,11 +499,7 @@ export const findByKeyword = async (keyword, offset = 0) => {
                         introduce: true,
                         wellTalent: true,
                         interestTalent: true,
-                        profileImage: {
-                            select: {
-                                src: true,
-                            },
-                        },
+                        profileImage: true,
                     },
                 },
             },
@@ -542,11 +529,7 @@ export const findFollowerList = async (findUserId) => {
                         introduce: true,
                         wellTalent: true,
                         interestTalent: true,
-                        profileImage: {
-                            select: {
-                                src: true,
-                            },
-                        },
+                        profileImage: true,
                     },
                 },
                 followers: true,
@@ -577,11 +560,7 @@ export const findFollowingList = async (findUserId) => {
                         introduce: true,
                         wellTalent: true,
                         interestTalent: true,
-                        profileImage: {
-                            select: {
-                                src: true,
-                            },
-                        },
+                        profileImage: true,
                     },
                 },
                 followers: true,
@@ -616,29 +595,6 @@ export const CheckMyArchive = async (id, archiveId) => {
     }
 };
 
-export const LikeOnArchive = async (userId, archiveId) => {
-    try {
-        return await prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                archiveLike: {
-                    create: {
-                        archive: {
-                            connect: {
-                                id: archiveId,
-                            },
-                        },
-                        createdAt: dbNow(),
-                    },
-                },
-            },
-        });
-    } catch (err) {
-        console.error(err);
-    }
-};
 
 export const unLikeOnArchive = async (userId, archiveId) => {
     try {
@@ -659,3 +615,4 @@ export const unLikeOnArchive = async (userId, archiveId) => {
         console.error(err);
     }
 };
+

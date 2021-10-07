@@ -350,12 +350,7 @@ const CreateOption = (bodydata) => {
                 createdAt: dbNow(),
             },
         },
-        channelImage: {
-            create: {
-                src: bodydata.src,
-                createdAt: dbNow(),
-            },
-        },
+        channelImage: bodydata.src,
         createdAt: dbNow(),
     };
     return Option;
@@ -389,12 +384,7 @@ const UpdateOption = (bodydata) => {
         };
     }
     if (bodydata.src) {
-        Option.channelImage = {
-            update: {
-                src: bodydata.src,
-                updatedAt: dbNow(),
-            },
-        };
+        Option.channelImage = bodydata.src;
     }
     return Option;
 };
@@ -417,11 +407,7 @@ const SelectOption = {
             userId: true,
         },
     },
-    channelImage: {
-        select: {
-            src: true,
-        },
-    },
+    channelImage: true,
     tags: {
         include: {
             tag: {

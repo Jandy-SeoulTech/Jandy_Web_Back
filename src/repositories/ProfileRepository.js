@@ -7,9 +7,6 @@ export const findById = async (id) => {
     try {
         return await prisma.profile.findUnique({
             where: { id },
-            include: {
-                profileImage: true,
-            },
         });
     } catch (err) {
         console.error(err);
@@ -57,12 +54,7 @@ export const updateProfile = async (
                 department,
                 introduce,
                 updatedAt: dbNow(),
-                profileImage: {
-                    update: {
-                        src,
-                        updatedAt: dbNow(),
-                    },
-                },
+                profileImage: src,
                 wellTalent: {
                     deleteMany: {},
                 },

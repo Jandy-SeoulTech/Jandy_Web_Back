@@ -13,15 +13,7 @@ export const findById = async (id) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
                 attention: {
@@ -122,15 +114,7 @@ export const findPostByChannelId = async (channelId) => {
                         id: true,
                         email: true,
                         nickname: true,
-                        profile: {
-                            select: {
-                                profileImage: {
-                                    select: {
-                                        src: true,
-                                    },
-                                },
-                            },
-                        },
+                        profile: true,
                     },
                 },
             },
