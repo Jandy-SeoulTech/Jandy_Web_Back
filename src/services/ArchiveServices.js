@@ -2,6 +2,7 @@ import * as ArchiveRepository from "../repositories/ArchiveRepository";
 import * as UserRepository from "../repositories/UserRepository";
 import * as PostRepository from "../repositories/PostRepository";
 import * as ChannelRoomRepository from "../repositories/ChannelRoomRepository";
+import * as LikeRepository from "../repositories/LikeRepository";
 import { dbNow } from "../utils/dayUtils";
 
 import resFormat from "../utils/resFormat";
@@ -193,6 +194,89 @@ export const GetUserArchiveList = async (req, res, next) => {
         return res
             .status(200)
             .send(resFormat.successData(200, "정보 얻기 성공", response));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const LikeArchive = async (req, res, next) => {
+    try {
+        const exArchive = await ArchiveRepository.getArchiveById(
+            parseInt(req.body.archiveId, 10)
+        );
+        if (!exArchive) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "존재하지 않는 아카이브 입니다."));
+        }
+        const exLike = await LikeRepository.findArchiveLike(
+            req.user.id,
+            parseInt(req.body.archiveId, 10)
+        );
+        if (exLike) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "이미 좋아요를 하였습니다."));
+        }
+        if (exArchive.status == "Private") {
+            if (req.body.channelId == null) {
+                return res
+                    .status(404)
+                    .send(resFormat.fail(404, "channelId가 없습니다."));
+            }
+            const joinUser = await UserRepository.CheckJoinChannel(
+                req.user.id,
+                parseInt(req.body.channelId, 10)
+            );
+            if (!joinUser[0]) {
+                return res
+                    .status(401)
+                    .send(
+                        resFormat.fail(
+                            401,
+                            "참여한 채널에서만 좋아요가 가능합니다."
+                        )
+                    );
+            }
+        }
+        const response = await UserRepository.LikeOnArchive(
+            req.user.id,
+            parseInt(req.body.archiveId, 10)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 좋아요 실패"));
+        }
+        return res.status(200).send(resFormat.success(200, "좋아요 성공"));
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
+
+export const UnLikeArchive = async (req, res, next) => {
+    try {
+        const exLike = await LikeRepository.findArchiveLike(
+            req.user.id,
+            parseInt(req.body.archiveId, 10)
+        );
+        if (!exLike) {
+            return res
+                .status(403)
+                .send(resFormat.fail(403, "좋아요 상태가 아닙니다."));
+        }
+        const response = await UserRepository.unLikeOnArchive(
+            req.user.id,
+            parseInt(req.body.archiveId, 10)
+        );
+        if (!response) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "알수 없는 에러로 좋아요 취소 실패"));
+        }
+        return res.status(200).send(resFormat.success(200, "좋아요 취소 성공"));
     } catch (err) {
         console.error(err);
         next(err);

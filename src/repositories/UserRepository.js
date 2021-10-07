@@ -222,7 +222,7 @@ export const LikeOnChannel = async (userId, channelId) => {
                 id: userId,
             },
             data: {
-                channellike: {
+                channelLike: {
                     create: {
                         channel: {
                             connect: {
@@ -246,7 +246,7 @@ export const unLikeOnChannel = async (userId, channelId) => {
                 id: userId,
             },
             data: {
-                channellike: {
+                channelLike: {
                     deleteMany: {
                         userId,
                         channelId,
@@ -594,3 +594,25 @@ export const CheckMyArchive = async (id, archiveId) => {
         console.error(err);
     }
 };
+
+
+export const unLikeOnArchive = async (userId, archiveId) => {
+    try {
+        return await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                archiveLike: {
+                    deleteMany: {
+                        userId,
+                        archiveId,
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+

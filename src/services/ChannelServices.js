@@ -1,6 +1,6 @@
 import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as BanRepository from "../repositories/BanRepository";
-import * as LikeRepository from "../repositories/LikeReposiotry";
+import * as LikeRepository from "../repositories/LikeRepository";
 import * as UserRepository from "../repositories/UserRepository";
 import { dbNow } from "../utils/dayUtils";
 
@@ -112,7 +112,7 @@ export const UpdateChannel = async (req, res, next) => {
 
 export const LikeChannel = async (req, res, next) => {
     try {
-        const exLike = await LikeRepository.findLike(
+        const exLike = await LikeRepository.findChannelLike(
             req.user.id,
             parseInt(req.body.channelId, 10)
         );
@@ -144,7 +144,7 @@ export const LikeChannel = async (req, res, next) => {
 
 export const UnLikeChannel = async (req, res, next) => {
     try {
-        const exLike = await LikeRepository.findLike(
+        const exLike = await LikeRepository.findChannelLike(
             req.user.id,
             parseInt(req.body.channelId, 10)
         );

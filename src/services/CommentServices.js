@@ -23,7 +23,7 @@ export const CreateComment = async (req, res, next) => {
                 );
         }
         const response = await CommentRepository.createComment(
-            CreateOption(req.user.id, parseInt(req.body.postId, 10), req.body)
+            CreateOption(req.user.id, req.query, req.body)
         );
         if (!response) {
             return res
@@ -50,7 +50,7 @@ export const UpdateComment = async (req, res, next) => {
         if (!checkAuthor[0]) {
             return res
                 .status(401)
-                .send(resFormat.fail(401, "댓글 삭제 권한이 없습니다."));
+                .send(resFormat.fail(401, "댓글 수정 권한이 없습니다."));
         }
         const response = await CommentRepository.updateComment(
             UpdateOption(parseInt(req.params.commentId, 10), req.body)
@@ -135,22 +135,30 @@ export const GetCommentList = async (req, res, next) => {
     }
 };
 
-const CreateOption = (id, postId, bodydata) => {
+const CreateOption = (id, querydata, bodydata) => {
     // DB에 맞추어 Option 설정
-    const Option = {
+    let Option = {
         author: {
             connect: {
-                id,
+                id: parseInt(id, 10),
             },
         },
         content: bodydata.content,
-        post: {
-            connect: {
-                id: parseInt(postId, 10),
-            },
-        },
         createdAt: dbNow(),
     };
+    if (querydata.type == "post") {
+        Option.post = {
+            connect: {
+                id: parseInt(querydata.id, 10),
+            },
+        };
+    } else if (querydata.type == "archive") {
+        Option.archive = {
+            connect: {
+                id: parseInt(querydata.id, 10),
+            },
+        };
+    }
     return Option;
 };
 
