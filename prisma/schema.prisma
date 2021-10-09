@@ -159,10 +159,10 @@ model ChannelRoom {
   id              Int           @id @default(autoincrement())
   status          RoomStatus
   name            String
-  channelId       Int
-  userId          Int
   roomOwner       User          @relation("RoomOwner", fields: [userId], references: [id]) //룸생성자
+  userId          Int
   channel         Channel       @relation(fields: [channelId], references: [id]) //룸이 소속한채널
+  channelId       Int
   roomParticipant RoomUser[]
   reservedAt      DateTime?
   createdAt       DateTime
@@ -172,6 +172,13 @@ model ChannelRoom {
   postId          Int
 
   @@map(name: "channel_rooms")
+}
+
+enum RoomStatus {
+  Open
+  Reservation
+  Close
+  Archived
 }
 
 model ChatMessage {
@@ -265,7 +272,7 @@ model Ban {
 model Post {
   id        Int         @id @default(autoincrement())
   title     String
-  status    Status
+  status    PostStatus
   content   String
   comment   Comment[]
   images    Image[]
@@ -279,9 +286,20 @@ model Post {
   createdAt  DateTime
   updatedAt  DateTime?
 
-  ChannelRoom ChannelRoom[]
   archive     Archive?
+  archiveId   Int?
+  ChannelRoom     ChannelRoom?
+  ChannelRoomId   Int
   @@map("posts")
+}
+
+enum PostStatus {
+  Notice
+  Open
+  Reservation
+  Close
+  Clear
+  Archived
 }
 
 model Comment {
@@ -324,21 +342,6 @@ model Review {
   createdAt      DateTime
 
   @@map("reviews")
-}
-
-enum Status {
-  Notice
-  Open
-  Reservation
-  Close
-  Clear
-}
-
-enum RoomStatus {
-  Open
-  Reservation
-  Close
-  Archived
 }
 
 model Archive {
