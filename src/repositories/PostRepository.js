@@ -32,6 +32,7 @@ export const findById = async (id) => {
                         src: true,
                     },
                 },
+                channelRoom: true,
             },
         });
     } catch (err) {
@@ -214,6 +215,21 @@ export const checkPostCleared = async (id) => {
                         status: "Clear",
                     },
                 ],
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updateArchived = async (id) => {
+    try {
+        return await prisma.post.update({
+            where: {
+                id,
+            },
+            data: {
+                status: "Archived",
             },
         });
     } catch (err) {
