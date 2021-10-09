@@ -10,8 +10,6 @@ RUN npm install
 COPY . .
 
 RUN npx prisma generate
-RUN npm run db:push
-RUN npm run build
 
 EXPOSE 4000
 
