@@ -56,7 +56,10 @@ export const CreateArchive = async (req, res, next) => {
             const roomArchived = await ChannelRoomRepository.updateArchivedRoom(
                 parseInt(req.body.postId)
             );
-            if (!roomArchived) {
+            const postArchived = await PostRepository.updateArchived(
+                parseInt(req.body.postId)
+            );
+            if (!roomArchived || !postArchived) {
                 return res
                     .status(500)
                     .send(resFormat.fail(500, "아카이빙 등록 실패"));
