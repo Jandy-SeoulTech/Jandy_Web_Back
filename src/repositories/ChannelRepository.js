@@ -76,7 +76,7 @@ export const findById = async (id) => {
                         tag: true,
                     },
                 },
-                channellike: {
+                channelLike: {
                     select: {
                         userId: true,
                     },
