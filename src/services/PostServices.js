@@ -145,7 +145,10 @@ export const GetPostInfo = async (req, res, next) => {
 export const GetPostListById = async (req, res, next) => {
     try {
         const data = await PostRepository.findPostByChannelId(
-            parseInt(req.params.channelId, 10)
+            parseInt(req.params.channelId, 10),
+            req.query.type,
+            parseInt(req.query.page, 10),
+            parseInt(req.query.pageSize, 10)
         );
         if (!data) {
             return res
