@@ -285,6 +285,14 @@ export const UnLikeArchive = async (req, res, next) => {
 
 const CreateOption = (id, channelId, postId, bodydata) => {
     // DB에 맞추어 Option 설정
+    const CreateTag = (tags) => {
+        return tags.map((v) => {
+            return {
+                tag: { create: { name: v, createdAt: dbNow() } },
+                createdAt: dbNow(),
+            };
+        });
+    };
     let Option = {
         owner: {
             connect: {
@@ -301,6 +309,9 @@ const CreateOption = (id, channelId, postId, bodydata) => {
         },
         images: {
             create: CreateObject(bodydata.images),
+        },
+        tags: {
+            create: CreateTag(bodydata.tags),
         },
         createdAt: dbNow(),
     };

@@ -73,6 +73,11 @@ export const getArchiveById = async (id) => {
                         },
                     },
                 },
+                tags: {
+                    include: {
+                        tag: true,
+                    },
+                },
                 images: {
                     select: {
                         src: true,

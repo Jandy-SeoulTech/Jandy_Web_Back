@@ -199,6 +199,7 @@ model Tag {
   createdAt DateTime
   updatedAt DateTime?
   channel   ChannelTag[]
+  archive   ArchiveTag[]
 
   @@map("tags")
 }
@@ -213,6 +214,18 @@ model ChannelTag {
 
   @@id([channelId, tagId])
   @@map("channel_tags")
+}
+
+model ArchiveTag {
+  archive   Archive   @relation(fields: [archiveId], references: [id])
+  archiveId Int
+  tag       Tag       @relation(fields: [tagId], references: [id])
+  tagId     Int
+  createdAt DateTime
+  updatedAt DateTime?
+
+  @@id([archiveId, tagId])
+  @@map("archive_tags")
 }
 
 model Category {
@@ -355,6 +368,7 @@ model Archive {
   post           Post?         @relation(fields: [postId], references: [id])
   postId         Int? // 주제가 되는 POST 정보
   archiveLike    ArchiveLike[]
+  tags           ArchiveTag[]
   createdAt      DateTime
   updatedAt      DateTime?
 
