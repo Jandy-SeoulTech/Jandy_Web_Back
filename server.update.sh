@@ -1,3 +1,6 @@
+docker stop upgle
+docker rm upgle
+
 cd Jandy_Web_Back
 git fetch origin
 git pull
@@ -15,8 +18,5 @@ mv ./front_build ../Jandy_Web_Back
 cd ..
 
 cd Jandy_Web_Back
-docker stop upgle
-docker rm upgle
-
 docker build -t upgle .
 docker run -d -p 4000:4000 --name upgle upgle
