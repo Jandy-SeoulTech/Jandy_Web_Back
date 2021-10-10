@@ -286,16 +286,26 @@ export const UnLikeArchive = async (req, res, next) => {
     }
 };
 
+const CreateTags = (tags) => {
+    return tags.map((v) => {
+        return {
+            tag: { create: { name: v, createdAt: dbNow() } },
+            createdAt: dbNow(),
+        };
+    });
+};
+
+const CreateImages = (arr) => {
+    if (arr === null) return { src: null, createdAt: dbNow() };
+    let ArrayChange = [];
+    arr.map((v) => {
+        ArrayChange.push({ src: v, createdAt: dbNow() });
+    });
+    return ArrayChange;
+};
+
 const CreateOption = (id, channelId, postId, bodydata) => {
     // DB에 맞추어 Option 설정
-    const CreateTag = (tags) => {
-        return tags.map((v) => {
-            return {
-                tag: { create: { name: v, createdAt: dbNow() } },
-                createdAt: dbNow(),
-            };
-        });
-    };
     let Option = {
         owner: {
             connect: {
@@ -311,10 +321,10 @@ const CreateOption = (id, channelId, postId, bodydata) => {
             },
         },
         images: {
-            create: CreateObject(bodydata.images),
+            create: CreateImages(bodydata.images),
         },
         tags: {
-            create: CreateTag(bodydata.tags),
+            create: CreateTags(bodydata.tags),
         },
         createdAt: dbNow(),
     };
@@ -326,15 +336,6 @@ const CreateOption = (id, channelId, postId, bodydata) => {
         };
     }
     return Option;
-};
-
-const CreateObject = (arr) => {
-    if (arr === null) return { src: null, createdAt: dbNow() };
-    let ArrayChange = [];
-    arr.map((v) => {
-        ArrayChange.push({ src: v, createdAt: dbNow() });
-    });
-    return ArrayChange;
 };
 
 const UpdateOption = (bodydata) => {
