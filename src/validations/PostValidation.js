@@ -66,6 +66,36 @@ export const GetRequestValid = async (req, res, next) => {
     validationFunction(req, res, next);
 };
 
+export const GetListRequestValid = async (req, res, next) => {
+    await check("channelId")
+        .notEmpty()
+        .withMessage("channelId가 존재하지 않습니다")
+        .isNumeric()
+        .withMessage("channelId는 숫자 형식이여야 합니다")
+        .run(req);
+    await check("type")
+        .notEmpty()
+        .withMessage("type가 존재하지 않습니다")
+        .isIn(["All", "Open", "Reservation", "Close", "Archived"])
+        .withMessage(
+            "type값은 all, Open, Reservation, Close, Archived중에 하나입니다."
+        )
+        .run(req);
+    await check("page")
+        .notEmpty()
+        .withMessage("page가 존재하지 않습니다")
+        .isNumeric()
+        .withMessage("page는 숫자 형식이여야 합니다")
+        .run(req);
+    await check("pageSize")
+        .notEmpty()
+        .withMessage("pageSize가 존재하지 않습니다")
+        .isNumeric()
+        .withMessage("pageSize는 숫자 형식이여야 합니다")
+        .run(req);
+    validationFunction(req, res, next);
+};
+
 export const DeleteRequestValid = async (req, res, next) => {
     GetRequestValid(req, res, next);
 };

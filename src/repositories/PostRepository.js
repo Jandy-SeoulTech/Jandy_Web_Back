@@ -32,6 +32,7 @@ export const findById = async (id) => {
                         src: true,
                     },
                 },
+                channelRoom: true,
             },
         });
     } catch (err) {
@@ -86,21 +87,12 @@ export const deletePost = async (id) => {
     }
 };
 
-export const findPostByChannelId = async (channelId) => {
+export const findPostByChannelId = async (channelId, type, page, pageSize) => {
     try {
-        return await prisma.post.findMany({
-            where: {
-                channelId,
-                NOT: [
-                    {
-                        status: "Clear",
-                    },
-                ],
-            },
+        const status = type == "All" ? undefined : type;
+        const query = {
+            where: {},
             orderBy: [
-                {
-                    status: "asc",
-                },
                 {
                     createdAt: "desc",
                 },
@@ -118,7 +110,40 @@ export const findPostByChannelId = async (channelId) => {
                     },
                 },
             },
-        });
+        };
+        let whereQuery = {
+            channelId,
+        };
+        let ret = [];
+        if (!status) {
+            whereQuery.status = "Notice";
+            query.where = whereQuery;
+            ret = await prisma.post.findMany(query);
+        }
+        whereQuery.status = status;
+        if (!status) {
+            whereQuery.NOT = [
+                {
+                    status: "Notice",
+                },
+            ];
+        }
+        query.where = whereQuery;
+        query.skip = (page - 1) * pageSize;
+        query.take = pageSize;
+        ret = ret.concat(await prisma.post.findMany(query));
+
+        const totalPage =
+            parseInt(
+                (await prisma.post.count({
+                    where: whereQuery,
+                })) / pageSize
+            ) + 1;
+        const data = {
+            posts: ret,
+            totalPage,
+        };
+        return data;
     } catch (err) {
         console.error(err);
     }
@@ -214,6 +239,21 @@ export const checkPostCleared = async (id) => {
                         status: "Clear",
                     },
                 ],
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const updateArchived = async (id) => {
+    try {
+        return await prisma.post.update({
+            where: {
+                id,
+            },
+            data: {
+                status: "Archived",
             },
         });
     } catch (err) {

@@ -37,7 +37,7 @@ Router.delete(
 Router.get(
     "/channel/:channelId",
     AuthHandler.isLoggedIn,
-    ChannelValidation.GetInfoRequestValid,
+    PostValidation.GetListRequestValid,
     PostServices.GetPostListById
 );
 
