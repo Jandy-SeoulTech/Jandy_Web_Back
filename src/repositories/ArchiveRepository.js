@@ -73,6 +73,11 @@ export const getArchiveById = async (id) => {
                         },
                     },
                 },
+                archiveLike: {
+                    select: {
+                        userId: true,
+                    },
+                },
                 tags: {
                     include: {
                         tag: true,
