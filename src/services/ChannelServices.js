@@ -342,9 +342,8 @@ const CreateOption = (bodydata) => {
         category: {
             create: {
                 category: {
-                    create: {
-                        name: bodydata.category,
-                        createdAt: dbNow(),
+                    connect: {
+                        code: bodydata.category,
                     },
                 },
                 createdAt: dbNow(),
@@ -374,9 +373,8 @@ const UpdateOption = (bodydata) => {
         Option.category = {
             update: {
                 category: {
-                    update: {
-                        name: bodydata.category,
-                        updatedAt: dbNow(),
+                    connect: {
+                        code: bodydata.category,
                     },
                 },
                 updatedAt: dbNow(),
