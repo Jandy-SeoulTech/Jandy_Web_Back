@@ -595,6 +595,29 @@ export const CheckMyArchive = async (id, archiveId) => {
     }
 };
 
+export const LikeOnArchive = async (userId, archiveId) => {
+    try {
+        return await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                archiveLike: {
+                    create: {
+                        archive: {
+                            connect: {
+                                id: archiveId,
+                            },
+                        },
+                        createdAt: dbNow(),
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
 
 export const unLikeOnArchive = async (userId, archiveId) => {
     try {
@@ -615,4 +638,3 @@ export const unLikeOnArchive = async (userId, archiveId) => {
         console.error(err);
     }
 };
-
