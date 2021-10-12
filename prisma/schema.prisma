@@ -238,6 +238,7 @@ model ArchiveTag {
 model Category {
   id        Int              @id @default(autoincrement())
   name      String
+  code      String           @unique
   createdAt DateTime
   updatedAt DateTime?
   channel   ChannelCategory?
