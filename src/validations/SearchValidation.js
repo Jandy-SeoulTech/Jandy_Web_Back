@@ -9,7 +9,32 @@ export const SearchoRequestValid = async (req, res, next) => {
         .run(req);
     await query("code")
         .if(query("code").exists())
-        .isString()
+        .isIn([
+            "ART",
+            "COOK",
+            "INVEST",
+            "LANGUAGE",
+            "DESIGN",
+            "BEAUTY",
+            "PROGRAMMING",
+            "STARTUP",
+            "MUSIC",
+            "INTERIOR",
+            "EXAM",
+            "SPORTS",
+            "ACT",
+            "PET",
+            "CAREER",
+            "HEALTH",
+            "DANCE",
+            "TRAVEL",
+            "STUDY",
+            "RELATIONSHIP",
+            "LIFE",
+            "MEDIA",
+            "HOBBY",
+            "ETC",
+        ])
         .withMessage("정해진 카테고리 code 형식에 맞아야 합니다.")
         .run(req);
     await query("keyword")
