@@ -1,88 +1,70 @@
 import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as UserRepository from "../repositories/UserRepository";
+import * as ArchiveRepository from "../repositories/ArchiveRepository";
 import resFormat from "../utils/resFormat";
 
 export const Search = async (req, res, next) => {
     try {
-        const skipChannel = isNaN(req.query.skipChannel)
-            ? 0
-            : parseInt(req.query.skipChannel, 10);
-        const skipUser = isNaN(req.query.skipUser)
-            ? 0
-            : parseInt(req.query.skipUser, 10);
-        const channelData = await ChannelRepository.findByKeyword(
-            req.query.category,
-            req.query.keyword,
-            skipChannel
-        );
-        if (!channelData) {
+        const type = req.query.type ? req.query.type : "channel";
+        const keyword = req.query.keyword;
+        const skip = req.query.skip ? parseInt(req.query.skip, 10) : 0;
+        const take = req.query.take ? parseInt(req.query.take, 10) : 12;
+        const code = req.query.code ? req.query.code : undefined;
+        if (type == "channel") {
+            const response = await ChannelRepository.findByKeyword(
+                code,
+                keyword,
+                skip,
+                take
+            );
+            if (!response) {
+                return res
+                    .status(500)
+                    .send(
+                        resFormat.fail(500, "알수 없는 에러로 채널 검색 실패")
+                    );
+            }
             return res
-                .status(500)
-                .send(resFormat.fail(500, "알수 없는 에러로 검색 실패"));
-        }
-        const userData = await UserRepository.findByKeyword(
-            req.query.keyword,
-            skipUser
-        );
-        if (!userData) {
+                .status(200)
+                .send(resFormat.successData(200, "채널 검색 성공", response));
+        } else if (type == "user") {
+            const response = await UserRepository.findByKeyword(
+                keyword,
+                skip,
+                take
+            );
+            if (!response) {
+                return res
+                    .status(500)
+                    .send(
+                        resFormat.fail(500, "알수 없는 에러로 유저 검색 실패")
+                    );
+            }
             return res
-                .status(500)
-                .send(resFormat.fail(500, "알수 없는 에러로 검색 실패"));
-        }
-        const data = {
-            channel: channelData,
-            user: userData,
-        };
-        return res
-            .status(200)
-            .send(resFormat.successData(200, "검색 성공", data));
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-};
-
-export const SearchOnlyChannel = async (req, res, next) => {
-    try {
-        const skipChannel = isNaN(req.query.skipChannel)
-            ? 0
-            : parseInt(req.query.skipChannel, 10);
-        const channelData = await ChannelRepository.findByKeyword(
-            req.query.category,
-            req.query.keyword,
-            skipChannel
-        );
-        if (!channelData) {
+                .status(200)
+                .send(resFormat.successData(200, "유저 검색 성공", response));
+        } else if (type == "archive") {
+            const response = await ArchiveRepository.findByKeyword(
+                keyword,
+                skip,
+                take
+            );
+            if (!response) {
+                return res
+                    .status(500)
+                    .send(
+                        resFormat.fail(
+                            500,
+                            "알수 없는 에러로 모아보기 검색 실패"
+                        )
+                    );
+            }
             return res
-                .status(500)
-                .send(resFormat.fail(500, "알수 없는 에러로 검색 실패"));
+                .status(200)
+                .send(
+                    resFormat.successData(200, "모아보기 검색 성공", response)
+                );
         }
-        return res
-            .status(200)
-            .send(resFormat.successData(200, "검색 성공", channelData));
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-};
-
-export const SearchOnlyUser = async (req, res, next) => {
-    try {
-        const skipUser = isNaN(req.query.skipUser)
-            ? 0
-            : parseInt(req.query.skipUser, 10);
-        const userData = await UserRepository.findByKeyword(
-            req.query.keyword,
-            skipUser
-        );
-        if (!userData) {
-            return res
-                .status(500)
-                .send(resFormat.fail(500, "알수 없는 에러로 검색 실패"));
-        }
-        return res
-            .status(200)
-            .send(resFormat.successData(200, "검색 성공", userData));
     } catch (err) {
         console.error(err);
         next(err);

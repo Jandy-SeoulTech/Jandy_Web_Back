@@ -176,11 +176,11 @@ export const findChatLogById = async (id) => {
     }
 };
 
-export const findByKeyword = async (category, keyword, offset = 0) => {
+export const findByKeyword = async (category, keyword, skip, take) => {
     try {
         return await prisma.channel.findMany({
-            skip: offset,
-            take: 6,
+            skip,
+            take,
             where: {
                 OR: [
                     {
@@ -204,14 +204,22 @@ export const findByKeyword = async (category, keyword, offset = 0) => {
                     {
                         category: {
                             category: {
-                                name: {
-                                    contains: category,
+                                code: {
+                                    equals: category,
                                 },
                             },
                         },
                     },
                 ],
             },
+            orderBy: [
+                {
+                    createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc",
+                },
+            ],
             include: {
                 admin: {
                     select: {
@@ -245,7 +253,6 @@ export const findByKeyword = async (category, keyword, offset = 0) => {
                         tag: true,
                     },
                 },
-                channelImage: true,
             },
         });
     } catch (err) {

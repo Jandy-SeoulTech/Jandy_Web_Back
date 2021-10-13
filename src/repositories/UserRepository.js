@@ -453,11 +453,11 @@ export const NotAttention = async (userId, postId) => {
     }
 };
 
-export const findByKeyword = async (keyword, offset = 0) => {
+export const findByKeyword = async (keyword, skip, take) => {
     try {
         return await prisma.user.findMany({
-            skip: offset,
-            take: 6,
+            skip,
+            take,
             where: {
                 OR: [
                     {
@@ -489,6 +489,14 @@ export const findByKeyword = async (keyword, offset = 0) => {
                     },
                 ],
             },
+            orderBy: [
+                {
+                    createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc",
+                },
+            ],
             select: {
                 id: true,
                 email: true,

@@ -141,6 +141,7 @@ export const getArchiveListByChannelId = async (channelId, isPublic) => {
                         src: true,
                     },
                 },
+                archiveLike: true,
             },
         });
     } catch (err) {
@@ -194,6 +195,72 @@ export const getArchiveListByUserId = async (userId, isPublic) => {
                         src: true,
                     },
                 },
+                archiveLike: true,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const findByKeyword = async (keyword, skip, take) => {
+    try {
+        return await prisma.archive.findMany({
+            skip,
+            take,
+            where: {
+                AND: [
+                    {
+                        title: {
+                            contains: keyword,
+                        },
+                    },
+                    {
+                        status: {
+                            equals: "Public",
+                        },
+                    },
+                ],
+            },
+            orderBy: [
+                {
+                    createdAt: "desc",
+                },
+                {
+                    updatedAt: "desc",
+                },
+            ],
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        email: true,
+                        nickname: true,
+                        profile: true,
+                    },
+                },
+                post: {
+                    select: {
+                        title: true,
+                        content: true,
+                        createdAt: true,
+                        updatedAt: true,
+                        author: {
+                            select: {
+                                id: true,
+                                email: true,
+                                nickname: true,
+                                profile: true,
+                            },
+                        },
+                    },
+                },
+                images: {
+                    select: {
+                        src: true,
+                    },
+                },
+                archiveLike: true,
             },
         });
     } catch (err) {
