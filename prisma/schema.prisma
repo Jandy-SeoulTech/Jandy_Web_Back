@@ -46,7 +46,7 @@ model Profile {
   userId         Int
   wellTalent     WellTalent[]
   interestTalent InterestTalent[]
-  profileImage   String?
+  profileImage   String?          @db.Text
 
   @@map(name: "profiles")
 }
@@ -75,7 +75,7 @@ model WellTalent {
 
 model Image {
   id        Int       @id @default(autoincrement())
-  src       String?   @db.VarChar(200)
+  src       String?   @db.Text
   createdAt DateTime
   updatedAt DateTime?
   post      Post?     @relation(fields: [postId], references: [id])
@@ -123,7 +123,7 @@ model Channel {
   id           Int              @id @default(autoincrement())
   name         String
   introduce    String?          @db.Text
-  channelImage String?
+  channelImage String?          @db.Text
   admin        User             @relation("admin", fields: [adminId], references: [id])
   adminId      Int
   participants Participant[]    @relation("Participant")
@@ -183,7 +183,7 @@ enum RoomStatus {
 
 model ChatMessage {
   id               Int           @id @default(autoincrement())
-  content          String
+  content          String        @db.Text
   sendUserId       Int
   sendUser         User          @relation(fields: [sendUserId], references: [id])
   baseRoomChat     Channel?      @relation(fields: [channelId], references: [id])
@@ -287,7 +287,7 @@ model Post {
   id        Int         @id @default(autoincrement())
   title     String
   status    PostStatus
-  content   String
+  content   String      @db.Text
   comment   Comment[]
   images    Image[]
   author    User        @relation("post", fields: [authorId], references: [id])
@@ -316,7 +316,7 @@ enum PostStatus {
 
 model Comment {
   id        Int       @id @default(autoincrement())
-  content   String
+  content   String    @db.VarChar(500)
   author    User      @relation("comment", fields: [authorId], references: [id])
   authorId  Int
   post      Post?     @relation(fields: [postId], references: [id])
@@ -343,7 +343,7 @@ model Attention {
 
 model Review {
   id             Int      @id @default(autoincrement())
-  content        String
+  content        String   @db.VarChar(100)
   status         String //good, soso, bad
   reviewedUser   User     @relation("reviewed", fields: [reviewedUserId], references: [id])
   reviewedUserId Int
@@ -360,7 +360,7 @@ model Archive {
   id             Int           @id @default(autoincrement())
   title          String
   status         ArchiveStatus // Private, Public 공개범위
-  content        String // 아카이빙에 들어갈 (게시글, 질문답쌍,) 내용
+  content        String        @db.Text // 아카이빙에 들어갈 (게시글, 질문답쌍,) 내용
   archiveComment Comment[] // 아카이빙에 속하는 댓글 목록
   images         Image[]
   owner          User          @relation("archive", fields: [ownerId], references: [id])
