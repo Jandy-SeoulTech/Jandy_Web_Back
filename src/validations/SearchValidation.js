@@ -38,7 +38,6 @@ export const SearchoRequestValid = async (req, res, next) => {
                 "ETC",
             ];
             for (let i in arr) {
-                console.log(arr[i]);
                 if (Dictionary.indexOf(arr[i]) == -1) return false;
             }
             return true;
