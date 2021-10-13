@@ -9,7 +9,7 @@ export const Search = async (req, res, next) => {
         const keyword = req.query.keyword;
         const skip = req.query.skip ? parseInt(req.query.skip, 10) : 0;
         const take = req.query.take ? parseInt(req.query.take, 10) : 12;
-        const code = req.query.code ? req.query.code : undefined;
+        const code = req.query.code ? req.query.code.split("!") : undefined;
         if (type == "channel") {
             const response = await ChannelRepository.findByKeyword(
                 code,

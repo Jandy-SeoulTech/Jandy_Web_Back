@@ -205,7 +205,7 @@ export const findByKeyword = async (category, keyword, skip, take) => {
                         category: {
                             category: {
                                 code: {
-                                    equals: category,
+                                    in: category,
                                 },
                             },
                         },
