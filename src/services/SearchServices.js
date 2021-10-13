@@ -6,7 +6,7 @@ import resFormat from "../utils/resFormat";
 export const Search = async (req, res, next) => {
     try {
         const type = req.query.type ? req.query.type : "channel";
-        const keyword = req.query.keyword;
+        const keyword = req.query.keyword ? req.query.keyword : undefined;
         const skip = req.query.skip ? parseInt(req.query.skip, 10) : 0;
         const take = req.query.take ? parseInt(req.query.take, 10) : 12;
         const code = req.query.code ? req.query.code.split("!") : undefined;

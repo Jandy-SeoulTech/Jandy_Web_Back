@@ -209,12 +209,25 @@ export const findByKeyword = async (keyword, skip, take) => {
             skip,
             take,
             where: {
-                AND: [
+                OR: [
                     {
                         title: {
                             contains: keyword,
                         },
                     },
+                    {
+                        tags: {
+                            some: {
+                                tag: {
+                                    name: {
+                                        contains: keyword,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ],
+                AND: [
                     {
                         status: {
                             equals: "Public",
@@ -261,6 +274,11 @@ export const findByKeyword = async (keyword, skip, take) => {
                     },
                 },
                 archiveLike: true,
+                tags: {
+                    include: {
+                        tag: true,
+                    },
+                },
             },
         });
     } catch (err) {
