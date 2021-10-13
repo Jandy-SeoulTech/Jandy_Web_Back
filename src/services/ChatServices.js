@@ -27,8 +27,10 @@ export const GetMainChatLog = async (req, res, next) => {
             lastId,
             parseInt(req.query.limit, 10)
         );
-        if (!response) {
-            return res.status(400).send(resFormat.fail(400, "실패"));
+        if (!response[0]) {
+            return res
+                .status(200)
+                .send(resFormat.successData(200, "채널 채팅이 없습니다.", []));
         }
         return res
             .status(200)
@@ -100,7 +102,9 @@ export const GetRoomChatLog = async (req, res, next) => {
             parseInt(req.query.limit, 10)
         );
         if (!response[0]) {
-            return res.status(400).send(resFormat.fail(400, "실패"));
+            return res
+                .status(200)
+                .send(resFormat.successData(200, "채팅방 채팅이 없습니다", []));
         }
         return res
             .status(200)
@@ -161,6 +165,7 @@ export const RoomChatAnswer = async (req, res, next) => {
 export const GetRoomChatAnswerList = async (req, res, next) => {
     try {
         const findAnswer = await ChatMessageRepository.findRoomAnswerChat(
+            req.user.id,
             parseInt(req.params.roomId)
         );
         if (!findAnswer[0]) {
