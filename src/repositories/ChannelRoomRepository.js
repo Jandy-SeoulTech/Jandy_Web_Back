@@ -147,34 +147,21 @@ export const updateArchivedRoom = async (postId) => {
 
 export const findOwnerRoom = async (userId) => {
     try {
-        return await prisma.channelRoom.findMany({
+        let data = await prisma.channelRoom.findMany({
             where: {
                 userId,
             },
             orderBy: {
                 status: "asc",
             },
-            select: {
-                id: true,
-                status: true,
-                name: true,
-                createdAt: true,
-                reservedAt: true,
-                roomOwner: {
-                    select: {
-                        email: true,
-                        nickname: true,
-                    },
-                },
+            include: {
+                roomOwner: true,
+                channel: true,
                 roomParticipant: true,
-                channel: {
-                    select: {
-                        name: true,
-                        channelImage: true,
-                    },
-                },
             },
         });
+        data.map((v) => delete v["roomOwner"]["password"]);
+        return data;
     } catch (err) {
         console.error(err);
     }
@@ -182,7 +169,7 @@ export const findOwnerRoom = async (userId) => {
 
 export const findParticipantRoom = async (id) => {
     try {
-        return await prisma.channelRoom.findMany({
+        let data = await prisma.channelRoom.findMany({
             where: {
                 AND: [
                     {
@@ -202,27 +189,14 @@ export const findParticipantRoom = async (id) => {
             orderBy: {
                 status: "asc",
             },
-            select: {
-                id: true,
-                status: true,
-                name: true,
-                createdAt: true,
-                reservedAt: true,
-                roomOwner: {
-                    select: {
-                        email: true,
-                        nickname: true,
-                    },
-                },
+            include: {
+                roomOwner: true,
+                channel: true,
                 roomParticipant: true,
-                channel: {
-                    select: {
-                        name: true,
-                        channelImage: true,
-                    },
-                },
             },
         });
+        data.map((v) => delete v["roomOwner"]["password"]);
+        return data;
     } catch (err) {
         console.error(err);
     }
