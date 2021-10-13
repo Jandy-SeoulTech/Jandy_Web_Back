@@ -216,11 +216,14 @@ export const createRoomChatAnswer = async (
     }
 };
 
-export const findRoomAnswerChat = async (channelRoomId) => {
+export const findRoomAnswerChat = async (sendUserId, channelRoomId) => {
     try {
         let data = await prisma.chatMessage.findMany({
             where: {
                 AND: [
+                    {
+                        sendUserId,
+                    },
                     {
                         channelRoomId,
                     },
