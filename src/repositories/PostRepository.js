@@ -33,6 +33,7 @@ export const findById = async (id) => {
                     },
                 },
                 channelRoom: true,
+                archive: true,
             },
         });
     } catch (err) {

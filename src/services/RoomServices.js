@@ -84,11 +84,6 @@ export const GetChannelRoomList = async (req, res, next) => {
             await ChannelRoomRepository.findReservedRoomByChannelId(
                 parseInt(req.params.channelId, 10)
             );
-        if (!findOpenRoom[0] && !findReservedRoom[0]) {
-            return res
-                .status(200)
-                .send(resFormat.success(200, "채팅방이 없습니다"));
-        }
 
         return res.status(200).send(
             resFormat.successData(200, "조회성공", {
@@ -181,11 +176,6 @@ export const GetOwnerRoomList = async (req, res, next) => {
     try {
         const findOwnerRoom =
             await ChannelRoomRepository.findOwnerCloseRoomByUserId(req.user.id);
-        if (!findOwnerRoom[0]) {
-            return res
-                .status(200)
-                .send(resFormat.success(200, "방을 찾을 수 없습니다."));
-        }
         return res
             .status(200)
             .send(resFormat.successData(200, "방 조회 성공", findOwnerRoom));
