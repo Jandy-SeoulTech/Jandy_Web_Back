@@ -254,6 +254,11 @@ export const findByKeyword = async (category, keyword, skip, take) => {
                         tag: true,
                     },
                 },
+                participants: {
+                    select: {
+                        userId: true,
+                    },
+                },
             },
         };
         const channels = await prisma.channel.findMany(query);
