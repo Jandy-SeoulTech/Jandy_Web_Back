@@ -95,14 +95,20 @@ export const getArchiveById = async (id) => {
     }
 };
 
-export const getArchiveListByChannelId = async (channelId, isPublic) => {
+export const getArchiveListByChannelId = async (
+    channelId,
+    isPublic,
+    page,
+    pageSize
+) => {
     const status = isPublic ? "Public" : undefined;
     try {
-        return prisma.archive.findMany({
-            where: {
-                channelId,
-                status,
-            },
+        const whereQuery = {
+            channelId,
+            status,
+        };
+        const query = {
+            where: whereQuery,
             orderBy: [
                 {
                     createdAt: "desc",
@@ -111,6 +117,8 @@ export const getArchiveListByChannelId = async (channelId, isPublic) => {
                     updatedAt: "desc",
                 },
             ],
+            skip: (page - 1) * pageSize,
+            take: pageSize,
             include: {
                 owner: {
                     select: {
@@ -143,7 +151,18 @@ export const getArchiveListByChannelId = async (channelId, isPublic) => {
                 },
                 archiveLike: true,
             },
-        });
+        };
+        const archives = await prisma.archive.findMany(query);
+        const totalPage =
+            parseInt(
+                (await prisma.archive.count({
+                    where: whereQuery,
+                })) / pageSize
+            ) + 1;
+        return {
+            archives,
+            totalPage,
+        };
     } catch (err) {
         console.error(err);
     }
