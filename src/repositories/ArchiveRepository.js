@@ -153,12 +153,11 @@ export const getArchiveListByChannelId = async (
             },
         };
         const archives = await prisma.archive.findMany(query);
-        const totalPage =
-            parseInt(
-                (await prisma.archive.count({
-                    where: whereQuery,
-                })) / pageSize
-            ) + 1;
+        const totalPage = Math.ceil(
+            (await prisma.archive.count({
+                where: whereQuery,
+            })) / pageSize
+        );
         return {
             archives,
             totalPage,

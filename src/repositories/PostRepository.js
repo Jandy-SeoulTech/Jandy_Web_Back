@@ -134,17 +134,15 @@ export const findPostByChannelId = async (channelId, type, page, pageSize) => {
         query.take = pageSize;
         ret = ret.concat(await prisma.post.findMany(query));
 
-        const totalPage =
-            parseInt(
-                (await prisma.post.count({
-                    where: whereQuery,
-                })) / pageSize
-            ) + 1;
-        const data = {
+        const totalPage = Math.ceil(
+            (await prisma.post.count({
+                where: whereQuery,
+            })) / pageSize
+        );
+        return {
             posts: ret,
             totalPage,
         };
-        return data;
     } catch (err) {
         console.error(err);
     }
