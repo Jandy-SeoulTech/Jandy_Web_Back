@@ -301,8 +301,8 @@ export const findByKeyword = async (keyword, skip, take) => {
                 },
             },
         };
-        const archives = prisma.archive.findMany(query);
-        const totalCount = prisma.archive.count({
+        const archives = await prisma.archive.findMany(query);
+        const totalCount = await prisma.archive.count({
             where: whereQuery,
         });
         return {
