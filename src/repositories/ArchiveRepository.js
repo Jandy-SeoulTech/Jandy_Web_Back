@@ -205,36 +205,37 @@ export const getArchiveListByUserId = async (userId, isPublic) => {
 
 export const findByKeyword = async (keyword, skip, take) => {
     try {
-        return await prisma.archive.findMany({
-            skip,
-            take,
-            where: {
-                OR: [
-                    {
-                        title: {
-                            contains: keyword,
-                        },
+        const whereQuery = {
+            OR: [
+                {
+                    title: {
+                        contains: keyword,
                     },
-                    {
-                        tags: {
-                            some: {
-                                tag: {
-                                    name: {
-                                        contains: keyword,
-                                    },
+                },
+                {
+                    tags: {
+                        some: {
+                            tag: {
+                                name: {
+                                    contains: keyword,
                                 },
                             },
                         },
                     },
-                ],
-                AND: [
-                    {
-                        status: {
-                            equals: "Public",
-                        },
+                },
+            ],
+            AND: [
+                {
+                    status: {
+                        equals: "Public",
                     },
-                ],
-            },
+                },
+            ],
+        };
+        const query = {
+            skip,
+            take,
+            where: whereQuery,
             orderBy: [
                 {
                     createdAt: "desc",
@@ -280,7 +281,15 @@ export const findByKeyword = async (keyword, skip, take) => {
                     },
                 },
             },
+        };
+        const archives = prisma.archive.findMany(query);
+        const totalCount = prisma.archive.count({
+            where: whereQuery,
         });
+        return {
+            archives,
+            totalCount,
+        };
     } catch (err) {
         console.error(err);
     }

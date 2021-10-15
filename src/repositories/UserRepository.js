@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaClientUnknownRequestError } from "@prisma/client/runtime";
 import { dbNow } from "../utils/dayUtils";
 
 const prisma = new PrismaClient();
@@ -455,40 +456,41 @@ export const NotAttention = async (userId, postId) => {
 
 export const findByKeyword = async (keyword, skip, take) => {
     try {
-        return await prisma.user.findMany({
+        const whereQuery = {
+            OR: [
+                {
+                    nickname: {
+                        contains: keyword,
+                    },
+                },
+                {
+                    profile: {
+                        wellTalent: {
+                            some: {
+                                contents: {
+                                    contains: keyword,
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    profile: {
+                        interestTalent: {
+                            some: {
+                                contents: {
+                                    contains: keyword,
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
+        };
+        const query = {
             skip,
             take,
-            where: {
-                OR: [
-                    {
-                        nickname: {
-                            contains: keyword,
-                        },
-                    },
-                    {
-                        profile: {
-                            wellTalent: {
-                                some: {
-                                    contents: {
-                                        contains: keyword,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    {
-                        profile: {
-                            interestTalent: {
-                                some: {
-                                    contents: {
-                                        contains: keyword,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                ],
-            },
+            where: whereQuery,
             orderBy: [
                 {
                     createdAt: "desc",
@@ -511,7 +513,15 @@ export const findByKeyword = async (keyword, skip, take) => {
                     },
                 },
             },
+        };
+        const users = await prisma.user.findMany(query);
+        const totalCount = await prisma.user.count({
+            where: whereQuery,
         });
+        return {
+            users,
+            totalCount,
+        };
     } catch (err) {
         console.error(err);
     }
