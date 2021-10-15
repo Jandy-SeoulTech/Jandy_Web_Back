@@ -456,7 +456,7 @@ export const NotAttention = async (userId, postId) => {
 
 export const findByKeyword = async (keyword, skip, take) => {
     try {
-        const whereQuery = {
+        let whereQuery = {
             OR: [
                 {
                     nickname: {
@@ -487,6 +487,7 @@ export const findByKeyword = async (keyword, skip, take) => {
                 },
             ],
         };
+        if (!keyword) whereQuery = undefined;
         const query = {
             skip,
             take,
