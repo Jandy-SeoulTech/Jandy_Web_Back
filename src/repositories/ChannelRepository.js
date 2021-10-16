@@ -178,40 +178,41 @@ export const findChatLogById = async (id) => {
 
 export const findByKeyword = async (category, keyword, skip, take) => {
     try {
-        return await prisma.channel.findMany({
+        const whereQuery = {
+            OR: [
+                {
+                    name: {
+                        contains: keyword,
+                    },
+                },
+                {
+                    tags: {
+                        some: {
+                            tag: {
+                                name: {
+                                    contains: keyword,
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
+            AND: [
+                {
+                    category: {
+                        category: {
+                            code: {
+                                in: category,
+                            },
+                        },
+                    },
+                },
+            ],
+        };
+        const query = {
             skip,
             take,
-            where: {
-                OR: [
-                    {
-                        name: {
-                            contains: keyword,
-                        },
-                    },
-                    {
-                        tags: {
-                            some: {
-                                tag: {
-                                    name: {
-                                        contains: keyword,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                ],
-                AND: [
-                    {
-                        category: {
-                            category: {
-                                code: {
-                                    in: category,
-                                },
-                            },
-                        },
-                    },
-                ],
-            },
+            where: whereQuery,
             orderBy: [
                 {
                     createdAt: "desc",
@@ -253,8 +254,21 @@ export const findByKeyword = async (category, keyword, skip, take) => {
                         tag: true,
                     },
                 },
+                participants: {
+                    select: {
+                        userId: true,
+                    },
+                },
             },
+        };
+        const channels = await prisma.channel.findMany(query);
+        const totalCount = await prisma.channel.count({
+            where: whereQuery,
         });
+        return {
+            channels,
+            totalCount,
+        };
     } catch (err) {
         console.error(err);
     }

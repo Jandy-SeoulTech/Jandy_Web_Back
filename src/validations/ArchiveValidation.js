@@ -121,6 +121,18 @@ export const GetByChannelRequestValid = async (req, res, next) => {
         .isNumeric()
         .withMessage("channelId는 숫자 형식이여야 합니다.")
         .run(req);
+    await check("page")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .isNumeric()
+        .withMessage("page는 숫자 형식이여야 합니다.")
+        .run(req);
+    await check("pageSize")
+        .notEmpty()
+        .withMessage("값이 없습니다")
+        .isNumeric()
+        .withMessage("pageSize는 숫자 형식이여야 합니다.")
+        .run(req);
     validationFunction(req, res, next);
 };
 

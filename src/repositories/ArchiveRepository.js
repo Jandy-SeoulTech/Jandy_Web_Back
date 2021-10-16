@@ -95,14 +95,20 @@ export const getArchiveById = async (id) => {
     }
 };
 
-export const getArchiveListByChannelId = async (channelId, isPublic) => {
+export const getArchiveListByChannelId = async (
+    channelId,
+    isPublic,
+    page,
+    pageSize
+) => {
     const status = isPublic ? "Public" : undefined;
     try {
-        return prisma.archive.findMany({
-            where: {
-                channelId,
-                status,
-            },
+        const whereQuery = {
+            channelId,
+            status,
+        };
+        const query = {
+            where: whereQuery,
             orderBy: [
                 {
                     createdAt: "desc",
@@ -111,6 +117,8 @@ export const getArchiveListByChannelId = async (channelId, isPublic) => {
                     updatedAt: "desc",
                 },
             ],
+            skip: (page - 1) * pageSize,
+            take: pageSize,
             include: {
                 owner: {
                     select: {
@@ -143,7 +151,17 @@ export const getArchiveListByChannelId = async (channelId, isPublic) => {
                 },
                 archiveLike: true,
             },
-        });
+        };
+        const archives = await prisma.archive.findMany(query);
+        const totalPage = Math.ceil(
+            (await prisma.archive.count({
+                where: whereQuery,
+            })) / pageSize
+        );
+        return {
+            archives,
+            totalPage,
+        };
     } catch (err) {
         console.error(err);
     }
@@ -205,36 +223,37 @@ export const getArchiveListByUserId = async (userId, isPublic) => {
 
 export const findByKeyword = async (keyword, skip, take) => {
     try {
-        return await prisma.archive.findMany({
-            skip,
-            take,
-            where: {
-                OR: [
-                    {
-                        title: {
-                            contains: keyword,
-                        },
+        const whereQuery = {
+            OR: [
+                {
+                    title: {
+                        contains: keyword,
                     },
-                    {
-                        tags: {
-                            some: {
-                                tag: {
-                                    name: {
-                                        contains: keyword,
-                                    },
+                },
+                {
+                    tags: {
+                        some: {
+                            tag: {
+                                name: {
+                                    contains: keyword,
                                 },
                             },
                         },
                     },
-                ],
-                AND: [
-                    {
-                        status: {
-                            equals: "Public",
-                        },
+                },
+            ],
+            AND: [
+                {
+                    status: {
+                        equals: "Public",
                     },
-                ],
-            },
+                },
+            ],
+        };
+        const query = {
+            skip,
+            take,
+            where: whereQuery,
             orderBy: [
                 {
                     createdAt: "desc",
@@ -280,7 +299,15 @@ export const findByKeyword = async (keyword, skip, take) => {
                     },
                 },
             },
+        };
+        const archives = await prisma.archive.findMany(query);
+        const totalCount = await prisma.archive.count({
+            where: whereQuery,
         });
+        return {
+            archives,
+            totalCount,
+        };
     } catch (err) {
         console.error(err);
     }

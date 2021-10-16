@@ -163,7 +163,9 @@ export const GetChannelArchiveList = async (req, res, next) => {
         }
         const response = await ArchiveRepository.getArchiveListByChannelId(
             parseInt(req.params.channelId, 10),
-            isPublic
+            isPublic,
+            parseInt(req.query.page, 10),
+            parseInt(req.query.pageSize, 10)
         );
         if (!response) {
             return res
