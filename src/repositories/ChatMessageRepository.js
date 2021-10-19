@@ -222,30 +222,28 @@ export const findRoomAnswerChat = async (sendUserId, channelRoomId) => {
             where: {
                 AND: [
                     {
-                        sendUserId,
-                    },
-                    {
                         channelRoomId,
                     },
                     {
-                        answeredId: {
-                            not: null,
+                        answeringMessage: {
+                            some: {
+                                sendUserId,
+                            },
                         },
                     },
                 ],
             },
             include: {
-                answeredMessage: {
-                    include: {
-                        sendUser: true,
-                    },
-                },
-                sendUser: true,
+                answeringMessage: true,
             },
         });
         return data.map((v) => {
-            delete v.sendUser["password"];
-            delete v.answeredMessage.sendUser["password"];
+            let answeringMessage = [];
+            v.answeringMessage.map((answer) => {
+                if (answer.sendUserId === sendUserId)
+                    answeringMessage.push(answer);
+            });
+            v.answeringMessage = answeringMessage;
             return v;
         });
     } catch (err) {
