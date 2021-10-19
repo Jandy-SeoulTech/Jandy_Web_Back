@@ -94,6 +94,13 @@ export const UpdateRequestValid = async (req, res, next) => {
         .isArray()
         .withMessage("배열만 가능합니다.")
         .run(req);
+    await check("tags")
+        .exists()
+        .withMessage("tags가 존재하지 않습니다.")
+        .if((value, { req }) => value !== null)
+        .isArray()
+        .withMessage("배열만 가능합니다.")
+        .run(req);
     if (!(req.body.images === null)) {
         await check("images.*")
             .trim()
