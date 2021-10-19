@@ -168,11 +168,6 @@ export const GetRoomChatAnswerList = async (req, res, next) => {
             req.user.id,
             parseInt(req.params.roomId)
         );
-        if (!findAnswer[0]) {
-            return res
-                .status(200)
-                .send(resFormat.success(200, "답장쌍이 없습니다"));
-        }
 
         return res
             .status(200)
