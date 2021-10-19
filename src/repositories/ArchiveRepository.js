@@ -30,6 +30,9 @@ export const updateArchive = async (id, data) => {
                 images: {
                     deleteMany: {},
                 },
+                tags: {
+                    deleteMany: {},
+                },
             },
         });
         return await prisma.archive.update({
@@ -37,6 +40,7 @@ export const updateArchive = async (id, data) => {
             data,
             include: {
                 images: true,
+                tags: true,
             },
         });
     } catch (err) {

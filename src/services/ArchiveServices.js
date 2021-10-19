@@ -354,9 +354,14 @@ const UpdateOption = (bodydata) => {
     if (bodydata.status) {
         Option.status = bodydata.status;
     }
+    if (bodydata.tags) {
+        Option.tags = {
+            create: CreateTags(bodydata.tags),
+        };
+    }
     if (bodydata.images) {
         Option.images = {
-            create: UpdateObject(bodydata.images),
+            create: CreateImages(bodydata.images),
         };
     }
     return Option;
