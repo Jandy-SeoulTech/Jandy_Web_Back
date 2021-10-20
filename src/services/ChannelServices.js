@@ -2,6 +2,7 @@ import * as ChannelRepository from "../repositories/ChannelRepository";
 import * as BanRepository from "../repositories/BanRepository";
 import * as LikeRepository from "../repositories/LikeRepository";
 import * as UserRepository from "../repositories/UserRepository";
+import * as CategoryRepository from "../repositories/CategoryRepository";
 import { dbNow } from "../utils/dayUtils";
 
 import resFormat from "../utils/resFormat";
@@ -13,10 +14,20 @@ export const CreateChannel = async (req, res, next) => {
                 .status(401)
                 .send(resFormat.fail(401, "본인소유의 채널만 생성 가능"));
         }
-        const response = await ChannelRepository.createChannel(
-            CreateOption(req.body)
+
+        const category = await CategoryRepository.findOneByCode(
+            req.body.category
         );
-        //console.log(response);
+        if (!category) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "카테고리조회실패"));
+        }
+
+        const response = await ChannelRepository.createChannel(
+            CreateOption(req.body, category.id)
+        );
+        console.log(response);
 
         if (!response) {
             return res.status(500).send(resFormat.fail(500, "채널 생성 실패"));
@@ -85,8 +96,18 @@ export const UpdateChannel = async (req, res, next) => {
                 .status(401)
                 .send(resFormat.fail(401, "본인소유의 채널만 수정 가능"));
         }
+
+        const category = await CategoryRepository.findOneByCode(
+            req.body.category
+        );
+        if (!category) {
+            return res
+                .status(500)
+                .send(resFormat.fail(500, "카테고리조회실패"));
+        }
+
         const response = await ChannelRepository.updateChannel(
-            UpdateOption(req.body)
+            UpdateOption(req.body, category.id)
         );
         if (!response) {
             return res.status(500).send(resFormat.fail(500, "알수없는 에러"));
@@ -329,7 +350,7 @@ export const Ban = async (req, res, next) => {
 };
 
 // Option 생성
-const CreateOption = (bodydata) => {
+const CreateOption = (bodydata, categoryId) => {
     // DB에 맞추어 Option 설정
 
     const Option = {
@@ -339,22 +360,13 @@ const CreateOption = (bodydata) => {
         tags: {
             create: ChangeObject(bodydata.tags),
         },
-        category: {
-            create: {
-                category: {
-                    connect: {
-                        code: bodydata.category,
-                    },
-                },
-                createdAt: dbNow(),
-            },
-        },
+        categoryId: categoryId,
         channelImage: bodydata.src,
         createdAt: dbNow(),
     };
     return Option;
 };
-const UpdateOption = (bodydata) => {
+const UpdateOption = (bodydata, categoryId) => {
     // DB에 맞추어 Option 설정
 
     let Option = {
@@ -370,16 +382,7 @@ const UpdateOption = (bodydata) => {
         };
     }
     if (bodydata.category) {
-        Option.category = {
-            update: {
-                category: {
-                    connect: {
-                        code: bodydata.category,
-                    },
-                },
-                updatedAt: dbNow(),
-            },
-        };
+        Option.categoryId = categoryId;
     }
     if (bodydata.src) {
         Option.channelImage = bodydata.src;
@@ -415,13 +418,5 @@ const SelectOption = {
             },
         },
     },
-    category: {
-        include: {
-            category: {
-                select: {
-                    name: true,
-                },
-            },
-        },
-    },
+    category: true,
 };

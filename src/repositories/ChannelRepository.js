@@ -66,11 +66,7 @@ export const findById = async (id) => {
                         },
                     },
                 },
-                category: {
-                    include: {
-                        category: true,
-                    },
-                },
+                category: true,
                 tags: {
                     include: {
                         tag: true,
