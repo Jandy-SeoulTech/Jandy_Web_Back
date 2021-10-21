@@ -390,15 +390,7 @@ const SelectOption = {
             },
         },
     },
-    category: {
-        include: {
-            category: {
-                select: {
-                    name: true,
-                },
-            },
-        },
-    },
+    category: true,
 };
 //Follower & FollowingList SelectOption
 

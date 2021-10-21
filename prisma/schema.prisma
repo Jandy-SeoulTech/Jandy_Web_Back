@@ -32,7 +32,7 @@ model User {
   reviewed        Review[]      @relation("reviewed")
   reviewer        Review[]      @relation("reviewer")
   archive         Archive[]     @relation("archive")
-  archiveLike     ArchiveLike[] 
+  archiveLike     ArchiveLike[]
   @@map(name: "users")
 }
 
@@ -43,7 +43,7 @@ model Profile {
   createdAt      DateTime
   updatedAt      DateTime?
   user           User             @relation(fields: [userId], references: [id])
-  userId         Int
+  userId         Int              @unique
   wellTalent     WellTalent[]
   interestTalent InterestTalent[]
   profileImage   String?          @db.Text
@@ -120,15 +120,16 @@ model Participant {
 }
 
 model Channel {
-  id           Int              @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   name         String
-  introduce    String?          @db.Text
-  channelImage String?          @db.Text
-  admin        User             @relation("admin", fields: [adminId], references: [id])
+  introduce    String?       @db.Text
+  channelImage String?       @db.Text
+  admin        User          @relation("admin", fields: [adminId], references: [id])
   adminId      Int
-  participants Participant[]    @relation("Participant")
+  participants Participant[] @relation("Participant")
   tags         ChannelTag[]
-  category     ChannelCategory?
+  category     Category?     @relation(fields: [categoryId], references: [id])
+  categoryId   Int?
   channelLike  ChannelLike[]
   ban          Ban[]
   channelRoom  ChannelRoom[]
@@ -169,7 +170,7 @@ model ChannelRoom {
   updatedAt       DateTime?
   chatMessage     ChatMessage[]
   question        Post          @relation(fields: [postId], references: [id])
-  postId          Int
+  postId          Int           @unique
 
   @@map(name: "channel_rooms")
 }
@@ -236,26 +237,14 @@ model ArchiveTag {
 }
 
 model Category {
-  id        Int              @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  code      String           @unique
+  code      String    @unique
   createdAt DateTime
   updatedAt DateTime?
-  channel   ChannelCategory?
+  channel   Channel[]
 
   @@map("categories")
-}
-
-model ChannelCategory {
-  channel    Channel   @relation(fields: [channelId], references: [id])
-  channelId  Int
-  category   Category  @relation(fields: [categoryId], references: [id])
-  categoryId Int
-  createdAt  DateTime
-  updatedAt  DateTime?
-
-  @@id([channelId, categoryId])
-  @@map("channel_categories")
 }
 
 // Channel -- Like -- User
@@ -301,7 +290,7 @@ model Post {
   updatedAt  DateTime?
 
   archive     Archive?
-  channelRoom     ChannelRoom?
+  channelRoom ChannelRoom?
   @@map("posts")
 }
 
@@ -368,7 +357,7 @@ model Archive {
   channel        Channel       @relation(fields: [channelId], references: [id])
   channelId      Int // 공개범위가 Private시 속한 채널의 유저를 판별하기위한 값
   post           Post?         @relation(fields: [postId], references: [id])
-  postId         Int? // 주제가 되는 POST 정보
+  postId         Int?          @unique // 주제가 되는 POST 정보
   archiveLike    ArchiveLike[]
   tags           ArchiveTag[]
   createdAt      DateTime
