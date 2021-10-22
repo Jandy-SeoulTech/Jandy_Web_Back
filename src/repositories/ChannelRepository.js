@@ -196,10 +196,8 @@ export const findByKeyword = async (category, keyword, skip, take) => {
             AND: [
                 {
                     category: {
-                        category: {
-                            code: {
-                                in: category,
-                            },
+                        code: {
+                            in: category,
                         },
                     },
                 },
@@ -240,11 +238,7 @@ export const findByKeyword = async (category, keyword, skip, take) => {
                         },
                     },
                 },
-                category: {
-                    include: {
-                        category: true,
-                    },
-                },
+                category: true,
                 tags: {
                     include: {
                         tag: true,
