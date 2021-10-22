@@ -1,13 +1,15 @@
 {
-    "name": "jandy_web_back",
+    "name": "upgle",
     "version": "1.0.0",
-    "description": "JandyWeb Project",
+    "description": "Talent Sharing Platform Upgle",
     "main": "index.js",
     "scripts": {
         "dev": "cross-env NODE_ENV=development nodemon src/index.js --exec babel-node",
         "build": "babel src -d dist",
         "start": "cross-env NODE_ENV=production pm2 start ./dist/index.js",
-        "db:push": "dotenv -e .env.dev -- npx prisma db push --accept-data-loss",
+        "db:generate":"npx prisma generate",
+        "dev-db:push": "dotenv -e .env.dev -- npx prisma db push",
+        "prod-db:push": "dotenv -e .env.prod -- npx prisma db push",
         "lint": "eslint src/**/*.js",
         "prepare": "husky install"
     },
