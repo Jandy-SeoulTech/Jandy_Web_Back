@@ -149,7 +149,16 @@ export const findOwnerRoom = async (userId) => {
     try {
         let data = await prisma.channelRoom.findMany({
             where: {
-                userId,
+                AND: [
+                    {
+                        userId,
+                    },
+                    {
+                        status: {
+                            not: "Archived",
+                        },
+                    },
+                ],
             },
             orderBy: {
                 status: "asc",
