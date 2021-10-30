@@ -5,6 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
 }
 
 model User {
@@ -78,9 +79,9 @@ model Image {
   src       String?   @db.Text
   createdAt DateTime
   updatedAt DateTime?
-  post      Post?     @relation(fields: [postId], references: [id])
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int?
-  archive   Archive?  @relation(fields: [archiveId], references: [id])
+  archive   Archive?  @relation(fields: [archiveId], references: [id], onDelete: Cascade)
   archiveId Int?
 
   @@map(name: "images")
@@ -128,7 +129,7 @@ model Channel {
   adminId      Int
   participants Participant[] @relation("Participant")
   tags         ChannelTag[]
-  category     Category?     @relation(fields: [categoryId], references: [id])
+  category     Category?     @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   categoryId   Int?
   channelLike  ChannelLike[]
   ban          Ban[]
@@ -213,9 +214,9 @@ model Tag {
 }
 
 model ChannelTag {
-  channel   Channel   @relation(fields: [channelId], references: [id])
+  channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
   channelId Int
-  tag       Tag       @relation(fields: [tagId], references: [id])
+  tag       Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId     Int
   createdAt DateTime
   updatedAt DateTime?
@@ -225,9 +226,9 @@ model ChannelTag {
 }
 
 model ArchiveTag {
-  archive   Archive   @relation(fields: [archiveId], references: [id])
+  archive   Archive   @relation(fields: [archiveId], references: [id], onDelete: Cascade)
   archiveId Int
-  tag       Tag       @relation(fields: [tagId], references: [id])
+  tag       Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId     Int
   createdAt DateTime
   updatedAt DateTime?
@@ -249,9 +250,9 @@ model Category {
 
 // Channel -- Like -- User
 model ChannelLike {
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  channel   Channel   @relation(fields: [channelId], references: [id])
+  channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
   channelId Int
   createdAt DateTime
   updatedAt DateTime?
@@ -261,9 +262,9 @@ model ChannelLike {
 }
 
 model Ban {
-  user      User      @relation("ban", fields: [userId], references: [id])
+  user      User      @relation("ban", fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  channel   Channel   @relation(fields: [channelId], references: [id])
+  channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
   channelId Int
   createdAt DateTime
   updatedAt DateTime?
@@ -279,9 +280,9 @@ model Post {
   content   String      @db.Text
   comment   Comment[]
   images    Image[]
-  author    User        @relation("post", fields: [authorId], references: [id])
+  author    User        @relation("post", fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
-  channel   Channel     @relation(fields: [channelId], references: [id])
+  channel   Channel     @relation(fields: [channelId], references: [id], onDelete: Cascade)
   channelId Int
   attention Attention[]
 
@@ -306,11 +307,11 @@ enum PostStatus {
 model Comment {
   id        Int       @id @default(autoincrement())
   content   String    @db.VarChar(500)
-  author    User      @relation("comment", fields: [authorId], references: [id])
+  author    User      @relation("comment", fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
-  post      Post?     @relation(fields: [postId], references: [id])
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int?
-  archive   Archive?  @relation(fields: [archiveId], references: [id])
+  archive   Archive?  @relation(fields: [archiveId], references: [id], onDelete: Cascade)
   archiveId Int?
   createdAt DateTime
   updatedAt DateTime?
@@ -319,9 +320,9 @@ model Comment {
 }
 
 model Attention {
-  user      User      @relation("Attention", fields: [userId], references: [id])
+  user      User      @relation("Attention", fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  post      Post      @relation(fields: [postId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
   createdAt DateTime
   updatedAt DateTime?
@@ -372,9 +373,9 @@ enum ArchiveStatus {
 }
 
 model ArchiveLike {
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  archive   Archive   @relation(fields: [archiveId], references: [id])
+  archive   Archive   @relation(fields: [archiveId], references: [id], onDelete: Cascade)
   archiveId Int
   createdAt DateTime
   updatedAt DateTime?

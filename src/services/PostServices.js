@@ -96,7 +96,7 @@ export const DeletePost = async (req, res, next) => {
         );
         const checkAdmin = await UserRepository.CheckMyChannel(
             req.user.id,
-            parseInt(req.body.channelId)
+            parseInt(req.body.channelId, 10)
         );
         if (!checkAuthor[0] && !checkAdmin[0]) {
             return res
