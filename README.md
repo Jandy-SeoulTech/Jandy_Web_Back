@@ -39,8 +39,6 @@
 
 [https://upgle.hisfolio.com](https://upgle.hisfolio.com/)
 
-## ERD
-
 ## Architecture
 ![Upgle Architecture](https://user-images.githubusercontent.com/28949213/138162544-26f92166-1b5f-4240-b7f0-67c11e87e059.png)
 
@@ -65,8 +63,12 @@
 - `eslint` : 문법 분석
 - `prettier` : 코드 포맷터
 
+## ERD
+[DB 설계 및 ER Diagram](https://github.com/Jandy-SeoulTech/Jandy_Web_Back/wiki/DB-%EC%84%A4%EA%B3%84)
+
 ## 🌟 Contribute
 저희 서비스는 다른 사람들의 Contribute 를 원하고 있습니다. 👋🏻 아래는 설치 및 Contribute 가이드입니다.
+
 ### installation
 > 원활한 실행을 위해서는 node LTS 이상의 버전을, 저희 서비스에 Contribute 하기 위해서는 node v16.8.0을 준비해주시기 바랍니다
 
@@ -80,8 +82,8 @@ $ cd Jandy_Web_Back
 $ npm install
 ```
 3. 루트 디렉토리에 환경변수 파일을 셋팅합니다.    
-- 자세한 설명은 [환변경수파일설명](https://github.com/Jandy-SeoulTech/Jandy_Web_Back/wiki/%ED%99%98%EA%B2%BD%EB%B3%80%EC%88%98%ED%8C%8C%EC%9D%BC-%EC%84%A4%EB%AA%85)를 참고해주세요! 
-4. 서비스의 ORM과 DB를 연동시켜줍니다
+- 자세한 설명은 [환경변수 파일 설명](https://github.com/Jandy-SeoulTech/Jandy_Web_Back/wiki/%ED%99%98%EA%B2%BD%EB%B3%80%EC%88%98%ED%8C%8C%EC%9D%BC-%EC%84%A4%EB%AA%85)를 참고해주세요! 
+4. 서비스의 ORM과 DB를 연동시켜줍니다.
 ```
 $ npx prisma generate
 $ npx prisma db push
@@ -95,7 +97,7 @@ $ npm run dev
 ### Contribute
 > 개발하시기 전 prettier가 에디터에 설정이 잘 돼있는지 확인해주세요!
 
-기여 가이드 라인을 따라서 해주시면 됩니다. [가이드라인](https://github.com/Jandy-SeoulTech/Jandy_Web_Back/blob/dev/CONTRIBUTING.md)
+기여 [가이드라인](https://github.com/Jandy-SeoulTech/Jandy_Web_Back/blob/dev/CONTRIBUTING.md)을 참고해주세요. 
 
 
 ## 👨‍👩‍👧‍👦 팀 멤버(Team Information)
@@ -123,7 +125,7 @@ $ npm run dev
         <a href="https://github.com/KeisLuv5991"><img src="https://avatars.githubusercontent.com/u/38745815?v=4" width="150px" alt="최민준"/><br /><sub><b>최민준</b></sub></a>
      </td>
      <td align="center">
-        <a href="##"><img src="https://user-images.githubusercontent.com/28949213/129733334-66bf8833-ce33-4e1a-9503-d01f700635af.png" width="150px" alt="김연수"/><br /><sub><b>김연수</b></sub></a>
+        <a href="https://github.com/ssusukang"><img src="https://avatars.githubusercontent.com/u/80057422?v=4" width="150px" alt="김연수"/><br /><sub><b>김연수</b></sub></a>
      </td>
   <tr>
     
