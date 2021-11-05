@@ -85,8 +85,8 @@ $ npm install
 - 자세한 설명은 [환경변수 파일 설명](https://github.com/Jandy-SeoulTech/Jandy_Web_Back/wiki/%ED%99%98%EA%B2%BD%EB%B3%80%EC%88%98%ED%8C%8C%EC%9D%BC-%EC%84%A4%EB%AA%85)를 참고해주세요! 
 4. 서비스의 ORM과 DB를 연동시켜줍니다.
 ```
-$ npx prisma generate
-$ npx prisma db push
+$ npm run db:generate
+$ npm run dev-db:push
 ```
 > ❗️ MySQL 서버가 실행되고 있어야 하고, 환경변수 파일의 셋팅이 정확해야 합니다.
 5. 위 작업이 완료되었다면 실행을 해주세요!
