@@ -1,5 +1,5 @@
 {
-    "name": "upgle",
+    "name": "Upgle",
     "version": "1.0.0",
     "description": "Talent Sharing Platform Upgle",
     "main": "index.js",
@@ -7,7 +7,7 @@
         "dev": "cross-env NODE_ENV=development nodemon src/index.js --exec babel-node",
         "build": "babel src -d dist",
         "start": "cross-env NODE_ENV=production pm2 start ./dist/index.js",
-        "db:generate":"npx prisma generate",
+        "db:generate": "npx prisma generate",
         "dev-db:push": "dotenv -e .env.dev -- npx prisma db push",
         "prod-db:push": "dotenv -e .env.prod -- npx prisma db push",
         "lint": "eslint src/**/*.js",
@@ -18,7 +18,7 @@
         "url": "git+https://github.com/Jandy-SeoulTech/Jandy_Web_Back.git"
     },
     "author": "",
-    "license": "ISC",
+    "license": "GPL-v3",
     "bugs": {
         "url": "https://github.com/Jandy-SeoulTech/Jandy_Web_Back/issues"
     },
